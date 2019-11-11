@@ -15,4 +15,7 @@ export class User {
     @Column()
     age: number;
 
+    @Column({default: 'male'})
+    sex: string;
+
 }
