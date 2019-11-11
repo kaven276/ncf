@@ -27,7 +27,7 @@ module.exports = [
     password: "postgre276",
     database: 'db1',
     synchronize: true,
-    logging: false,
+    logging: true,
     entities: ["src/entity/**/*.ts"],
     migrations: ["src/migration/**/*.ts"],
     subscribers: ["src/subscriber/**/*.ts"],
