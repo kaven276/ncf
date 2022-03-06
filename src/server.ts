@@ -17,9 +17,9 @@ function startServer() {
     const mock = !!url.searchParams.get('mock');
     // const request = {...new Map(url.searchParams)};
     const request = {} as any;
-    for (const [key, value] of url.searchParams.entries()) {
-      request[key] = value;
-    }
+    url.searchParams.forEach((value, name) => {
+      request[name] = value;
+    });
 
     // 给核心服务环境信息，然后调用
     const result = await execute({ jwtString, sub, faasPath, request, mock });
