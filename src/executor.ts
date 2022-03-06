@@ -105,6 +105,32 @@ export async function execute({ jwtString, sub, faasPath, request, mock }: IEntr
         await Promise.all(Object.values(store.db).map(db => db.commitTransaction()));
       }
       console.log('res.end successfully');
+
+      // 校验响应数据规格
+      {
+        console.log({ result })
+        if (fassAsync.responseSchema && !fassAsync.checkResponse) {
+          const ajv = new Ajv();
+          fassAsync.checkResponse = ajv.compile(fassAsync.responseSchema);
+        }
+        if (fassAsync.checkResponse) {
+          try {
+            if (fassAsync.checkResponse(result) === false) {
+              return {
+                status: 500,
+                msg: 'response invalid',
+                errors: fassAsync.checkResponse.errors,
+              }
+            }
+          } catch (e) {
+            return {
+              status: 500,
+              msg: e.toString(),
+            }
+          }
+        }
+      }
+
       return { code: 0, data: result };
     } catch (e) {
       await Promise.all(Object.values(store.db).map(db => db.rollbackTransaction()));
@@ -118,4 +144,7 @@ export async function execute({ jwtString, sub, faasPath, request, mock }: IEntr
     }
     // console.log(require.cache);
   });
+
+
+
 }
