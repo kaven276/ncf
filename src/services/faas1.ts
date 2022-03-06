@@ -1,18 +1,7 @@
 import { add } from './util1';
 import { PI, check401, checkIsAdmin } from '.';
 import { Service } from 'src/lib/faas';
-
-export interface ISpec {
-  path: '/faas1',
-  request: {
-    user?: string,
-  },
-  response: {
-    name: string,
-    count: number,
-    PI: number,
-  }
-}
+import { ISpec } from './faas1.spec';
 
 export const faas: Service<ISpec> = async (req) => {
   check401();
