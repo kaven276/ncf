@@ -33,12 +33,10 @@ function startServer() {
         await Promise.all(Object.values(store.db).map(db => db.rollbackTransaction()));
         console.log('---------', e instanceof ServiceError, e);
         if (e instanceof ServiceError) {
-          console.log('--------- catched');
           res.end(JSON.stringify({ code: e.code, msg: e.message }));
         } else {
-          console.log('--------- not catched', e.code, e.message);
+          console.log('--------- not ServiceError', e.code, e.message);
           res.end(JSON.stringify({ code: e.code, msg: e.message }));
-          console.log('res.end with exception')
         }
       }
       // console.log(require.cache);
