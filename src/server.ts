@@ -13,10 +13,11 @@ function startServer() {
     const url = new URL(req.url, `http://${req.headers.host}`);
     const faasPath = url.pathname;
     const jwtString = req.headers['authorization'] || 'anonymous';
-    const sub = url.search || 'testuser';
+    const sub = url.searchParams.get('user') || 'testuser';
 
     // 给核心服务环境信息，然后调用
     const result = await execute({ jwtString, sub, faasPath });
+    res.setHeader('content-type', 'application/json');
     res.statusCode = result.status || 200;
     res.end(JSON.stringify(result));
   }).listen(PORT);
