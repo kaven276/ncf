@@ -1,7 +1,7 @@
 import { createServer, get } from 'http';
 import { asyncLocalStorage } from 'src/lib/transaction';
 import { ServiceError } from 'src/lib/registry';
-import { service } from 'src/services/testTransactionQueryRunner';
+import { faas } from 'src/services/testTransactionQueryRunner';
 import { createConnection } from "typeorm";
 
 
@@ -10,7 +10,7 @@ function startServer() {
   let idSeq = 0;
   createServer((req, res) => {
     console.log(`request ${idSeq + 1} coming...`);
-    const start = service;
+    const start = faas;
     asyncLocalStorage.run({ id: ++idSeq, db: {} }, async () => {
       const store = asyncLocalStorage.getStore()!;
       try {
