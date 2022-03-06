@@ -1,7 +1,6 @@
 import { getConnFromThread } from 'src/lib/transaction';
 import { asyncLocalStorage } from 'src/lib/transaction';
 import { ServiceError } from 'src/lib/ServiceError';
-import { makeRe } from 'minimatch';
 
 export async function getManager() {
   const queryRunner = await getConnFromThread('postgis');
@@ -25,14 +24,4 @@ export function checkIsAdmin() {
   }
 }
 
-const faasRegExp = makeRe('/faas*');
-export const middlewares = [
-  (path: string) => {
-    // console.log(path, faasRegExp.test(path));
-    if (faasRegExp.test(path)) {
-      check401();
-      checkIsAdmin();
-      // throw new ServiceError(403, '禁止访问 /faas*');
-    }
-  }
-]
+

@@ -14,7 +14,7 @@ interface IEntranceProps {
 
 function getMiddlewares(): Promise<Function[]> {
   return new Promise((resolve) => {
-    import(`src/services/index`).then((m) => resolve(m.middlewares)).catch(() => []);
+    import(`src/services/config`).then((m) => resolve(m.middlewares)).catch(() => []);
   });
 }
 
