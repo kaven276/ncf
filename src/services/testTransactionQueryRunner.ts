@@ -1,5 +1,6 @@
 import { getConnFromThread } from 'src/lib/transaction';
 import { User } from "src/entity/User";
+import { ServiceError } from 'src/lib/registry';
 
 /**
  * 模拟参与 service 的一个调用单元，参与了事务。
@@ -12,16 +13,14 @@ export async function testTransactionQueryRunner(id: number) {
   const manager = queryRunner.manager;
   const ly = await manager.findOne(User, { where: { firstName: 'LiYong' } });
 
-
   ly.age++;
   await manager.save(ly);
   ly.age++;
   await manager.save(ly);
-  // throw new Error('rollback');
-  // await queryRunner.rollbackTransaction();
 
-  // 在 async thread 结束时自动执行
-  // await queryRunner.commitTransaction();
+  if (Math.random() < 1) {
+    throw new ServiceError(1, '随机制造的异常!');
+  }
   return { id }
 }
 
@@ -31,8 +30,5 @@ export async function service() {
   const list = [];
   list.push(await testTransactionQueryRunner(1));
   list.push(await testTransactionQueryRunner(2));
-  return {
-    code: 0,
-    data: list,
-  }
+  return list;
 }
