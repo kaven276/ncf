@@ -3,6 +3,7 @@ import { asyncLocalStorage } from 'src/lib/transaction';
 import { ServiceError } from 'src/lib/registry';
 import { createConnection } from "typeorm";
 import { watchHotUpdate } from './hotUpdate';
+import { URL } from 'url';
 
 watchHotUpdate();
 
@@ -13,9 +14,12 @@ function startServer() {
   createServer(async (req, res) => {
     console.log(`request ${idSeq + 1} coming...`);
     // 动态根据访问路径找到对应的处理 ts 文件
-    const fassAsync = await import(`src/services${req.url}`);
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    const fassAsync = await import(`src/services${url.pathname}`);
     const start = fassAsync.faas;
-    asyncLocalStorage.run({ id: ++idSeq, db: {} }, async () => {
+    const jwtString = req.headers['authorization'] || 'anonymous';
+
+    asyncLocalStorage.run({ id: ++idSeq, db: {}, jwtString, jwt: { sub: url.search || 'testuser' } }, async () => {
       const store = asyncLocalStorage.getStore()!;
       try {
         const result = await start();
@@ -47,9 +51,9 @@ function startServer() {
 async function startAndTest() {
   await createConnection('postgis');
   startServer();
-  get(`http://localhost:${PORT}/testTransactionQueryRunner`);
+  // get(`http://localhost:${PORT}/testTransactionQueryRunner`);
   await new Promise((r) => setTimeout(r, 300));
-  get(`http://localhost:${PORT}/testTransactionQueryRunner`);
+  // get(`http://localhost:${PORT}/testTransactionQueryRunner`);
 }
 
 startAndTest();

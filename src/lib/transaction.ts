@@ -8,6 +8,10 @@ interface ICallState {
   db: {
     [name: string]: QueryRunner,
   },
+  jwtString?: string,
+  jwt?: {
+    sub: string,
+  },
 }
 
 export const asyncLocalStorage = new AsyncLocalStorage<ICallState>();
