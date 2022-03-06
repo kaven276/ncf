@@ -5,3 +5,5 @@ export async function getManager() {
   const manager = queryRunner.manager;
   return manager;
 }
+
+export const PI = 3.14;

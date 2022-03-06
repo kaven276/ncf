@@ -2,7 +2,7 @@ import { createServer, get } from 'http';
 import { asyncLocalStorage } from 'src/lib/transaction';
 import { ServiceError } from 'src/lib/registry';
 import { createConnection } from "typeorm";
-import { watchHotUpdate } from './hotUpdate';
+import { watchHotUpdate, registerDep } from './hotUpdate';
 import { URL } from 'url';
 
 watchHotUpdate();
@@ -15,13 +15,18 @@ function startServer() {
     console.log(`request ${idSeq + 1} coming...`);
     // 动态根据访问路径找到对应的处理 ts 文件
     const url = new URL(req.url, `http://${req.headers.host}`);
-    const fassAsync = await import(`src/services${url.pathname}`).catch(e => ({}));
+    const resolvedPath = require.resolve(`src/services${url.pathname}`);
+    const fassAsync = await import(resolvedPath).catch(e => ({}));
     const start = fassAsync.faas;
     if (!start) {
       res.statusCode = 404;
       res.end();
       return;
     }
+    registerDep(resolvedPath);
+
+    // 反向登记依赖的 children，child 改变时，可以将依赖服务删除
+    console.log(resolvedPath);
 
     const jwtString = req.headers['authorization'] || 'anonymous';
 
