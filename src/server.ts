@@ -2,6 +2,9 @@ import { createServer, get } from 'http';
 import { asyncLocalStorage } from 'src/lib/transaction';
 import { ServiceError } from 'src/lib/registry';
 import { createConnection } from "typeorm";
+import { watchHotUpdate } from './hotUpdate';
+
+watchHotUpdate();
 
 const PORT = 8081;
 
@@ -35,6 +38,7 @@ function startServer() {
           console.log('res.end with exception')
         }
       }
+      // console.log(require.cache);
     });
   }).listen(PORT);
 }

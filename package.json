@@ -9,6 +9,7 @@
       "typescript": "3.3.3333"
    },
    "dependencies": {
+      "chokidar": "^3.5.3",
       "oracledb": "^4.0.1",
       "pg": "^8.7.3",
       "reflect-metadata": "^0.1.10",
