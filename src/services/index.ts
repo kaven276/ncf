@@ -31,7 +31,7 @@ export const middlewares = [
     // console.log(path, faasRegExp.test(path));
     if (faasRegExp.test(path)) {
       check401();
-      checkIsAdmin();;
+      checkIsAdmin();
       // throw new ServiceError(403, '禁止访问 /faas*');
     }
   }

@@ -12,9 +12,11 @@ interface IEntranceProps {
   faasPath: string,
 }
 
-let middlewaresPromise: Promise<Function[]> = new Promise((resolve) => {
-  import(`src/services/index`).then((m) => resolve(m.middlewares)).catch(() => []);
-});
+function getMiddlewares(): Promise<Function[]> {
+  return new Promise((resolve) => {
+    import(`src/services/index`).then((m) => resolve(m.middlewares)).catch(() => []);
+  });
+}
 
 /** 进入服务执行，提供执行环境，事务管理 */
 export async function execute({ jwtString, sub, faasPath }: IEntranceProps) {
@@ -52,7 +54,8 @@ export async function execute({ jwtString, sub, faasPath }: IEntranceProps) {
     const store = asyncLocalStorage.getStore()!;
 
     // 最终做成像 koa 式的包洋葱中间件
-    const middlewares = await middlewaresPromise;
+
+    const middlewares = await getMiddlewares();
     let result;
     try {
       for (const mw of middlewares) {
