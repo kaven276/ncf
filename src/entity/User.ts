@@ -11,8 +11,9 @@ export enum UserRole {
 // 使用核心领域规范来确保 typeorm 实体符合规范
 export class User implements IUser {
 
-  @PrimaryGeneratedColumn()
   /** 用户标识 */
+  @PrimaryGeneratedColumn()
+
   id: number;
 
   @Column()
@@ -21,6 +22,7 @@ export class User implements IUser {
   @Column()
   lastName: string;
 
+  /** 年龄 */
   @Column()
   age: number;
 

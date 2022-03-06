@@ -10,7 +10,7 @@ import { getManager } from '.';
 async function testTransactionQueryRunner(id: number) {
   // 在 async thread 开始时自动进行
   const manager = await getManager();
-  const ly = await manager.findOne(User, { where: { firstName: 'LiYong' } });
+  const ly = (await manager.findOne(User, { where: { firstName: 'LiYong' } }))!;
 
   ly.age++;
   await manager.save(ly);
@@ -26,7 +26,7 @@ async function testTransactionQueryRunner(id: number) {
 
 /** 模拟一个对外部的服务，需要注册到服务清单，来方便将请求映射到服务 */
 export async function faas() {
-  const list = [];
+  const list = [] as any[];
   list.push(await testTransactionQueryRunner(1));
   list.push(await testTransactionQueryRunner(2));
   return list;
