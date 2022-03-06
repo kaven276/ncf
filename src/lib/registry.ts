@@ -16,19 +16,4 @@ export function getService(name: string): Service | undefined {
   return registry.get(name);
 }
 
-export class ServiceError extends Error {
-  constructor(public code: number, public message: string) {
-    super(message);
 
-    // if (Error.captureStackTrace) {
-    //   Error.captureStackTrace(this, HttpError);
-    // }
-    this.code = code;
-    this.message = message;
-  }
-
-  toString() {
-    return `[${this.code}] ${this.message}`;
-  }
-
-}

@@ -1,5 +1,5 @@
 import { User } from "src/entity/User";
-import { ServiceError } from 'src/lib/registry';
+import { ServiceError } from 'src/lib/ServiceError';
 import { getManager } from '.';
 
 /**

@@ -1,7 +1,9 @@
 import { add } from './util1';
-import { PI } from '.';
+import { PI, check401, checkIsAdmin } from '.';
 
 export function faas() {
+  check401();
+  checkIsAdmin();
   return {
     'name': 'test1',
     count: add(10),

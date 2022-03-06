@@ -1,5 +1,5 @@
 import { asyncLocalStorage } from 'src/lib/transaction';
-import { ServiceError } from 'src/lib/registry';
+import { ServiceError } from 'src/lib/ServiceError';
 import { watchHotUpdate, registerDep } from './hotUpdate';
 
 watchHotUpdate();
