@@ -3,6 +3,7 @@
    "version": "0.0.1",
    "description": "Awesome project developed with TypeORM.",
    "devDependencies": {
+      "@types/minimatch": "^3.0.5",
       "@types/node": "^17.0.21",
       "@types/pg": "^8.6.4",
       "ts-node": "^10.6.0",
@@ -10,6 +11,7 @@
    },
    "dependencies": {
       "chokidar": "^3.5.3",
+      "minimatch": "^5.0.1",
       "oracledb": "^4.0.1",
       "pg": "^8.7.3",
       "reflect-metadata": "^0.1.10",

@@ -12,6 +12,10 @@ interface IEntranceProps {
   faasPath: string,
 }
 
+let middlewaresPromise: Promise<Function[]> = new Promise((resolve) => {
+  import(`src/services/index`).then((m) => resolve(m.middlewares)).catch(() => []);
+});
+
 /** 进入服务执行，提供执行环境，事务管理 */
 export async function execute({ jwtString, sub, faasPath }: IEntranceProps) {
 
@@ -42,9 +46,28 @@ export async function execute({ jwtString, sub, faasPath }: IEntranceProps) {
   // 反向登记依赖的 children，child 改变时，可以将依赖服务删除
   console.log(resolvedPath);
 
+
   // step 3: 执行服务模块
   return asyncLocalStorage.run({ id: ++idSeq, db: {}, jwtString, jwt: { sub } }, async () => {
     const store = asyncLocalStorage.getStore()!;
+
+    // 最终做成像 koa 式的包洋葱中间件
+    const middlewares = await middlewaresPromise;
+    let result;
+    try {
+      for (const mw of middlewares) {
+        result = await mw(faasPath);
+      }
+    } catch (e) {
+      // 出问题，提前拦截了
+      if (e instanceof ServiceError) {
+        return { status: 500, code: e.code, msg: e.message };
+      } else {
+        console.log('--------- not ServiceError', e.code, e.message);
+        return { status: 500, code: e.code, msg: e.message };
+      }
+    }
+
     try {
       const result = await faas();
       if (store.db) {

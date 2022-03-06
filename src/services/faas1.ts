@@ -1,7 +1,7 @@
 import { add } from './util1';
 import { PI, check401, checkIsAdmin } from '.';
 
-export function faas() {
+export async function faas() {
   check401();
   checkIsAdmin();
   return {
