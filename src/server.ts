@@ -1,16 +1,17 @@
 import { createServer, get } from 'http';
 import { asyncLocalStorage } from 'src/lib/transaction';
 import { ServiceError } from 'src/lib/registry';
-import { faas } from 'src/services/testTransactionQueryRunner';
 import { createConnection } from "typeorm";
 
-
 const PORT = 8081;
+
 function startServer() {
   let idSeq = 0;
-  createServer((req, res) => {
+  createServer(async (req, res) => {
     console.log(`request ${idSeq + 1} coming...`);
-    const start = faas;
+    // 动态根据访问路径找到对应的处理 ts 文件
+    const fassAsync = await import(`src/services${req.url}`);
+    const start = fassAsync.faas;
     asyncLocalStorage.run({ id: ++idSeq, db: {} }, async () => {
       const store = asyncLocalStorage.getStore()!;
       try {
@@ -39,8 +40,12 @@ function startServer() {
 }
 
 
-createConnection('postgis').then(() => {
+async function startAndTest() {
+  await createConnection('postgis');
   startServer();
-  get(`http://localhost:${PORT}`);
-  setTimeout(() => get(`http://localhost:${PORT}`), 300);
-});
+  get(`http://localhost:${PORT}/testTransactionQueryRunner`);
+  await new Promise((r) => setTimeout(r, 300));
+  get(`http://localhost:${PORT}/testTransactionQueryRunner`);
+}
+
+startAndTest();
