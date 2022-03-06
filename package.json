@@ -3,17 +3,20 @@
    "version": "0.0.1",
    "description": "Awesome project developed with TypeORM.",
    "devDependencies": {
-      "@types/node": "^8.0.29",
-      "ts-node": "3.3.0",
+      "@types/node": "^17.0.21",
+      "@types/pg": "^8.6.4",
+      "ts-node": "^10.6.0",
       "typescript": "3.3.3333"
    },
    "dependencies": {
       "oracledb": "^4.0.1",
-      "pg": "^7.12.1",
+      "pg": "^8.7.3",
       "reflect-metadata": "^0.1.10",
-      "typeorm": "0.2.20"
+      "tsconfig-paths": "^3.13.0",
+      "typeorm": "^0.2.45"
    },
    "scripts": {
-      "start": "ts-node src/index.ts"
+      "start": "ts-node src/index.ts",
+      "4A": "ts-node domains/4A/index.ts"
    }
 }
