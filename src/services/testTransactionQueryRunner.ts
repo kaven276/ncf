@@ -1,6 +1,6 @@
-import { getConnFromThread } from 'src/lib/transaction';
 import { User } from "src/entity/User";
 import { ServiceError } from 'src/lib/registry';
+import { getManager } from '.';
 
 /**
  * 模拟参与 service 的一个调用单元，参与了事务。
@@ -9,8 +9,7 @@ import { ServiceError } from 'src/lib/registry';
  */
 async function testTransactionQueryRunner(id: number) {
   // 在 async thread 开始时自动进行
-  const queryRunner = await getConnFromThread('postgis');
-  const manager = queryRunner.manager;
+  const manager = await getManager();
   const ly = await manager.findOne(User, { where: { firstName: 'LiYong' } });
 
   ly.age++;
