@@ -1,3 +1,5 @@
+import { JSONSchemaType, ValidateFunction } from 'ajv';
+
 export interface IApi {
   path: string,
   request?: any,
@@ -11,6 +13,8 @@ export type Service<T extends { path: string, request?: any, response?: any }> =
 
 export interface IFaasModule {
   faas: Service<any>,
-  checkRequest: Function,
-  checkResponse: Function,
+  checkRequest?: ValidateFunction,
+  checkResponse?: ValidateFunction,
+  requestSchema?: JSONSchemaType<any>,
+  responseSchema?: JSONSchemaType<any>,
 }

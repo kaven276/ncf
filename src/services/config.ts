@@ -1,7 +1,7 @@
 import { makeRe } from 'minimatch';
 import { check401, checkIsAdmin } from '.';
 
-const faasRegExp = makeRe('/faas*');
+const faasRegExp = makeRe('/faas2*');
 export const middlewares = [
   (path: string) => {
     // console.log(path, faasRegExp.test(path));

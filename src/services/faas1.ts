@@ -7,7 +7,7 @@ export * from './faas1.check';
 
 export const faas: Service<ISpec> = async (req) => {
   check401();
-  checkIsAdmin();
+  // checkIsAdmin();
   return {
     'name': 'test1',
     count: add(10),

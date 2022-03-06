@@ -3,31 +3,29 @@
  */
 
 import { ISpec } from './faas1.spec';
-import Ajv, { JSONSchemaType } from 'ajv';
-const ajv = new Ajv();
+import { JSONSchemaType } from 'ajv';
 
-
-const schema1: JSONSchemaType<ISpec["request"]> = {
+export const requestSchema: JSONSchemaType<ISpec["request"]> = {
   type: "object",
   properties: {
     user: { type: "string" }
   },
-  required: [],
+  required: ['user'],
   additionalProperties: false
 }
 
-const validate1 = ajv.compile(schema1);
-
-export function checkRequest(req: any) {
-  // if (!req.user) {
-  //   throw Error('请求中没有user字段');
-  // }
-  if (!validate1(req)) {
-    return validate1.errors;
-  }
+export const responseSchema: JSONSchemaType<ISpec["response"]> = {
+  type: "object",
+  properties: {
+    name: { type: 'string' },
+    count: { type: 'integer' },
+    PI: { type: "number" }
+  },
+  required: ['name', 'count', 'PI'],
+  additionalProperties: false
 }
 
-export function checkResponse(resp: any) {
+export function checkResponse_(resp: any) {
   if (!resp.name) {
     throw Error('响应中没有name字段');
   }

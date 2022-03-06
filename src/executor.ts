@@ -2,6 +2,7 @@ import { asyncLocalStorage } from 'src/lib/transaction';
 import { ServiceError } from 'src/lib/ServiceError';
 import { watchHotUpdate, registerDep } from './hotUpdate';
 import { IFaasModule } from './lib/faas';
+import Ajv from 'ajv';
 
 watchHotUpdate();
 
@@ -48,14 +49,19 @@ export async function execute({ jwtString, sub, faasPath, request, mock }: IEntr
   }
   registerDep(resolvedPath);
 
+  if (fassAsync.requestSchema && !fassAsync.checkRequest) {
+    const ajv = new Ajv();
+    fassAsync.checkRequest = ajv.compile(fassAsync.requestSchema);
+    console.log('fassAsync.checkRequest', fassAsync.requestSchema, request);
+  }
+
   if (fassAsync.checkRequest) {
     try {
-      const errors = fassAsync.checkRequest(request);
-      if (errors) {
+      if (fassAsync.checkRequest(request) === false) {
         return {
           status: 400,
           msg: 'request invalid',
-          errors,
+          errors: fassAsync.checkRequest.errors,
         }
       }
     } catch (e) {
