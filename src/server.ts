@@ -30,7 +30,6 @@ function startServer() {
         res.end(JSON.stringify({ code: 0, data: result }));
         console.log('res.end successfully')
       } catch (e) {
-        // @ts-ignore
         await Promise.all(Object.values(store.db).map(db => db.rollbackTransaction()));
         console.log('---------', e instanceof ServiceError, e);
         if (e instanceof ServiceError) {
@@ -51,7 +50,7 @@ function startServer() {
 async function startAndTest() {
   await createConnection('postgis');
   startServer();
-  // get(`http://localhost:${PORT}/testTransactionQueryRunner`);
+  get(`http://localhost:${PORT}/testTransactionQueryRunner`);
   await new Promise((r) => setTimeout(r, 300));
   // get(`http://localhost:${PORT}/testTransactionQueryRunner`);
 }
