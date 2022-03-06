@@ -3,6 +3,7 @@
       "target": "es2018",
       "module": "commonjs",
       "moduleResolution": "node",
+      "strictNullChecks": true,
       "outDir": "./build",
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
@@ -13,6 +14,9 @@
       }
    },
    "ts-node": {
+     "compilerOptions": {
+       "strictNullChecks": false
+     },
     "require": ["tsconfig-paths/register"]
   }
 }
