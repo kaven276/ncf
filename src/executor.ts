@@ -50,7 +50,14 @@ export async function execute({ jwtString, sub, faasPath, request, mock }: IEntr
 
   if (fassAsync.checkRequest) {
     try {
-      fassAsync.checkRequest(request)
+      const errors = fassAsync.checkRequest(request);
+      if (errors) {
+        return {
+          status: 400,
+          msg: 'request invalid',
+          errors,
+        }
+      }
     } catch (e) {
       return {
         status: 400,

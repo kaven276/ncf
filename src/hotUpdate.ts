@@ -27,7 +27,7 @@ export function watchHotUpdate() {
 const depsMap = new Map<string, Set<string>>();
 export function registerDep(absServicePath: string) {
   if (!started) return;
-  const children = require.cache[absServicePath].children;
+  const children = require.cache[absServicePath]!.children;
   if (!children) return;
   children.forEach((depModule) => {
     // 只对服务目录内的依赖登记

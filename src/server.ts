@@ -10,12 +10,13 @@ function startServer() {
 
   createServer(async (req, res) => {
     // 动态根据访问路径找到对应的处理 ts 文件
-    const url = new URL(req.url, `http://${req.headers.host}`);
+    const url = new URL(req.url!, `http://${req.headers.host}`);
     const faasPath = url.pathname;
     const jwtString = req.headers['authorization'] || 'anonymous';
     const sub = url.searchParams.get('user') || 'testuser';
     const mock = !!url.searchParams.get('mock');
-    const request = {};
+    // const request = {...new Map(url.searchParams)};
+    const request = {} as any;
     for (const [key, value] of url.searchParams.entries()) {
       request[key] = value;
     }
