@@ -10,6 +10,7 @@ interface IEntranceProps {
   jwtString: string,
   sub: string,
   faasPath: string,
+  mock?: boolean,
 }
 
 function getMiddlewares(): Promise<Function[]> {
@@ -19,12 +20,12 @@ function getMiddlewares(): Promise<Function[]> {
 }
 
 /** 进入服务执行，提供执行环境，事务管理 */
-export async function execute({ jwtString, sub, faasPath }: IEntranceProps) {
+export async function execute({ jwtString, sub, faasPath, mock }: IEntranceProps) {
 
   // step1: 定位服务模块文件路径
   let resolvedPath: string;
   try {
-    resolvedPath = require.resolve(`src/services${faasPath}`);
+    resolvedPath = require.resolve(`src/services${faasPath}${mock ? '.mock' : ''}`);
   } catch (e) {
     return {
       status: 404,

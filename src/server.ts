@@ -14,9 +14,10 @@ function startServer() {
     const faasPath = url.pathname;
     const jwtString = req.headers['authorization'] || 'anonymous';
     const sub = url.searchParams.get('user') || 'testuser';
+    const mock = !!url.searchParams.get('mock');
 
     // 给核心服务环境信息，然后调用
-    const result = await execute({ jwtString, sub, faasPath });
+    const result = await execute({ jwtString, sub, faasPath, mock });
     res.setHeader('content-type', 'application/json');
     res.statusCode = result.status || 200;
     res.end(JSON.stringify(result));
