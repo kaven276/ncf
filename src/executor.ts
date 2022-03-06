@@ -1,6 +1,7 @@
 import { asyncLocalStorage } from 'src/lib/transaction';
 import { ServiceError } from 'src/lib/ServiceError';
 import { watchHotUpdate, registerDep } from './hotUpdate';
+import { IFaasModule } from './lib/faas';
 
 watchHotUpdate();
 
@@ -10,6 +11,7 @@ interface IEntranceProps {
   jwtString: string,
   sub: string,
   faasPath: string,
+  request: object,
   mock?: boolean,
 }
 
@@ -20,7 +22,7 @@ function getMiddlewares(): Promise<Function[]> {
 }
 
 /** 进入服务执行，提供执行环境，事务管理 */
-export async function execute({ jwtString, sub, faasPath, mock }: IEntranceProps) {
+export async function execute({ jwtString, sub, faasPath, request, mock }: IEntranceProps) {
 
   // step1: 定位服务模块文件路径
   let resolvedPath: string;
@@ -34,7 +36,7 @@ export async function execute({ jwtString, sub, faasPath, mock }: IEntranceProps
   console.log(`request ${idSeq + 1} ${faasPath} coming...`, resolvedPath);
 
   // step2: 加载服务模块
-  const fassAsync = await import(resolvedPath).catch(e => {
+  const fassAsync: IFaasModule = await import(resolvedPath).catch(e => {
     console.log('---- no found ---', e);
     return {};
   });
@@ -45,6 +47,17 @@ export async function execute({ jwtString, sub, faasPath, mock }: IEntranceProps
     }
   }
   registerDep(resolvedPath);
+
+  if (fassAsync.checkRequest) {
+    try {
+      fassAsync.checkRequest(request)
+    } catch (e) {
+      return {
+        status: 400,
+        msg: e.toString(),
+      }
+    }
+  }
 
   // 反向登记依赖的 children，child 改变时，可以将依赖服务删除
   console.log(resolvedPath);
@@ -73,7 +86,7 @@ export async function execute({ jwtString, sub, faasPath, mock }: IEntranceProps
     }
 
     try {
-      const result = await faas();
+      const result = await faas(request);
       if (store.db) {
         // @ts-ignore
         await Promise.all(Object.values(store.db).map(db => db.commitTransaction()));

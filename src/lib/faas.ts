@@ -8,3 +8,9 @@ export interface IApi {
 export type Service<T extends { path: string, request?: any, response?: any }> = {
   (request: T["request"]): Promise<T["response"]>
 }
+
+export interface IFaasModule {
+  faas: Service<any>,
+  checkRequest: Function,
+  checkResponse: Function,
+}
