@@ -15,8 +15,14 @@ function startServer() {
     console.log(`request ${idSeq + 1} coming...`);
     // 动态根据访问路径找到对应的处理 ts 文件
     const url = new URL(req.url, `http://${req.headers.host}`);
-    const fassAsync = await import(`src/services${url.pathname}`);
+    const fassAsync = await import(`src/services${url.pathname}`).catch(e => ({}));
     const start = fassAsync.faas;
+    if (!start) {
+      res.statusCode = 404;
+      res.end();
+      return;
+    }
+
     const jwtString = req.headers['authorization'] || 'anonymous';
 
     asyncLocalStorage.run({ id: ++idSeq, db: {}, jwtString, jwt: { sub: url.search || 'testuser' } }, async () => {
@@ -33,9 +39,11 @@ function startServer() {
         await Promise.all(Object.values(store.db).map(db => db.rollbackTransaction()));
         console.log('---------', e instanceof ServiceError, e);
         if (e instanceof ServiceError) {
+          res.statusCode = 500;
           res.end(JSON.stringify({ code: e.code, msg: e.message }));
         } else {
           console.log('--------- not ServiceError', e.code, e.message);
+          res.statusCode = 500;
           res.end(JSON.stringify({ code: e.code, msg: e.message }));
         }
       }
