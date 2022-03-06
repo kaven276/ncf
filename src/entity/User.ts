@@ -1,14 +1,18 @@
 import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn } from "typeorm";
+import { IUser } from 'src/interfaces/user';
 
 export enum UserRole {
   ADMIN = "admin",
   EDITOR = "editor",
   GHOST = "ghost"
 }
+/** 系统用户 */
 @Entity({ name: 'user2' })
-export class User {
+// 使用核心领域规范来确保 typeorm 实体符合规范
+export class User implements IUser {
 
   @PrimaryGeneratedColumn()
+  /** 用户标识 */
   id: number;
 
   @Column()
