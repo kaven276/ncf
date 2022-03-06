@@ -29,4 +29,7 @@ export async function testTransactionQueryRunner() {
 export async function service() {
   await testTransactionQueryRunner();
   await testTransactionQueryRunner();
+  return {
+    code: 0,
+  }
 }

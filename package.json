@@ -16,7 +16,7 @@
       "typeorm": "^0.2.45"
    },
    "scripts": {
-      "start": "ts-node src/index.ts",
+      "start": "ts-node src/server.ts",
       "4A": "ts-node domains/4A/index.ts"
    }
 }
