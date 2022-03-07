@@ -49,4 +49,7 @@ export class User implements IUser {
   @Column("simple-array", { nullable: true })
   likes: string[];
 
+  @Column("simple-json", { nullable: true })
+  profile: { name: string; nickname: string };
+
 }

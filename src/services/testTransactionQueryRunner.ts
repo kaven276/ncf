@@ -18,6 +18,10 @@ async function testTransactionQueryRunner(id: number) {
     ly.role = UserRole.EDITOR;
     ly.likes = ly.likes || ['足球', '爬山'];
     ly.likes.push(String(Math.random()).substring(0, 6));
+    ly.profile = {
+      name: '安德范',
+      nickname: 'kiv',
+    };
     await manager.save(ly);
   }
 
