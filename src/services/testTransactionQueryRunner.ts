@@ -13,8 +13,11 @@ async function testTransactionQueryRunner(id: number) {
   const ly = (await manager.findOne(User, { where: { firstName: 'LiYong' } }));
 
   if (ly) {
+    // console.log('ly', ly);
     ly.age++;
     ly.role = UserRole.EDITOR;
+    ly.likes = ly.likes || ['足球', '爬山'];
+    ly.likes.push(String(Math.random()).substring(0, 6));
     await manager.save(ly);
   }
 

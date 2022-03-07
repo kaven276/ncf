@@ -45,4 +45,8 @@ export class User implements IUser {
   })
   fetech: FeTechType;
 
+  /** 喜好 */
+  @Column("simple-array", { nullable: true })
+  likes: string[];
+
 }
