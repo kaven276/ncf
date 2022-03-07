@@ -1,4 +1,4 @@
-import { User } from "src/entity/User";
+import { User, UserRole } from "src/entity/User";
 import { ServiceError } from 'src/lib/ServiceError';
 import { getManager } from '.';
 
@@ -10,12 +10,21 @@ import { getManager } from '.';
 async function testTransactionQueryRunner(id: number) {
   // 在 async thread 开始时自动进行
   const manager = await getManager();
-  const ly = (await manager.findOne(User, { where: { firstName: 'LiYong' } }))!;
+  const ly = (await manager.findOne(User, { where: { firstName: 'LiYong' } }));
 
-  ly.age++;
-  await manager.save(ly);
-  ly.age++;
-  await manager.save(ly);
+  if (ly) {
+    ly.age++;
+    ly.role = UserRole.EDITOR;
+    await manager.save(ly);
+  }
+
+  const user1 = (await manager.findOne(User, 1));
+  if (user1) {
+    user1.age++;
+    user1.role = UserRole.GHOST;
+    await manager.save(user1);
+  }
+
 
   if (Math.random() < 0.25) {
     throw new ServiceError(1, '随机制造的异常!');
