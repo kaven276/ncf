@@ -6,6 +6,9 @@ export enum UserRole {
   EDITOR = "editor",
   GHOST = "ghost"
 }
+
+export type FeTechType = "vue" | "react" | "angular"
+
 /** 系统用户 */
 @Entity({ name: 'user2' })
 // 使用核心领域规范来确保 typeorm 实体符合规范
@@ -34,5 +37,12 @@ export class User implements IUser {
 
   @Column("simple-array", { nullable: true })
   names: string[];
+
+  @Column({
+    type: "enum",
+    enum: ["react", "vue", "angular"],
+    default: "react"
+  })
+  fetech: FeTechType;
 
 }

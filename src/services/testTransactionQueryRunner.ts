@@ -22,6 +22,7 @@ async function testTransactionQueryRunner(id: number) {
   if (user1) {
     user1.age++;
     user1.role = UserRole.GHOST;
+    user1.fetech = "react";
     await manager.save(user1);
   }
 
