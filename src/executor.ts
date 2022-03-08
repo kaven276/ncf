@@ -1,3 +1,4 @@
+import { IncomingMessage } from 'http';
 import { asyncLocalStorage } from 'src/lib/transaction';
 import { ServiceError } from 'src/lib/ServiceError';
 import { watchHotUpdate, registerDep } from './hotUpdate';
@@ -13,6 +14,7 @@ interface IEntranceProps {
   sub: string,
   faasPath: string,
   request: object,
+  stream?: IncomingMessage,
   mock?: boolean,
 }
 
@@ -23,7 +25,7 @@ function getMiddlewares(): Promise<Function[]> {
 }
 
 /** 进入服务执行，提供执行环境，事务管理 */
-export async function execute({ jwtString, sub, faasPath, request, mock }: IEntranceProps) {
+export async function execute({ jwtString, sub, faasPath, request, stream, mock }: IEntranceProps) {
 
   // step1: 定位服务模块文件路径
   let resolvedPath: string;
@@ -99,7 +101,7 @@ export async function execute({ jwtString, sub, faasPath, request, mock }: IEntr
     }
 
     try {
-      const result = await faas(request);
+      const result = await faas(request, stream);
       if (store.db) {
         // @ts-ignore
         await Promise.all(Object.values(store.db).map(db => db.commitTransaction()));

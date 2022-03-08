@@ -25,6 +25,7 @@ function startServer() {
     const result = await execute({ jwtString, sub, faasPath, request, mock });
     res.setHeader('content-type', 'application/json');
     res.statusCode = result.status || 200;
+    res.statusMessage = 'ok';
     res.end(JSON.stringify(result));
   }).listen(PORT);
 }

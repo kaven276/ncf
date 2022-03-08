@@ -16,6 +16,7 @@
       "koa": "^2.13.4",
       "koa-body": "^4.2.0",
       "minimatch": "^5.0.1",
+      "node-fetch": "^3.2.2",
       "oracledb": "^4.0.1",
       "pg": "^8.7.3",
       "reflect-metadata": "^0.1.10",
