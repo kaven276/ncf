@@ -12,6 +12,7 @@ export const faas: Service<ISpec> = async (req) => {
     'name': 'test1',
     count: add(10),
     PI,
+    req,
     // a: 1, // additionalProperty will cause ajv check error
   }
 };

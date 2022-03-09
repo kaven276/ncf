@@ -8,7 +8,7 @@ import { JSONSchemaType } from 'ajv';
 export const requestSchema: JSONSchemaType<ISpec["request"]> = {
   type: "object",
   properties: {
-    user: { type: "string" }
+    user: { type: "string", default: 'anonymous' }
   },
   required: ['user'],
   additionalProperties: false
@@ -22,7 +22,7 @@ export const responseSchema: JSONSchemaType<ISpec["response"]> = {
     PI: { type: "number" }
   },
   required: ['name', 'count', 'PI'],
-  additionalProperties: false
+  additionalProperties: true,
 }
 
 export function checkResponse_(resp: any) {
