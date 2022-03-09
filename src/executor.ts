@@ -52,7 +52,7 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
   registerDep(resolvedPath);
 
   if (fassAsync.requestSchema && !fassAsync.checkRequest) {
-    const ajv = new Ajv({ useDefaults: true });
+    const ajv = new Ajv({ useDefaults: true, coerceTypes: true });
     fassAsync.checkRequest = ajv.compile(fassAsync.requestSchema);
     console.log('fassAsync.checkRequest', fassAsync.requestSchema, request);
   }

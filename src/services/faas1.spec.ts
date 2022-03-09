@@ -6,6 +6,7 @@ export interface ISpec {
   path: '/faas1',
   request: {
     user: string,
+    age: number,
   },
   response: {
     name: string,

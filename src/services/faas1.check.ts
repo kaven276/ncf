@@ -8,7 +8,8 @@ import { JSONSchemaType } from 'ajv';
 export const requestSchema: JSONSchemaType<ISpec["request"]> = {
   type: "object",
   properties: {
-    user: { type: "string", default: 'anonymous' }
+    user: { type: "string", default: 'anonymous' },
+    age: { type: "number" },
   },
   required: ['user'],
   additionalProperties: false
