@@ -11,10 +11,11 @@ function waitWritable(writeable: Writable) {
   });
 }
 
-export const faas = async (req: undefined, stream: IncomingMessage) => {
-  console.log('stream', !!stream);
+export const faas = async (req: any, stream: IncomingMessage) => {
+  const filename = req.filename || String(Date.now());
+  console.log('stream', !!stream, filename);
   /** 上传文件在文件系统的路径 */
-  const path: string = join(__dirname, '../../upload', String(Date.now()));
+  const path: string = join(__dirname, '../../upload', filename);
   const wstream = createWriteStream(path);
   if (stream) {
     await waitWritable(stream.pipe(wstream));

@@ -54,10 +54,10 @@ function useNCF() {
     const sub = url.searchParams.get('user') || 'testuser';
     const mock = !!url.searchParams.get('mock');
     const isPost = ctx.request.method.toLocaleUpperCase() === 'POST';
-    const request = isPost ? ctx.request.body : ctx.request.query;
+    const request = ctx.request.body || ctx.request.query;
 
     let stream: IncomingMessage | undefined;
-    if (!request) {
+    if (isPost && !ctx.request.body) {
       stream = ctx.req;
       console.log('found stream');
     }
