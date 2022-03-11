@@ -35,7 +35,7 @@ function useCors(allowedOrigin?: string) {
       return;
     }
     const reqBody = ctx.request.body;
-    console.log('prelog -----', ctx.request.method, reqBody instanceof buffer, reqBody instanceof String, ctx.origin, ctx.request.headers);
+    // console.log('prelog -----', ctx.request.method, reqBody instanceof buffer, reqBody instanceof String, ctx.origin, ctx.request.headers);
     await next();
   }
 }
@@ -44,7 +44,7 @@ function useCors(allowedOrigin?: string) {
 function useNCF() {
   return async (ctx: Koa.ParameterizedContext<Koa.DefaultState, Koa.DefaultContext, any>) => {
     const reqBody = ctx.request.body;
-    console.log('buffer -----', reqBody instanceof buffer, reqBody instanceof String, reqBody);
+    // console.log('buffer -----', reqBody instanceof buffer, reqBody instanceof String, reqBody);
 
     const req = ctx.req;
     // 动态根据访问路径找到对应的处理 ts 文件
@@ -59,17 +59,17 @@ function useNCF() {
     let stream: IncomingMessage | undefined;
     if (isPost && !ctx.request.body) {
       stream = ctx.req;
-      console.log('found stream');
+      // console.log('found stream');
     }
 
     // 给核心服务环境信息，然后调用
     const result = await execute({ jwtString, sub, faasPath, request, stream, mock });
     ctx.response.type = 'application/json';
     ctx.body = result;
-    console.log('ctx.body', ctx.body);
+    // console.log('ctx.body', ctx.body);
     ctx.response.set('content-type', 'application/json');
     ctx.response.status = result.status || 200;
-    console.log('final response', result.status, ctx.status, ctx.response.status, ctx.response.headers);
+    // console.log('final response', result.status, ctx.status, ctx.response.status, ctx.response.headers);
   }
 }
 
