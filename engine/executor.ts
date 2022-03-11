@@ -2,7 +2,7 @@ import { IncomingMessage } from 'http';
 import { asyncLocalStorage } from 'src/lib/transaction';
 import { ServiceError } from 'src/lib/ServiceError';
 import { watchHotUpdate, registerDep } from './hotUpdate';
-import { IFaasModule } from './lib/faas';
+import { IFaasModule } from '../src/lib/faas';
 import Ajv from 'ajv';
 
 watchHotUpdate();
