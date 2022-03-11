@@ -5,6 +5,7 @@ import { watchHotUpdate, registerDep } from './hotUpdate';
 import { IFaasModule } from './lib/faas';
 import { MWContext, IMiddleWare } from './lib/middleware';
 import Ajv from 'ajv';
+import { servicesDir } from './util/resolve';
 
 watchHotUpdate();
 
@@ -18,8 +19,6 @@ interface IEntranceProps {
   stream?: IncomingMessage,
   mock?: boolean,
 }
-
-const servicesDir = process.cwd();
 
 function getMiddlewares(): Promise<IMiddleWare[]> {
   // return Promise.resolve([]); // 暂时关闭中间件来调试

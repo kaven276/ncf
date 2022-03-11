@@ -3,3 +3,4 @@ export { ServiceError } from './src/lib/ServiceError';
 export { asyncLocalStorage, getConnFromThread, ICallState } from './src/lib/transaction';
 export { IApi, IFaasModule, Service } from './src/lib/faas';
 export { MWContext, IMiddleWare } from './src/lib/middleware';
+export { getDebug } from './src/util/debug';
