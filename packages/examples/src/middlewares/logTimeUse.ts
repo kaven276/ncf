@@ -1,6 +1,6 @@
 import { MWContext } from '@ncf/engine';
 
-export async function logTimeUse(ctx: MWContext, next: () => Promise<void>) {
+export async function logTimeUse(ctx: MWContext, cfg: any, next: () => Promise<void>) {
   const startTime = Date.now();
   await next();
   const timeUsed = Date.now() - startTime;

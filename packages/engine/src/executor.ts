@@ -3,7 +3,7 @@ import { asyncLocalStorage } from './lib/transaction';
 import { ServiceError } from './lib/ServiceError';
 import { watchHotUpdate, registerDep } from './hotUpdate';
 import { IFaasModule } from './lib/faas';
-import { MWContext } from './lib/middleware';
+import { MWContext, IMiddleWare } from './lib/middleware';
 import Ajv from 'ajv';
 
 watchHotUpdate();
@@ -21,7 +21,7 @@ interface IEntranceProps {
 
 const servicesDir = process.cwd();
 
-function getMiddlewares(): Promise<Function[]> {
+function getMiddlewares(): Promise<IMiddleWare[]> {
   // return Promise.resolve([]); // 暂时关闭中间件来调试
   return new Promise((resolve) => {
     import(`${servicesDir}/src/services/config`).then((m) => resolve(m.middlewares)).catch(() => []);
@@ -99,10 +99,10 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
     const middlewares = await getMiddlewares();
 
     function runMiddware(n: number) {
-      console.log(`----- middleware ${n}`)
+      // console.log(`----- middleware ${n}`);
       const mw = middlewares[n];
       if (!mw) return;
-      return mw(mwContext, () => runMiddware(n + 1));
+      return mw(mwContext, undefined, () => runMiddware(n + 1));
     }
 
     let result;
