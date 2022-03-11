@@ -1,36 +1,20 @@
 {
-   "name": "typeorm2",
-   "version": "0.0.1",
-   "description": "Awesome project developed with TypeORM.",
-   "devDependencies": {
-      "@types/koa": "^2.13.4",
-      "@types/minimatch": "^3.0.5",
-      "@types/node": "^17.0.21",
-      "@types/pg": "^8.6.4",
-      "lerna": "^4.0.0",
-      "ts-node": "^10.6.0",
-      "typescript": "3.3.3333"
-   },
-   "dependencies": {
-      "@types/elasticsearch": "^5.0.40",
-      "ajv": "^8.10.0",
-      "chokidar": "^3.5.3",
-      "elasticsearch": "^16.7.3",
-      "koa": "^2.13.4",
-      "koa-body": "^4.2.0",
-      "minimatch": "^5.0.1",
-      "node-fetch": "^3.2.2",
-      "oracledb": "^4.0.1",
-      "pg": "^8.7.3",
-      "reflect-metadata": "^0.1.10",
-      "tsconfig-paths": "^3.13.0",
-      "typeorm": "^0.2.45"
-   },
-   "scripts": {
-      "start": "ts-node engine/serverKoa.ts",
-      "4A": "ts-node domains/4A/index.ts"
-   },
-   "optionalDependencies": {
-      "nats": "^2.6.1"
-   }
+  "name": "ncf",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Awesome project developed with TypeORM.",
+  "workspaces": [
+    "packages/engine",
+    "packages/examples"
+  ],
+  "devDependencies": {
+    "lerna": "^4.0.0",
+    "ts-node": "^10.6.0",
+    "typescript": "3.3.3333"
+  },
+  "dependencies": {
+    "oracledb": "^4.0.1",
+    "pg": "^8.7.3"
+  },
+  "scripts": {}
 }

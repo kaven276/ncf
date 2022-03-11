@@ -1,0 +1,15 @@
+{
+  "name": "example-oracle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "4A": "ts-node domains/4A/index.ts"
+  },
+  "dependencies": {
+    "oracledb": "^4.0.1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

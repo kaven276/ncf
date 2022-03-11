@@ -92,10 +92,15 @@ function startServer() {
 }
 
 
+export async function start() {
+  // await createConnection('postgis');
+  startServer();
+}
+
 async function startAndTest() {
   await createConnection('postgis');
   startServer();
   // test();
 }
 
-startAndTest();
+// startAndTest();

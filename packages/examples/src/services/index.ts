@@ -1,6 +1,4 @@
-import { getConnFromThread } from 'src/lib/transaction';
-import { asyncLocalStorage } from 'src/lib/transaction';
-import { ServiceError } from 'src/lib/ServiceError';
+import { getConnFromThread, asyncLocalStorage, ServiceError } from '@ncf/engine';
 
 export async function getManager() {
   const queryRunner = await getConnFromThread('postgis');
@@ -19,7 +17,8 @@ export function check401() {
 
 export function checkIsAdmin() {
   const threadStore = asyncLocalStorage.getStore()!;
-  if (threadStore.jwt.sub !== 'admin') {
+  // todo: threadStore.jwt?.sub 报异常 error TS1109: Expression expected.
+  if (threadStore.jwt && threadStore.jwt.sub !== 'admin') {
     throw new ServiceError(403, '不是管理员')
   }
 }

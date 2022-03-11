@@ -1,6 +1,6 @@
 import { add } from './util1';
 import { PI, check401, checkIsAdmin } from '.';
-import { Service } from 'src/lib/faas';
+import { Service } from '@ncf/engine';
 import { ISpec } from './faas1.spec';
 
 export * from './faas1.check';

@@ -1,5 +1,5 @@
 import { Category } from "src/entity/Category";
-import { ServiceError } from 'src/lib/ServiceError';
+import { ServiceError } from 'src/../packages/engine/src/lib/ServiceError';
 import { getManager } from '.';
 
 export const faas = async (req: any) => {

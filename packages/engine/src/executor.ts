@@ -1,8 +1,8 @@
 import { IncomingMessage } from 'http';
-import { asyncLocalStorage } from 'src/lib/transaction';
-import { ServiceError } from 'src/lib/ServiceError';
+import { asyncLocalStorage } from './lib/transaction';
+import { ServiceError } from './lib/ServiceError';
 import { watchHotUpdate, registerDep } from './hotUpdate';
-import { IFaasModule } from '../src/lib/faas';
+import { IFaasModule } from './lib/faas';
 import Ajv from 'ajv';
 
 watchHotUpdate();
@@ -18,9 +18,12 @@ interface IEntranceProps {
   mock?: boolean,
 }
 
+const servicesDir = process.cwd();
+
 function getMiddlewares(): Promise<Function[]> {
+  return Promise.resolve([]); // 暂时关闭中间件来调试
   return new Promise((resolve) => {
-    import(`src/services/config`).then((m) => resolve(m.middlewares)).catch(() => []);
+    import(`${servicesDir}/src/services/config`).then((m) => resolve(m.middlewares)).catch(() => []);
   });
 }
 
@@ -30,7 +33,9 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
   // step1: 定位服务模块文件路径
   let resolvedPath: string;
   try {
-    resolvedPath = require.resolve(`src/services${faasPath}${mock ? '.mock' : ''}`);
+    resolvedPath = require.resolve(`src/services${faasPath}${mock ? '.mock' : ''}`, {
+      paths: [servicesDir],
+    });
   } catch (e) {
     return {
       status: 404,

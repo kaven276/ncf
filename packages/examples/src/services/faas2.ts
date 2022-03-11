@@ -1,4 +1,4 @@
-import { asyncLocalStorage } from 'src/lib/transaction';
+import { asyncLocalStorage } from '@ncf/engine';
 
 /** 测试从 asyncLocalStorage 中拿到 jwt 信息，用户标识等等 */
 export async function faas() {

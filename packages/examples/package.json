@@ -1,0 +1,21 @@
+{
+  "name": "examples",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "dependencies": {
+    "@ncf/engine": "*",
+    "elasticsearch": "^16.7.3",
+    "pg": "^8.7.3"
+  },
+  "devDependencies": {
+    "@types/elasticsearch": "^5.0.40",
+    "@types/pg": "^8.6.4"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

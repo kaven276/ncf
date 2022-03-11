@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { createConnection, getConnection } from "typeorm";
 import { User } from "src/entity/User";
 import { Org } from "src/entity/Org";
-import { asyncLocalStorage } from 'src/lib/transaction';
+import { asyncLocalStorage } from '@ncf/engine';
 import { testTransactionQueryRunner } from 'src/services/testTransactionQueryRunner';
 
 async function testUser(connection) {

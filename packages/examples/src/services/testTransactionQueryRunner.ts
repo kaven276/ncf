@@ -1,5 +1,5 @@
 import { User, UserRole } from "src/entity/User";
-import { ServiceError } from 'src/lib/ServiceError';
+import { ServiceError } from '@ncf/engine';
 import { getManager } from '.';
 
 /**
@@ -7,7 +7,7 @@ import { getManager } from '.';
  * 可以考虑设计注解，但是并没有什么特别的好处。
  * 对于参与事务的处理单元，统一使用 getConnFromThread(name) 获取数据库连接
  */
-async function testTransactionQueryRunner(id: number) {
+export async function testTransactionQueryRunner(id: number) {
   // 在 async thread 开始时自动进行
   const manager = await getManager();
   const ly = (await manager.findOne(User, { where: { firstName: 'LiYong' } }));
