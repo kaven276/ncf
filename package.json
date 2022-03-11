@@ -28,5 +28,8 @@
    "scripts": {
       "start": "ts-node src/serverKoa.ts",
       "4A": "ts-node domains/4A/index.ts"
+   },
+   "optionalDependencies": {
+      "nats": "^2.6.1"
    }
 }
