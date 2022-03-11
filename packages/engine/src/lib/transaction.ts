@@ -2,7 +2,7 @@ import { AsyncLocalStorage } from 'async_hooks';
 import { QueryRunner, getConnection } from "typeorm";
 
 /** 服务调用期间的全部内容 */
-interface ICallState {
+export interface ICallState {
   /** 调用号 */
   id: number,
   db: {
