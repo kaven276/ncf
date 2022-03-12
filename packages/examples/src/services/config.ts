@@ -15,7 +15,7 @@ export const checkAuth: IMiddleWare = async (ctx, cfg: any, next) => {
     checkIsAdmin();
     // throw new ServiceError(403, '禁止访问 /faas*');
   }
-  next();
+  await next();
 }
 
 export const middlewares = [

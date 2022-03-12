@@ -6,6 +6,9 @@ import { IFaasModule } from './lib/faas';
 import { MWContext, IMiddleWare } from './lib/middleware';
 import Ajv from 'ajv';
 import { servicesDir } from './util/resolve';
+import { getDebug } from './util/debug';
+
+const debug = getDebug(module);
 
 watchHotUpdate();
 
@@ -97,35 +100,29 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
     }
     const middlewares = await getMiddlewares();
 
-    function runMiddware(n: number) {
+    function runMiddware(n: number): Promise<void> {
       // console.log(`----- middleware ${n}`);
       const mw = middlewares[n];
-      if (!mw) return;
+      if (!mw) {
+        return new Promise(resolve => faas(request, stream).then((response) => {
+          mwContext.response = response;
+          resolve();
+        }));
+      };
       return mw(mwContext, undefined, () => runMiddware(n + 1));
     }
 
-    let result;
     try {
       await runMiddware(0);
-    } catch (e) {
-      // 出问题，提前拦截了
-      if (e instanceof ServiceError) {
-        return { status: 500, code: e.code, msg: e.message };
-      } else {
-        console.log('--------- not ServiceError', e.code, e.message);
-        return { status: 500, code: e.code, msg: e.message };
-      }
-    }
-
-    try {
-      const result = await faas(request, stream);
+      const result = mwContext.response;
+      // 自动提交和回滚事务
       if (store.db) {
         // @ts-ignore
         await Promise.all(Object.values(store.db).map(db => db.commitTransaction()));
       }
       // console.log('res.end successfully');
 
-      // 校验响应数据规格
+      // 校验最终返回调用方的响应数据规格
       {
         // console.log({ result })
         if (fassAsync.responseSchema && !fassAsync.checkResponse) {
