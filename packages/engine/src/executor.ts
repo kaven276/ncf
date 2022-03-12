@@ -47,11 +47,11 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
   // console.log(`request ${idSeq + 1} ${faasPath} coming...`, resolvedPath);
 
   // step2: 加载服务模块
-  const fassAsync: IFaasModule = await import(resolvedPath).catch(e => {
+  const fassModule: IFaasModule = await import(resolvedPath).catch(e => {
     // console.log('---- no found ---', e);
     return {};
   });
-  const faas = fassAsync.faas;
+  const faas = fassModule.faas;
   if (!faas) {
     return {
       status: 404,
@@ -59,19 +59,19 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
   }
   registerDep(resolvedPath);
 
-  if (fassAsync.requestSchema && !fassAsync.checkRequest) {
+  if (fassModule.requestSchema && !fassModule.checkRequest) {
     const ajv = new Ajv({ useDefaults: true, coerceTypes: true });
-    fassAsync.checkRequest = ajv.compile(fassAsync.requestSchema);
+    fassModule.checkRequest = ajv.compile(fassModule.requestSchema);
     // console.log('fassAsync.checkRequest', fassAsync.requestSchema, request);
   }
 
-  if (fassAsync.checkRequest) {
+  if (fassModule.checkRequest) {
     try {
-      if (fassAsync.checkRequest(request) === false) {
+      if (fassModule.checkRequest(request) === false) {
         return {
           status: 400,
           msg: 'request invalid',
-          errors: fassAsync.checkRequest.errors,
+          errors: fassModule.checkRequest.errors,
         }
       }
     } catch (e) {
@@ -96,6 +96,7 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
       path: faasPath,
       request: request,
       response: null,
+      fassModule: fassModule,
       callState: store,
     }
     const middlewares = await getMiddlewares();
@@ -125,17 +126,17 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
       // 校验最终返回调用方的响应数据规格
       {
         // console.log({ result })
-        if (fassAsync.responseSchema && !fassAsync.checkResponse) {
+        if (fassModule.responseSchema && !fassModule.checkResponse) {
           const ajv = new Ajv();
-          fassAsync.checkResponse = ajv.compile(fassAsync.responseSchema);
+          fassModule.checkResponse = ajv.compile(fassModule.responseSchema);
         }
-        if (fassAsync.checkResponse) {
+        if (fassModule.checkResponse) {
           try {
-            if (fassAsync.checkResponse(result) === false) {
+            if (fassModule.checkResponse(result) === false) {
               return {
                 status: 500,
                 msg: 'response invalid',
-                errors: fassAsync.checkResponse.errors,
+                errors: fassModule.checkResponse.errors,
               }
             }
           } catch (e) {
