@@ -1,4 +1,5 @@
 import { IMiddleWare } from '../lib/middleware';
+import { throwServiceError } from '../lib/ServiceError';
 import Ajv from 'ajv';
 
 /** 校验请求响应规格，内置 ajv 校验 json schema 配置 */
@@ -15,17 +16,12 @@ export const validate: IMiddleWare = async (ctx, cfg, next) => {
   if (fassModule.checkRequest) {
     try {
       if (fassModule.checkRequest(ctx.request) === false) {
-        throw {
-          status: 400,
-          msg: 'request invalid',
-          errors: fassModule.checkRequest.errors,
-        }
+        throwServiceError(400, 'request invalid', {
+          errors: fassModule.checkRequest.errors
+        })
       }
     } catch (e) {
-      throw {
-        status: 400,
-        msg: e.toString(),
-      }
+      throwServiceError(400, e.toString());
     }
   }
 
@@ -40,17 +36,12 @@ export const validate: IMiddleWare = async (ctx, cfg, next) => {
   if (fassModule.checkResponse) {
     try {
       if (fassModule.checkResponse(ctx.response) === false) {
-        throw {
-          status: 500,
-          msg: 'response invalid',
+        throwServiceError(500, 'response invalid', {
           errors: fassModule.checkResponse.errors,
-        }
+        });
       }
     } catch (e) {
-      throw {
-        status: 500,
-        msg: e.toString(),
-      }
+      throwServiceError(500, e.toString());
     }
   }
 }

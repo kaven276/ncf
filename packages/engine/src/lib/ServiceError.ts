@@ -1,5 +1,5 @@
 export class ServiceError extends Error {
-  constructor(public code: number, public message: string) {
+  constructor(public code: number, public message: string, public data?: any) {
     super(message);
 
     // if (Error.captureStackTrace) {
@@ -18,6 +18,7 @@ export class ServiceError extends Error {
       status: 500,
       code: this.code,
       msg: this.message,
+      data: this.data,
     }
   }
 
@@ -25,4 +26,8 @@ export class ServiceError extends Error {
     return JSON.stringify(this.toResponse());
   }
 
+}
+
+export function throwServiceError(code: number, message: string, data?: any) {
+  throw new ServiceError(code, message, data);
 }

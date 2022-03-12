@@ -23,15 +23,37 @@ interface IEntranceProps {
   mock?: boolean,
 }
 
+interface ISuccessResponse {
+  status: number,
+  /** 服务处理成功为0 */
+  code: 0,
+  /** 服务处理的响应数据 */
+  data?: any,
+}
+
+interface IFailureResponse {
+  status: number,
+  /** 服务处理失败，值不为 0 */
+  code: number,
+  /** 伴随异常需要返回给人看的异常信息文字 */
+  msg: string,
+  /** 其他伴随信息，调用方可能用到 */
+  data?: any,
+}
+
+/** 提供给各种接入 gateway 使用的响应。核心永远不会 throw 异常，必须返回这个规格的数据 */
+type IFinalResponse = ISuccessResponse | IFailureResponse;
+
 function getMiddlewares(): Promise<IMiddleWare[]> {
-  // return Promise.resolve([]); // 暂时关闭中间件来调试
   return new Promise((resolve) => {
     import(`${servicesDir}/src/services/config`).then((m) => resolve(m.middlewares)).catch(() => []);
   });
 }
 
-/** 进入服务执行，提供执行环境，事务管理 */
-export async function execute({ jwtString, sub, faasPath, request, stream, mock }: IEntranceProps) {
+/** 进入服务执行，提供执行环境，事务管理。
+ * 返回 Promise
+ */
+export async function execute({ jwtString, sub, faasPath, request, stream, mock }: IEntranceProps): Promise<IFinalResponse> {
 
   // step1: 定位服务模块文件路径
   let resolvedPath: string;
@@ -42,6 +64,8 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
   } catch (e) {
     return {
       status: 404,
+      code: 404,
+      msg: '找不到 mock 定义',
     }
   }
   // console.log(`request ${idSeq + 1} ${faasPath} coming...`, resolvedPath);
@@ -55,6 +79,8 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
   if (!faas) {
     return {
       status: 404,
+      code: 404,
+      msg: '找不到服务定义',
     }
   }
   registerDep(resolvedPath);
@@ -93,19 +119,24 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
 
     try {
       await runMiddware(0);
-      const result = mwContext.response;
+
       // 自动提交和回滚事务
       if (store.db) {
         // @ts-ignore
         await Promise.all(Object.values(store.db).map(db => db.commitTransaction()));
       }
 
-      return { code: 0, data: result };
+      // 正常返回响应
+      return { code: 0, data: mwContext.response };
     } catch (e) {
+
+      // 处理出现异常会，事务自动回滚
       await Promise.all(Object.values(store.db).map(db => db.rollbackTransaction()));
+
       // console.log('---------', e instanceof ServiceError, e);
       if (e instanceof ServiceError) {
-        return { status: 500, code: e.code, msg: e.message };
+        const status = (e.code >= 100 && e.code <= 999) ? e.code : 500;
+        return { status, code: e.code, msg: e.message, data: e.data };
       } else if (e.code) {
         return e;
       } else {
