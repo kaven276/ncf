@@ -1,0 +1,8 @@
+<!DOCTYPE user>
+<user name="Kaven" age="64">
+  <interest>
+    <item>react</item>
+    <item>vue</item>
+    <item>angular</item>
+  </interest>
+</user>

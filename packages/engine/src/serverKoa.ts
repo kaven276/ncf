@@ -4,7 +4,6 @@ import koaBody from 'koa-body';
 import { execute } from './executor';
 import { createConnection } from "typeorm";
 import { URL } from 'url';
-import { buffer } from 'stream/consumers';
 
 /*
 * 选 KOA 而非裸 nodejs http 的原因
@@ -98,7 +97,7 @@ export async function start() {
 }
 
 async function startAndTest() {
-  await createConnection('postgis');
+  // await createConnection('postgis');
   startServer();
   // test();
 }

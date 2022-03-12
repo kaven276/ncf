@@ -72,11 +72,16 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
 
   // step2: 加载服务模块
   const fassModule: IFaasModule = await import(resolvedPath).catch(e => {
-    // console.log('---- no found ---', e);
-    return {};
+    // console.log('---- no found ---', e, resolvedPath);
+    return {
+      status: 404,
+      code: 404,
+      msg: '找不到服务模块',
+    };
   });
   const faas = fassModule.faas;
   if (!faas) {
+    // console.log('fassModule', fassModule);
     return {
       status: 404,
       code: 404,

@@ -5,7 +5,11 @@
   "description": "Awesome project developed with TypeORM.",
   "workspaces": [
     "packages/engine",
-    "packages/examples"
+    "packages/examples",
+    "packages/loader-cfg-json5",
+    "packages/loader-cfg-yaml",
+    "packages/loader-cfg-xml",
+    "packages/loader-cfg-markdown"
   ],
   "devDependencies": {
     "lerna": "^4.0.0",
