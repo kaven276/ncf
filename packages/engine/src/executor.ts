@@ -4,9 +4,9 @@ import { ServiceError } from './lib/ServiceError';
 import { watchHotUpdate, registerDep } from './hotUpdate';
 import { IFaasModule } from './lib/faas';
 import { MWContext, IMiddleWare } from './lib/middleware';
-import Ajv from 'ajv';
 import { servicesDir } from './util/resolve';
 import { getDebug } from './util/debug';
+import { validate } from './middlewares/validator';
 
 const debug = getDebug(module);
 
@@ -59,29 +59,6 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
   }
   registerDep(resolvedPath);
 
-  if (fassModule.requestSchema && !fassModule.checkRequest) {
-    const ajv = new Ajv({ useDefaults: true, coerceTypes: true });
-    fassModule.checkRequest = ajv.compile(fassModule.requestSchema);
-    // console.log('fassAsync.checkRequest', fassAsync.requestSchema, request);
-  }
-
-  if (fassModule.checkRequest) {
-    try {
-      if (fassModule.checkRequest(request) === false) {
-        return {
-          status: 400,
-          msg: 'request invalid',
-          errors: fassModule.checkRequest.errors,
-        }
-      }
-    } catch (e) {
-      return {
-        status: 400,
-        msg: e.toString(),
-      }
-    }
-  }
-
   // 反向登记依赖的 children，child 改变时，可以将依赖服务删除
   console.log(resolvedPath);
 
@@ -100,6 +77,7 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
       callState: store,
     }
     const middlewares = await getMiddlewares();
+    middlewares.unshift(validate);
 
     function runMiddware(n: number): Promise<void> {
       // console.log(`----- middleware ${n}`);
@@ -121,32 +99,6 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
         // @ts-ignore
         await Promise.all(Object.values(store.db).map(db => db.commitTransaction()));
       }
-      // console.log('res.end successfully');
-
-      // 校验最终返回调用方的响应数据规格
-      {
-        // console.log({ result })
-        if (fassModule.responseSchema && !fassModule.checkResponse) {
-          const ajv = new Ajv();
-          fassModule.checkResponse = ajv.compile(fassModule.responseSchema);
-        }
-        if (fassModule.checkResponse) {
-          try {
-            if (fassModule.checkResponse(result) === false) {
-              return {
-                status: 500,
-                msg: 'response invalid',
-                errors: fassModule.checkResponse.errors,
-              }
-            }
-          } catch (e) {
-            return {
-              status: 500,
-              msg: e.toString(),
-            }
-          }
-        }
-      }
 
       return { code: 0, data: result };
     } catch (e) {
@@ -154,6 +106,8 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
       // console.log('---------', e instanceof ServiceError, e);
       if (e instanceof ServiceError) {
         return { status: 500, code: e.code, msg: e.message };
+      } else if (e.code) {
+        return e;
       } else {
         // console.log('--------- not ServiceError', e.code, e.message);
         return { status: 500, code: e.code, msg: e.message };
@@ -161,7 +115,5 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
     }
     // console.log(require.cache);
   });
-
-
 
 }
