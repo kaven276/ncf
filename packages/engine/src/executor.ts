@@ -1,5 +1,5 @@
 import { IncomingMessage } from 'http';
-import { asyncLocalStorage, ICallState } from './lib/transaction';
+import { asyncLocalStorage, ICallState } from './lib/callState';
 import { ServiceError, throwServiceError } from './lib/ServiceError';
 import { watchHotUpdate, registerDep } from './hotUpdate';
 import { IFaasModule } from './lib/faas';

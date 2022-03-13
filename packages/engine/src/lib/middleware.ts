@@ -1,6 +1,6 @@
 /* 这里面定义 middleware 的规范 */
 
-import { ICallState } from './transaction';
+import { ICallState } from './callState';
 import { IFaasModule } from './faas';
 
 /** 中间件能获取到的上下文 */
