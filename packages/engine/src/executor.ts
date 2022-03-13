@@ -94,7 +94,7 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
 
   // step 3: 执行服务模块
   const callTheadStore: ICallState = {
-    id: ++idSeq, trans: [], db: {}, jwtString, jwt: { sub },
+    id: ++idSeq, trans: [], jwtString, jwt: { sub },
   }
   return asyncLocalStorage.run(callTheadStore, async () => {
     const store = asyncLocalStorage.getStore()!;

@@ -7,7 +7,7 @@ const debug = getDebug(module);
 /** 服务调用期间的全部内容 */
 declare module '@ncf/engine' {
   interface ICallState {
-    db: {
+    db?: {
       [name: string]: QueryRunner,
     },
   }
