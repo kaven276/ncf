@@ -20,7 +20,7 @@ export function getDebug(m: Module) {
       }
     }
   }
-  if (m.path.match('/baas/')) {
+  if (m.filename.includes('/baas/')) {
     // console.log('baas path', m.path);
     return debug('baas: ' + m.filename.split('/baas/').pop()!);
   }
