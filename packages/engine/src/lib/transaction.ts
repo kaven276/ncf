@@ -1,5 +1,4 @@
 import { AsyncLocalStorage } from 'async_hooks';
-import { QueryRunner, getConnection } from "typeorm";
 
 export interface TransactionDealer {
   /** 提交 */
@@ -13,9 +12,6 @@ export interface ICallState {
   /** 调用号 */
   id: number,
   trans: TransactionDealer[],
-  db: {
-    [name: string]: QueryRunner,
-  },
   jwtString?: string,
   jwt?: {
     sub: string,
@@ -24,15 +20,3 @@ export interface ICallState {
 
 export const asyncLocalStorage = new AsyncLocalStorage<ICallState>();
 
-/** service thread 中需要获取执行名称的链接并开启事务的时候调用 */
-export async function getConnFromThread(name: string) {
-  const store = asyncLocalStorage.getStore()!;
-  if (store.db && store.db[name]) {
-    return store.db[name];
-  }
-  const c = getConnection(name);
-  const queryRunner = c.createQueryRunner();
-  await queryRunner.startTransaction("READ COMMITTED");
-  store.db[name] = queryRunner;
-  return queryRunner;
-}

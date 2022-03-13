@@ -128,12 +128,7 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
 
     try {
       await runMiddware(0);
-
-      // 自动提交和回滚事务
-      if (store.db) {
-        // @ts-ignore
-        await Promise.all(Object.values(store.db).map(db => db.commitTransaction()));
-      }
+      // 一切执行成功无异常后，自动提交事务
       debug('trans committing');
       await Promise.all(store.trans.map(tran => tran.commit()));
       debug('trans committed');
@@ -143,7 +138,6 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
     } catch (e) {
 
       // 处理出现异常会，事务自动回滚
-      await Promise.all(Object.values(store.db).map(db => db.rollbackTransaction()));
       await Promise.all(store.trans.map(tran => tran.rollback()));
 
       // console.log('---------', e instanceof ServiceError, e);

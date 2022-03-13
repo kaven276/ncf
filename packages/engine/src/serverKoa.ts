@@ -2,7 +2,6 @@ import { IncomingMessage } from 'http';
 import Koa from 'koa';
 import koaBody from 'koa-body';
 import { execute } from './executor';
-import { createConnection } from "typeorm";
 import { URL } from 'url';
 
 /*
@@ -92,14 +91,5 @@ function startServer() {
 
 
 export async function start() {
-  // await createConnection('postgis');
   startServer();
 }
-
-async function startAndTest() {
-  // await createConnection('postgis');
-  startServer();
-  // test();
-}
-
-// startAndTest();

@@ -15,8 +15,7 @@
     "minimatch": "^5.0.1",
     "reflect-metadata": "^0.1.10",
     "shimmer": "^1.2.1",
-    "tsconfig-paths": "^3.13.0",
-    "typeorm": "^0.2.45"
+    "tsconfig-paths": "^3.13.0"
   },
   "devDependencies": {
     "@types/debug": "^4.1.7",

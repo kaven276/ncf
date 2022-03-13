@@ -9,7 +9,8 @@
   "dependencies": {
     "@ncf/engine": "*",
     "elasticsearch": "^16.7.3",
-    "pg": "^8.7.3"
+    "pg": "^8.7.3",
+    "typeorm": "^0.2.45"
   },
   "devDependencies": {
     "@types/elasticsearch": "^5.0.40",

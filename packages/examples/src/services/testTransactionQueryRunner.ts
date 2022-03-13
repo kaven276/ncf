@@ -16,7 +16,7 @@ export async function testTransactionQueryRunner(id: number) {
     // console.log('ly', ly);
     ly.age++;
     ly.role = UserRole.EDITOR;
-    ly.likes = ly.likes || ['足球', '爬山'];
+    ly.likes = (Math.random() > 0.5) ? ly.likes : ['足球', '爬山'];
     ly.likes.push(String(Math.random()).substring(0, 6));
     ly.profile = {
       name: '安德范',
