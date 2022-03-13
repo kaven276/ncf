@@ -1,13 +1,16 @@
 import { asyncLocalStorage, getDebug } from '@ncf/engine';
 import { createConnection, getConnection, QueryRunner } from "typeorm";
-import { ormconfig } from './ormconfig'
+import { ormconfig } from './ormconfig';
 
 const debug = getDebug(module);
+
+const ORMKey = Symbol.for('ORMKey');
 
 /** 服务调用期间的全部内容 */
 declare module '@ncf/engine' {
   interface ICallState {
-    db?: {
+    // 使用 Symbol 作为本功能模块在调用线程数据结构中的 key，防止其他第三方中间件 key 命名重复造成 bug
+    [ORMKey]?: {
       [name: string]: QueryRunner,
     },
   }
@@ -23,17 +26,17 @@ createConnection(ormconfig.find(c => (c.name === 'postgis'))!).then(() => {
 /** service thread 中需要获取执行名称的链接并开启事务的时候调用 */
 export async function getConnFromThread(name: PoolNames) {
   const threadStore = asyncLocalStorage.getStore()!;
-  if (!threadStore.db) {
-    threadStore.db = {};
+  if (!threadStore[ORMKey]) {
+    threadStore[ORMKey] = {};
   }
-  if (threadStore.db[name]) {
-    return threadStore.db[name];
+  if (threadStore[ORMKey]![name]) {
+    return threadStore[ORMKey]![name];
   }
   const c = getConnection(name);
   const queryRunner = c.createQueryRunner();
   await queryRunner.startTransaction("READ COMMITTED");
   debug('start transaction');
-  threadStore.db[name] = queryRunner;
+  threadStore[ORMKey]![name] = queryRunner;
   threadStore.trans.push({
     commit: () => {
       debug('typeorm commit');
