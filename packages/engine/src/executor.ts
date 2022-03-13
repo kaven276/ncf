@@ -1,5 +1,5 @@
 import { IncomingMessage } from 'http';
-import { asyncLocalStorage } from './lib/transaction';
+import { asyncLocalStorage, ICallState } from './lib/transaction';
 import { ServiceError } from './lib/ServiceError';
 import { watchHotUpdate, registerDep } from './hotUpdate';
 import { IFaasModule } from './lib/faas';
@@ -7,6 +7,7 @@ import { MWContext, IMiddleWare } from './lib/middleware';
 import { servicesDir } from './util/resolve';
 import { getDebug } from './util/debug';
 import { validate } from './middlewares/validator';
+import assert from 'assert/strict';
 
 const debug = getDebug(module);
 
@@ -95,8 +96,13 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
 
 
   // step 3: 执行服务模块
-  return asyncLocalStorage.run({ id: ++idSeq, db: {}, jwtString, jwt: { sub } }, async () => {
+  const callTheadStore: ICallState = {
+    id: ++idSeq, db: {}, jwtString, jwt: { sub },
+  }
+  return asyncLocalStorage.run(callTheadStore, async () => {
     const store = asyncLocalStorage.getStore()!;
+
+    assert.equal(callTheadStore, store);
 
     // 最终做成像 koa 式的包洋葱中间件
 
