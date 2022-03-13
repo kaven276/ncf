@@ -1,5 +1,5 @@
 import { asyncLocalStorage, ServiceError } from '@ncf/engine';
-import { getConnFromThread } from '../baas/testOrmPool';
+import { getConnFromThread } from '@ncf/baas-typeorm';
 
 export async function getManager() {
   const queryRunner = await getConnFromThread('postgis');

@@ -6,6 +6,7 @@
   "workspaces": [
     "packages/engine",
     "packages/mw-validator",
+    "packages/baas-typeorm",
     "packages/examples",
     "packages/loader-cfg-json5",
     "packages/loader-cfg-yaml",

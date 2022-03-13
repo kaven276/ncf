@@ -1,20 +1,8 @@
-import { asyncLocalStorage, getDebug } from '@ncf/engine';
-import { createConnection, getConnection, QueryRunner } from "typeorm";
+import {  getDebug } from '@ncf/engine';
+import { createConnection } from "typeorm";
 import { ormconfig } from './ormconfig';
 
 const debug = getDebug(module);
-
-const ORMKey = Symbol.for('ORMKey');
-
-/** 服务调用期间的全部内容 */
-declare module '@ncf/engine' {
-  interface ICallState {
-    // 使用 Symbol 作为本功能模块在调用线程数据结构中的 key，防止其他第三方中间件 key 命名重复造成 bug
-    [ORMKey]?: {
-      [name: string]: QueryRunner,
-    },
-  }
-}
 
 type PoolNames = 'postgis' | 'postgresmac';
 
@@ -23,29 +11,3 @@ createConnection(ormconfig.find(c => (c.name === 'postgis'))!).then(() => {
   debug('postgis typeorm connection created');
 });
 
-/** service thread 中需要获取执行名称的链接并开启事务的时候调用 */
-export async function getConnFromThread(name: PoolNames) {
-  const threadStore = asyncLocalStorage.getStore()!;
-  if (!threadStore[ORMKey]) {
-    threadStore[ORMKey] = {};
-  }
-  if (threadStore[ORMKey]![name]) {
-    return threadStore[ORMKey]![name];
-  }
-  const c = getConnection(name);
-  const queryRunner = c.createQueryRunner();
-  await queryRunner.startTransaction("READ COMMITTED");
-  debug('start transaction');
-  threadStore[ORMKey]![name] = queryRunner;
-  threadStore.trans.push({
-    commit: () => {
-      debug('typeorm commit');
-      queryRunner.commitTransaction();
-    },
-    rollback: () => {
-      debug('typeorm rollback');
-      queryRunner.rollbackTransaction();
-    },
-  });
-  return queryRunner;
-}
