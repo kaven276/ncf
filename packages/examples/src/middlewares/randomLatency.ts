@@ -6,6 +6,6 @@ export interface IRandomLatencyConfig {
 
 /** 延迟开始执行不超过任意毫秒数  */
 export const randomLatency: IMiddleWare = async (ctx, cfg: IRandomLatencyConfig = {}, next) => {
-  await new Promise(r => setTimeout(r, Math.random() * (cfg.maxLatencyMs || 3000)));
+  await new Promise(r => setTimeout(r, Math.random() * (cfg.maxLatencyMs || 100)));
   await next();
 }

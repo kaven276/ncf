@@ -1,6 +1,7 @@
 import { makeRe } from 'minimatch';
 import { check401, checkIsAdmin } from '.';
 import { IMiddleWare } from '@ncf/engine';
+import { validate } from '@ncf/mw-validator';
 import { logTimeUse } from '../middlewares/logTimeUse';
 import { randomLatency, IRandomLatencyConfig } from '../middlewares/randomLatency';
 
@@ -19,12 +20,14 @@ export const checkAuth: IMiddleWare = async (ctx, cfg: any, next) => {
 }
 
 export const middlewares = [
+  validate,
   checkAuth,
   logTimeUse,
-  // randomLatency,
+  randomLatency,
 ];
 
 
 // export config = new WeakMap({
 //   randomLatency: { maxLatencyMs: 2000 }
 // })
+

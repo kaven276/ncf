@@ -6,7 +6,6 @@ import { IFaasModule } from './lib/faas';
 import { MWContext, IMiddleWare } from './lib/middleware';
 import { servicesDir } from './util/resolve';
 import { getDebug } from './util/debug';
-import { validate } from './middlewares/validator';
 import assert from 'assert/strict';
 
 const debug = getDebug(module);
@@ -112,7 +111,6 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
       callState: store,
     }
     const middlewares = await getMiddlewares();
-    middlewares.unshift(validate);
 
     function runMiddware(n: number): Promise<void> {
       // console.log(`----- middleware ${n}`);

@@ -1,5 +1,5 @@
-import { IMiddleWare } from '../lib/middleware';
-import { throwServiceError } from '../lib/ServiceError';
+import { IMiddleWare } from '@ncf/engine';
+import { throwServiceError } from '@ncf/engine';
 import Ajv from 'ajv';
 
 /** 校验请求响应规格，内置 ajv 校验 json schema 配置 */
