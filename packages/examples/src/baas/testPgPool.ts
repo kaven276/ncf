@@ -32,8 +32,13 @@ export function getPGPool(name: PoolNames) {
 /** 从服务线程中获取指定名称的连接池中的连接 */
 export async function getPGPoolByServiceThread(name: PoolNames): Promise<PoolClient> {
   const threadStore = asyncLocalStorage.getStore()!;
-  if (!threadStore.pgClient) {
-    threadStore.pgClient = await getPGPool(name).connect();
+  let client = threadStore.pgClient;
+  if (!client) {
+    client = threadStore.pgClient = await getPGPool(name).connect();
   }
-  return threadStore.pgClient!;
+  threadStore.trans.push({
+    commit: () => client!.release(),
+    rollback: () => client!.release(),
+  });
+  return client;
 }

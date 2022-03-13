@@ -1,6 +1,6 @@
 import { IncomingMessage } from 'http';
 import { asyncLocalStorage, ICallState } from './lib/transaction';
-import { ServiceError } from './lib/ServiceError';
+import { ServiceError, throwServiceError } from './lib/ServiceError';
 import { watchHotUpdate, registerDep } from './hotUpdate';
 import { IFaasModule } from './lib/faas';
 import { MWContext, IMiddleWare } from './lib/middleware';
@@ -73,16 +73,14 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
 
   // step2: 加载服务模块
   const fassModule: IFaasModule = await import(resolvedPath).catch(e => {
-    // console.log('---- no found ---', e, resolvedPath);
-    return {
-      status: 404,
-      code: 404,
-      msg: '找不到服务模块',
-    };
+    console.log('---- no found ---', e, resolvedPath);
+    throwServiceError(404, '找不到服务模块', {
+      path: faasPath,
+    })
   });
   const faas = fassModule.faas;
   if (!faas) {
-    // console.log('fassModule', fassModule);
+    console.log('fassModule', fassModule);
     return {
       status: 404,
       code: 404,
@@ -97,7 +95,7 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
 
   // step 3: 执行服务模块
   const callTheadStore: ICallState = {
-    id: ++idSeq, db: {}, jwtString, jwt: { sub },
+    id: ++idSeq, trans: [], db: {}, jwtString, jwt: { sub },
   }
   return asyncLocalStorage.run(callTheadStore, async () => {
     const store = asyncLocalStorage.getStore()!;
@@ -136,6 +134,7 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
         // @ts-ignore
         await Promise.all(Object.values(store.db).map(db => db.commitTransaction()));
       }
+      await Promise.all(store.trans.map(tran => tran.commit()));
 
       // 正常返回响应
       return { code: 0, data: mwContext.response };
@@ -143,6 +142,7 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
 
       // 处理出现异常会，事务自动回滚
       await Promise.all(Object.values(store.db).map(db => db.rollbackTransaction()));
+      await Promise.all(store.trans.map(tran => tran.rollback()));
 
       // console.log('---------', e instanceof ServiceError, e);
       if (e instanceof ServiceError) {
