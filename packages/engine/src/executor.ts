@@ -73,14 +73,14 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
 
   // step2: 加载服务模块
   const fassModule: IFaasModule = await import(resolvedPath).catch(e => {
-    console.log('---- no found ---', e, resolvedPath);
+    // console.log('---- no found ---', e, resolvedPath);
     throwServiceError(404, '找不到服务模块', {
       path: faasPath,
     })
   });
   const faas = fassModule.faas;
   if (!faas) {
-    console.log('fassModule', fassModule);
+    // console.log('fassModule', fassModule);
     return {
       status: 404,
       code: 404,
@@ -90,7 +90,7 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
   registerDep(resolvedPath);
 
   // 反向登记依赖的 children，child 改变时，可以将依赖服务删除
-  console.log(resolvedPath);
+  // console.log(resolvedPath);
 
 
   // step 3: 执行服务模块
@@ -118,10 +118,10 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
       // console.log(`----- middleware ${n}`);
       const mw = middlewares[n];
       if (!mw) {
-        return new Promise(resolve => faas(request, stream).then((response) => {
+        return new Promise((resolve, reject) => faas(request, stream).then((response) => {
           mwContext.response = response;
           resolve();
-        }));
+        }).catch(reject));
       };
       return mw(mwContext, undefined, () => runMiddware(n + 1));
     }
@@ -134,7 +134,9 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
         // @ts-ignore
         await Promise.all(Object.values(store.db).map(db => db.commitTransaction()));
       }
+      debug('trans committing');
       await Promise.all(store.trans.map(tran => tran.commit()));
+      debug('trans committed');
 
       // 正常返回响应
       return { code: 0, data: mwContext.response };

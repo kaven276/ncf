@@ -20,5 +20,17 @@ export function getDebug(m: Module) {
       }
     }
   }
-  return debug(m.path);
+  if (m.path.match('/baas/')) {
+    // console.log('baas path', m.path);
+    return debug('baas: ' + m.filename.split('/baas/').pop()!);
+  }
+  const sects = m.filename.split('/src/');
+  if (sects.length > 1) {
+    const packageName = sects[0].split('/').pop();
+    const inPkgPath = sects.pop();
+    // console.log('pkg: path', m.path)
+    return debug(`${packageName}: ${inPkgPath}`);
+  }
+
+  return debug(`others: ${m.path.split('/').slice(-3).join('/')}`);
 }

@@ -8,7 +8,7 @@ const faasRegExp = makeRe('/faas2*');
 
 /** 延迟开始执行不超过任意毫秒数  */
 export const checkAuth: IMiddleWare = async (ctx, cfg: any, next) => {
-  console.log(`${ctx.path} is calling`);
+  // console.log(`${ctx.path} is calling`);
   // console.log(path, faasRegExp.test(path));
   if (faasRegExp.test(ctx.path)) {
     check401();
@@ -21,7 +21,7 @@ export const checkAuth: IMiddleWare = async (ctx, cfg: any, next) => {
 export const middlewares = [
   checkAuth,
   logTimeUse,
-  randomLatency,
+  // randomLatency,
 ];
 
 

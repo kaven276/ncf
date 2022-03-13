@@ -1,7 +1,9 @@
 /* 需要
  */
 import { Pool, PoolClient } from 'pg';
-import { asyncLocalStorage } from '@ncf/engine';
+import { asyncLocalStorage, getDebug } from '@ncf/engine';
+
+const debug = getDebug(module);
 
 declare module "@ncf/engine" {
   interface ICallState {
@@ -35,10 +37,19 @@ export async function getPGPoolByServiceThread(name: PoolNames): Promise<PoolCli
   let client = threadStore.pgClient;
   if (!client) {
     client = threadStore.pgClient = await getPGPool(name).connect();
+    threadStore.trans.push({
+      commit: () => {
+        debug('pg commit');
+        client!.query('COMMIT');
+        client!.release();
+      },
+      rollback: () => {
+        debug('pg rollback');
+        client!.query('ROLLBACK');
+        client!.release();
+      },
+    });
   }
-  threadStore.trans.push({
-    commit: () => client!.release(),
-    rollback: () => client!.release(),
-  });
+  await client.query('BEGIN');
   return client;
 }
