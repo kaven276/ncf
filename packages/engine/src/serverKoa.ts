@@ -48,8 +48,6 @@ function useNCF() {
     // 动态根据访问路径找到对应的处理 ts 文件
     const url = new URL(ctx.url!, `http://${req.headers.host}`);
     const faasPath = url.pathname;
-    const jwtString = req.headers['authorization'] || 'anonymous';
-    const sub = url.searchParams.get('user') || 'testuser';
     const mock = !!url.searchParams.get('mock');
     const isPost = ctx.request.method.toLocaleUpperCase() === 'POST';
     const request = ctx.request.body || ctx.request.query;
@@ -61,7 +59,10 @@ function useNCF() {
     }
 
     // 给核心服务环境信息，然后调用
-    const result = await execute({ jwtString, sub, faasPath, request, stream, mock });
+    const result = await execute({ faasPath, request, stream, mock, http: {
+      req: ctx.req,
+      res: ctx.res,
+    } });
     ctx.response.type = 'application/json';
     ctx.body = result;
     // console.log('ctx.body', ctx.body);

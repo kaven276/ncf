@@ -3,6 +3,7 @@ import { check401, checkIsAdmin } from '.';
 import { IMiddleWare } from '@ncf/engine';
 import { validate } from '@ncf/mw-validator';
 import { logTimeUse } from '../middlewares/logTimeUse';
+import { jwtMiddleware } from '../middlewares/mw-jwt';
 import { randomLatency, IRandomLatencyConfig } from '../middlewares/randomLatency';
 
 const faasRegExp = makeRe('/faas2*');
@@ -20,6 +21,7 @@ export const checkAuth: IMiddleWare = async (ctx, cfg: any, next) => {
 }
 
 export const middlewares = [
+  jwtMiddleware,
   validate,
   checkAuth,
   logTimeUse,

@@ -3,7 +3,7 @@ import { asyncLocalStorage, ICallState } from './lib/callState';
 import { ServiceError, throwServiceError } from './lib/ServiceError';
 import { watchHotUpdate, registerDep } from './hotUpdate';
 import { IFaasModule } from './lib/faas';
-import { MWContext, IMiddleWare } from './lib/middleware';
+import { IMiddleWare } from './lib/middleware';
 import { servicesDir } from './util/resolve';
 import { getDebug } from './util/debug';
 import assert from 'assert/strict';
@@ -15,12 +15,11 @@ watchHotUpdate();
 let idSeq = 0;
 
 interface IEntranceProps {
-  jwtString: string,
-  sub: string,
   faasPath: string,
   request: object,
   stream?: IncomingMessage,
   mock?: boolean,
+  http: ICallState["http"],
 }
 
 interface ISuccessResponse {
@@ -53,7 +52,7 @@ function getMiddlewares(): Promise<IMiddleWare[]> {
 /** 进入服务执行，提供执行环境，事务管理。
  * 返回 Promise
  */
-export async function execute({ jwtString, sub, faasPath, request, stream, mock }: IEntranceProps): Promise<IFinalResponse> {
+export async function execute({ faasPath, request, stream, mock, http }: IEntranceProps): Promise<IFinalResponse> {
 
   // step1: 定位服务模块文件路径
   let resolvedPath: string;
@@ -93,23 +92,22 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
 
 
   // step 3: 执行服务模块
-  const callTheadStore: ICallState = {
-    id: ++idSeq, trans: [], jwtString, jwt: { sub },
+  const als: ICallState = {
+    id: ++idSeq,
+    http,
+    path: faasPath,
+    request,
+    response: null,
+    fassModule,
+    trans: [],
   }
-  return asyncLocalStorage.run(callTheadStore, async () => {
+  return asyncLocalStorage.run(als, async () => {
     const store = asyncLocalStorage.getStore()!;
 
-    assert.equal(callTheadStore, store);
+    assert.equal(als, store);
 
     // 最终做成像 koa 式的包洋葱中间件
 
-    const mwContext: MWContext = {
-      path: faasPath,
-      request: request,
-      response: null,
-      fassModule: fassModule,
-      callState: store,
-    }
     const middlewares = await getMiddlewares();
 
     function runMiddware(n: number): Promise<void> {
@@ -117,11 +115,11 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
       const mw = middlewares[n];
       if (!mw) {
         return new Promise((resolve, reject) => faas(request, stream).then((response) => {
-          mwContext.response = response;
+          als.response = response;
           resolve();
         }).catch(reject));
       };
-      return mw(mwContext, undefined, () => runMiddware(n + 1));
+      return mw(als, undefined, () => runMiddware(n + 1));
     }
 
     try {
@@ -132,7 +130,7 @@ export async function execute({ jwtString, sub, faasPath, request, stream, mock 
       debug('trans committed');
 
       // 正常返回响应
-      return { code: 0, data: mwContext.response };
+      return { code: 0, data: als.response };
     } catch (e) {
 
       // 处理出现异常会，事务自动回滚
