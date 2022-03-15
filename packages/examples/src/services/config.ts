@@ -13,8 +13,8 @@ export const checkAuth: IMiddleWare = async (ctx, cfg: any, next) => {
   // console.log(`${ctx.path} is calling`);
   // console.log(path, faasRegExp.test(path));
   if (faasRegExp.test(ctx.path)) {
-    check401();
-    checkIsAdmin();
+    // check401();
+    // checkIsAdmin();
     // throw new ServiceError(403, '禁止访问 /faas*');
   }
   await next();

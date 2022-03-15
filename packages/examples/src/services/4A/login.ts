@@ -1,5 +1,5 @@
 import { throwServiceError } from '@ncf/engine';
-import * as jws from 'jws';
+import { sign } from 'jsonwebtoken';
 
 interface ILoginInfo {
   user: string,
@@ -13,12 +13,12 @@ interface Result {
 /** 测试通过专用 API 二维从 asyncLocalStorage 中拿到 jwt 信息，用户标识等等 */
 export async function faas(req: ILoginInfo): Promise<Result | undefined> {
   if (['test', 'admin'].includes(req.user) && req.password === '123456') {
-    const token = jws.sign({
-      header: { alg: 'HS256' },
-      payload: {
-        sub: req.user,
-      },
-      secret: 'has a van',
+    const token = sign({
+      user: req.user,
+    }, 'has a van', {
+      expiresIn: 60,
+      issuer: 'NCF',
+      subject: 'examples',
     });
     return { token };
   }

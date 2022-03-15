@@ -105,9 +105,10 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
     const middlewares: IMiddleWare = await import(`${servicesDir}/src/services/config`).then((m) => (m.middlewares)).catch(() => []);
 
     function runMiddware(n: number): Promise<void> {
-      // console.log(`----- middleware ${n}`);
+      debug(`executing middleware ${n}`);
       const mw = middlewares[n];
       if (!mw) {
+        debug('after middlewares, executing faas');
         return new Promise((resolve, reject) => faas(request, stream).then((response) => {
           als.response = response;
           resolve();
