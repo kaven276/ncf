@@ -19,7 +19,7 @@ export function check401() {
 export function checkIsAdmin() {
   console.log('checkIsAdmin', getJWTStruct());
   // todo: threadStore.jwt?.sub 报异常 error TS1109: Expression expected.
-  if (getJWTStruct() && getJWTStruct()!.sub !== 'admin')
+  if (getJWTStruct() && getJWTStruct()!.user !== 'admin')
     throwServiceError(403, '不是管理员')
 }
 
