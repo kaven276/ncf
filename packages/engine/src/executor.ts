@@ -43,12 +43,6 @@ interface IFailureResponse {
 /** 提供给各种接入 gateway 使用的响应。核心永远不会 throw 异常，必须返回这个规格的数据 */
 type IFinalResponse = ISuccessResponse | IFailureResponse;
 
-function getMiddlewares(): Promise<IMiddleWare[]> {
-  return new Promise((resolve) => {
-    import(`${servicesDir}/src/services/config`).then((m) => resolve(m.middlewares)).catch(() => []);
-  });
-}
-
 /** 进入服务执行，提供执行环境，事务管理。
  * 返回 Promise
  */
@@ -67,7 +61,7 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
       msg: '找不到 mock 定义',
     }
   }
-  // console.log(`request ${idSeq + 1} ${faasPath} coming...`, resolvedPath);
+  console.log(`request ${idSeq + 1} ${faasPath} coming...`, resolvedPath);
 
   // step2: 加载服务模块
   const fassModule: IFaasModule = await import(resolvedPath).catch(e => {
@@ -108,7 +102,7 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
 
     // 最终做成像 koa 式的包洋葱中间件
 
-    const middlewares = await getMiddlewares();
+    const middlewares: IMiddleWare = await import(`${servicesDir}/src/services/config`).then((m) => (m.middlewares)).catch(() => []);
 
     function runMiddware(n: number): Promise<void> {
       // console.log(`----- middleware ${n}`);

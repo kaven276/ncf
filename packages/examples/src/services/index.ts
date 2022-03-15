@@ -1,5 +1,6 @@
-import { asyncLocalStorage, ServiceError } from '@ncf/engine';
+import { throwServiceError } from '@ncf/engine';
 import { getConnFromThread } from '@ncf/baas-typeorm';
+import { getJWT, getJWTStruct } from '../middlewares/mw-jwt';
 
 export async function getManager() {
   const queryRunner = await getConnFromThread('postgis');
@@ -10,18 +11,16 @@ export async function getManager() {
 export const PI = 3.1415926;
 
 export function check401() {
-  const threadStore = asyncLocalStorage.getStore()!;
-  if (!threadStore.jwt) {
-    throw new ServiceError(401, '未认证');
+  if (!getJWT()) {
+    throwServiceError(401, '未认证');
   }
 }
 
 export function checkIsAdmin() {
-  const threadStore = asyncLocalStorage.getStore()!;
+  console.log('checkIsAdmin', getJWTStruct());
   // todo: threadStore.jwt?.sub 报异常 error TS1109: Expression expected.
-  if (threadStore.jwt && threadStore.jwt.sub !== 'admin') {
-    throw new ServiceError(403, '不是管理员')
-  }
+  if (getJWTStruct() && getJWTStruct()!.sub !== 'admin')
+    throwServiceError(403, '不是管理员')
 }
 
 

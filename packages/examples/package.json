@@ -9,11 +9,13 @@
   "dependencies": {
     "@ncf/engine": "*",
     "elasticsearch": "^16.7.3",
+    "jws": "^4.0.0",
     "pg": "^8.7.3",
     "typeorm": "^0.2.45"
   },
   "devDependencies": {
     "@types/elasticsearch": "^5.0.40",
+    "@types/jws": "^3.2.4",
     "@types/pg": "^8.6.4"
   },
   "keywords": [],

@@ -1,5 +1,6 @@
 import { ICallState, getDebug, asyncLocalStorage } from '@ncf/engine';
 import { JWT_STRUCT } from './jwt_example';
+import * as jws from 'jws';
 
 const debug = getDebug(module);
 const JWT = Symbol.for('JWT');
@@ -31,7 +32,8 @@ function jwtDecode(jwtText: string): JWT_STRUCT {
 
 /** jwt 分析的中间件，为了提供下面 getJWT 的 API */
 export async function jwtMiddleware(ctx: ICallState, cfg: any, next: () => Promise<void>) {
-  // debug(ctx.http.req.headers);
+  console.log(' ------ ')
+  debug(ctx.http.req.headers);
   ctx[JWT] = ctx.http.req.headers.authorization;
   await next();
 }
@@ -56,5 +58,6 @@ export function getJWTStruct(): JWT_STRUCT | undefined {
   if (!token) {
     return undefined;
   }
-  return jwtDecode(token);
+  return JSON.parse(jws.decode(token).payload);
+  // return jwtDecode(token);
 }
