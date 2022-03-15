@@ -1,5 +1,6 @@
 import { IncomingMessage } from 'http';
-import { asyncLocalStorage, ICallState } from './lib/callState';
+import { AsyncLocalStorage } from 'async_hooks';
+import { ICallState } from './lib/callState';
 import { ServiceError, throwServiceError } from './lib/ServiceError';
 import { watchHotUpdate, registerDep } from './hotUpdate';
 import { IFaasModule } from './lib/faas';
@@ -20,6 +21,12 @@ interface IEntranceProps {
   stream?: IncomingMessage,
   mock?: boolean,
   http: ICallState["http"],
+}
+
+const asyncLocalStorage = new AsyncLocalStorage<ICallState>();
+
+export function getCallState(): ICallState {
+  return asyncLocalStorage.getStore()!;
 }
 
 interface ISuccessResponse {

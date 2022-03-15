@@ -12,7 +12,7 @@ export const requestSchema: JSONSchemaType<ISpec["request"]> = {
     age: { type: "number" },
   },
   required: ['user'],
-  additionalProperties: false
+  additionalProperties: true,
 }
 
 export const responseSchema: JSONSchemaType<ISpec["response"]> = {

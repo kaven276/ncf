@@ -1,7 +1,7 @@
 /* 需要
  */
 import { Pool, PoolClient } from 'pg';
-import { asyncLocalStorage, getDebug } from '@ncf/engine';
+import { getCallState, getDebug } from '@ncf/engine';
 
 const debug = getDebug(module);
 
@@ -33,7 +33,7 @@ export function getPGPool(name: PoolNames) {
 
 /** 从服务线程中获取指定名称的连接池中的连接 */
 export async function getPGPoolByServiceThread(name: PoolNames): Promise<PoolClient> {
-  const threadStore = asyncLocalStorage.getStore()!;
+  const threadStore = getCallState();
   let client = threadStore.pgClient;
   if (!client) {
     client = threadStore.pgClient = await getPGPool(name).connect();

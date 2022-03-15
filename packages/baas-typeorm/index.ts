@@ -1,4 +1,4 @@
-import { asyncLocalStorage, getDebug } from '@ncf/engine';
+import { getCallState, getDebug } from '@ncf/engine';
 import { getConnection, QueryRunner } from "typeorm";
 
 const debug = getDebug(module);
@@ -16,7 +16,7 @@ declare module '@ncf/engine' {
 
 /** service thread 中需要获取执行名称的链接并开启事务的时候调用 */
 export async function getConnFromThread(name: string): Promise<QueryRunner> {
-  const threadStore = asyncLocalStorage.getStore()!;
+  const threadStore = getCallState();
   // TLS 没有配置 typeorm 连接的话，就给初始化一个
   if (!threadStore[ORMKey]) {
     threadStore[ORMKey] = {};

@@ -1,4 +1,4 @@
-import { AsyncLocalStorage } from 'async_hooks';
+
 import { IncomingMessage, ServerResponse } from 'http';
 import { IFaasModule } from './faas';
 
@@ -29,6 +29,3 @@ export interface ICallState {
   /** 跟踪发生的带提交或回滚的事务清单 */
   readonly trans: TransactionDealer[],
 }
-
-export const asyncLocalStorage = new AsyncLocalStorage<ICallState>();
-

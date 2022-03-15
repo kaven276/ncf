@@ -1,4 +1,4 @@
-import { ICallState, getDebug, asyncLocalStorage, throwServiceError } from '@ncf/engine';
+import { ICallState, getDebug, getCallState, throwServiceError } from '@ncf/engine';
 import { verify, JwtPayload, TokenExpiredError } from 'jsonwebtoken';
 
 const debug = getDebug(module);
@@ -29,8 +29,8 @@ const prefixLen = prefix.length;
 export async function jwtMiddleware(ctx: ICallState, cfg: any, next: () => Promise<void>) {
   const token = ctx.http.req.headers.authorization;
   if (token) {
-    ctx[JWT] = token;
     const jwt = token.substring(prefixLen);
+    ctx[JWT] = jwt;
     try {
       const parsed: JwtPayload = verify(jwt, secret, {
         issuer: 'NCF',
@@ -50,13 +50,13 @@ export async function jwtMiddleware(ctx: ICallState, cfg: any, next: () => Promi
 
 /** 返回 ALS 中的 JWT 字符串 */
 export function getJWT(): string | undefined {
-  const als = asyncLocalStorage.getStore()!;
+  const als = getCallState();
   debug('als[JWT]', als[JWTParsed]);
   return als[JWT];
 }
 
 /** 返回 ALS 中的 JWT 解析后的数据结构 */
 export function getJWTStruct(): JwtPayload | undefined {
-  const als = asyncLocalStorage.getStore()!;
+  const als = getCallState();
   return als[JWTParsed];
 }

@@ -16,7 +16,7 @@ export async function faas(req: ILoginInfo): Promise<Result | undefined> {
     const token = sign({
       user: req.user,
     }, 'has a van', {
-      expiresIn: 60,
+      expiresIn: 600,
       issuer: 'NCF',
       subject: 'examples',
     });
