@@ -13,44 +13,24 @@ declare module '@ncf/engine' {
   }
 }
 
-/**
- * 封装是因为 atob 只支持 ASCII，往后若需要支持中文等字符集，实现方式需要修改
- * @param base64Text 带转换的 base64 编码字符串
- */
-function base64Decode(base64Text: string) {
-  return Buffer.from(base64Text, 'base64')
-}
-
-/**
- * 将JWT字符串中的内容解析到js数据
- * @param jwtText 带提取内容到js数据的jwt原始文本
- */
-function jwtDecode(jwtText: string): JWT_STRUCT {
-  const jwtConent = jwtText.split('.')[1];
-  return JSON.parse(base64Decode(jwtConent).toString());
-}
+const prefix = 'Bearer ';
+const prefixLen = prefix.length;
 
 /** jwt 分析的中间件，为了提供下面 getJWT 的 API */
 export async function jwtMiddleware(ctx: ICallState, cfg: any, next: () => Promise<void>) {
-  console.log(' ------ ')
-  debug(ctx.http.req.headers);
-  ctx[JWT] = ctx.http.req.headers.authorization;
+  const token = ctx.http.req.headers.authorization;
+  if (token) {
+    ctx[JWT] = token.substring(prefixLen);;
+  }
   await next();
 }
 
-const prefix = 'Bearer ';
-const prefixLen = prefix.length;
 
 /** 返回 ALS 中的 JWT */
 export function getJWT(): string | undefined {
   const als = asyncLocalStorage.getStore()!;
   debug('als[JWT]', als[JWT]);
-  if (als[JWT]) {
-    return als[JWT]!.substring(prefixLen);
-  } else {
-    return undefined;
-  }
-
+  return als[JWT];
 }
 
 export function getJWTStruct(): JWT_STRUCT | undefined {
@@ -59,5 +39,4 @@ export function getJWTStruct(): JWT_STRUCT | undefined {
     return undefined;
   }
   return JSON.parse(jws.decode(token).payload);
-  // return jwtDecode(token);
 }
