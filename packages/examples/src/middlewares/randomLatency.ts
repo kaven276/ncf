@@ -1,17 +1,19 @@
 import { IMiddleWare, IConfig } from '@ncf/engine';
 
+interface LatencyConfig {
+  /** 最大延迟的毫秒数 */
+  maxLatencyMs: number,
+}
+
+const defaultConfig: LatencyConfig = {
+  maxLatencyMs: 3000,
+}
+
 declare module '@ncf/engine' {
   interface IConfig {
-    randomLatency?: {
-      /** 最大延迟的毫秒数 */
-      maxLatencyMs: number,
-    },
+    /** 默认延迟执行中间件的配置 */
+    randomLatency: LatencyConfig
   }
-}
-type MyConfig = IConfig["randomLatency"];
-
-const defaultConfig: MyConfig = {
-  maxLatencyMs: 3000,
 }
 
 /** 延迟开始执行不超过任意毫秒数  */
