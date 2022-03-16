@@ -1,4 +1,4 @@
-import { throwServiceError } from '@ncf/engine';
+import { throwServiceError, IConfig } from '@ncf/engine';
 import { sign } from 'jsonwebtoken';
 
 interface ILoginInfo {
@@ -8,6 +8,12 @@ interface ILoginInfo {
 
 interface Result {
   token: string,
+}
+
+export const config: IConfig = {
+  randomLatency: {
+    maxLatencyMs: 0,
+  }
 }
 
 /** 测试通过专用 API 二维从 asyncLocalStorage 中拿到 jwt 信息，用户标识等等 */
