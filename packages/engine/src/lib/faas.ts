@@ -1,5 +1,6 @@
 import { IncomingMessage } from 'http';
 import { JSONSchemaType, ValidateFunction } from 'ajv';
+import { IConfig } from './config';
 
 export interface IApi {
   path: string,
@@ -18,4 +19,5 @@ export interface IFaasModule {
   checkResponse?: ValidateFunction,
   requestSchema?: JSONSchemaType<any>,
   responseSchema?: JSONSchemaType<any>,
+  config?: IConfig,
 }

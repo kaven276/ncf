@@ -1,10 +1,10 @@
 import { makeRe } from 'minimatch';
 import { check401, checkIsAdmin } from '.';
-import { IMiddleWare } from '@ncf/engine';
+import { IMiddleWare, IConfig } from '@ncf/engine';
 import { validate } from '@ncf/mw-validator';
 import { logTimeUse } from '../middlewares/logTimeUse';
 import { jwtMiddleware } from '../middlewares/mw-jwt';
-import { randomLatency, IRandomLatencyConfig } from '../middlewares/randomLatency';
+import { randomLatency } from '../middlewares/randomLatency';
 
 const faasRegExp = makeRe('/faas2*');
 
@@ -29,7 +29,7 @@ export const middlewares = [
 ];
 
 
-// export config = new WeakMap({
-//   randomLatency: { maxLatencyMs: 2000 }
-// })
+export const config: IConfig = {
+  randomLatency: { maxLatencyMs: 5000 }
+}
 

@@ -4,6 +4,7 @@ import { ICallState } from './lib/callState';
 import { ServiceError, throwServiceError } from './lib/ServiceError';
 import { watchHotUpdate, registerDep } from './hotUpdate';
 import { IFaasModule } from './lib/faas';
+import { getFaasConfig, IConfig } from './lib/config';
 import { IMiddleWare } from './lib/middleware';
 import { servicesDir } from './util/resolve';
 import { getDebug } from './util/debug';
@@ -86,11 +87,13 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
       msg: '找不到服务定义',
     }
   }
+  const config: IConfig = await getFaasConfig(faasPath, fassModule);
   registerDep(resolvedPath);
 
   // 反向登记依赖的 children，child 改变时，可以将依赖服务删除
   // console.log(resolvedPath);
 
+  // 找到该 faas 模块的配置
 
   // step 3: 执行服务模块
   const als: ICallState = {
@@ -113,7 +116,7 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
 
     function runMiddware(n: number): Promise<void> {
       debug(`executing middleware ${n}`);
-      const mw = middlewares[n];
+      const mw: IMiddleWare = middlewares[n];
       if (!mw) {
         debug('after middlewares, executing faas');
         return new Promise((resolve, reject) => faas(request, stream).then((response) => {
@@ -121,7 +124,7 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
           resolve();
         }).catch(reject));
       };
-      return mw(als, undefined, () => runMiddware(n + 1));
+      return mw(als, config, () => runMiddware(n + 1));
     }
 
     try {
