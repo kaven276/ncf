@@ -1,4 +1,4 @@
-import { throwServiceError, IConfig } from '@ncf/engine';
+import { throwServiceError, IConfig, createGetConfig, getDebug } from '@ncf/engine';
 import { sign } from 'jsonwebtoken';
 
 interface ILoginInfo {
@@ -16,8 +16,13 @@ export const config: IConfig = {
   }
 }
 
+const debug = getDebug(module);
+const getConfig = createGetConfig(module);
+
 /** 测试通过专用 API 二维从 asyncLocalStorage 中拿到 jwt 信息，用户标识等等 */
 export async function faas(req: ILoginInfo): Promise<Result | undefined> {
+  const cfg: IConfig = getConfig()!;
+  debug('config', cfg.randomLatency);
   if (['test', 'admin'].includes(req.user) && req.password === '123456') {
     const token = sign({
       user: req.user,

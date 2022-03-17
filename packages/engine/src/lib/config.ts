@@ -79,3 +79,8 @@ export async function getFaasConfig(path: string, fassModule: IFaasModule): Prom
   // console.log('faasConfig.randomLatency', faasConfig.randomLatency);
   return faasConfig;
 }
+
+/** 返回获取指定 faas 模块配置的函数 */
+export function createGetConfig(m: NodeModule) {
+  return () => configMap.get(m.exports);
+}
