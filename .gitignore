@@ -7,3 +7,4 @@ temp/
 /domains/
 /upload/
 /packages/examples/upload/
+/packages/loader-sql-pg/
