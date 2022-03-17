@@ -12,7 +12,7 @@ const defaultConfig: LatencyConfig = {
 declare module '@ncf/engine' {
   interface IConfig {
     /** 默认延迟执行中间件的配置 */
-    randomLatency: LatencyConfig
+    randomLatency?: LatencyConfig,
   }
 }
 
