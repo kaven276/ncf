@@ -1,4 +1,4 @@
-import { ICallState, getDebug, getCallState, throwServiceError } from '@ncf/engine';
+import { getDebug, getCallState, throwServiceError, IMiddleWare } from '@ncf/engine';
 import { verify, JwtPayload, TokenExpiredError } from 'jsonwebtoken';
 
 const debug = getDebug(module);
@@ -26,7 +26,7 @@ const prefix = 'Bearer ';
 const prefixLen = prefix.length;
 
 /** jwt 检查校验和解析中间件 */
-export async function jwtMiddleware(ctx: ICallState, cfg: any, next: () => Promise<void>) {
+export const jwtMiddleware: IMiddleWare = async (ctx, cfg, next) => {
   const token = ctx.http.req.headers.authorization;
   if (token) {
     const jwt = token.substring(prefixLen);

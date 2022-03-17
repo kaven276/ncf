@@ -4,12 +4,12 @@ import { IMiddleWare, IConfig } from '@ncf/engine';
 import { validate } from '@ncf/mw-validator';
 import { logTimeUse } from '../middlewares/logTimeUse';
 import { jwtMiddleware } from '../middlewares/mw-jwt';
-import { randomLatency } from '../middlewares/randomLatency';
+import { randomLatency, setRandomLatencyConfig } from '../middlewares/randomLatency';
 
 const faasRegExp = makeRe('/faas2*');
 
 /** 延迟开始执行不超过任意毫秒数  */
-export const checkAuth: IMiddleWare = async (ctx, cfg: any, next) => {
+export const checkAuth: IMiddleWare = async (ctx, cfg, next) => {
   // console.log(`${ctx.path} is calling`);
   // console.log(path, faasRegExp.test(path));
   if (faasRegExp.test(ctx.path)) {
@@ -30,6 +30,8 @@ export const middlewares = [
 
 
 export const config: IConfig = {
-  randomLatency: { maxLatencyMs: 5000 }
+  ...setRandomLatencyConfig({
+    maxLatencyMs: 0,
+  }),
 }
 

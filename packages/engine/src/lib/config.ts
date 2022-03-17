@@ -3,7 +3,8 @@ import { IFaasModule } from '../lib/faas';
 
 /** 一个配置的全部内容，配置从 faas module 向上看各上级目录的 config.ts 中的 export config，通过 prototype 融合 */
 export interface IConfig {
-
+  //@ts-ignore
+  [key: symbol]: any,
 }
 
 /** 因为不想造成原始源码模块在框架内被改变，所以外部记录对应的配置 */

@@ -124,7 +124,8 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
           resolve();
         }).catch(reject));
       };
-      return mw(als, config, () => runMiddware(n + 1));
+      //@ts-ignore
+      return mw(als, mw.configKey ? config[mw.configKey] : {}, () => runMiddware(n + 1));
     }
 
     try {
