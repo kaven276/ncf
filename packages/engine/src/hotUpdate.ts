@@ -1,6 +1,9 @@
 import { watch } from 'chokidar';
+import { getDebug } from './util/debug';
+import { root } from './lib/config';
 const ServiceDir = process.cwd() + '/src/services';
 
+const debug = getDebug(module);
 let started = false;
 
 /** 启动服务热更新，只针对服务入口模块，级联模块暂时不支持 */
@@ -20,6 +23,24 @@ export function watchHotUpdate() {
       depServiceSet.forEach(servicePath => {
         delete require.cache[servicePath];
       })
+    }
+    if (path.endsWith('/config.ts')) {
+      // 目录配置改变的话，更新 config prototype chain
+      debug('config changed for', path.substring(ServiceDir.length));
+      const dirs = path.substring(ServiceDir.length + 1).split('/');
+      dirs.pop();
+      debug('config dirs', dirs);
+      let cfgNode = root;
+      for (let dir of dirs) {
+        cfgNode = cfgNode.subs[dir];
+        if (!cfgNode) return; // 还没有被使用过，等待 faas 模块加载时再加载
+      }
+      // 随后动态加载配置更新
+      import(path).then(dirModule => {
+        if (dirModule.config) {
+          Object.assign(cfgNode.cfg, dirModule.config);
+        }
+      }).catch();
     }
   });
 }

@@ -1,5 +1,8 @@
 import { servicesDir } from '../util/resolve';
 import { IFaasModule } from '../lib/faas';
+import { getDebug } from '../util/debug';
+
+const debug = getDebug(module);
 
 /** 一个配置的全部内容，配置从 faas module 向上看各上级目录的 config.ts 中的 export config，通过 prototype 融合 */
 export interface IConfig {
@@ -63,7 +66,9 @@ export function getFaasConfig(path: string, fassModule: IFaasModule): IConfig {
         if (dirModule.config) {
           Object.assign(newConfig, dirModule.config);
         }
-      }).catch();
+      }).catch(() => {
+        debug('config not exists for dir', currentPath);
+      });
     }
     upper = upper.subs[thisDirName];
   }
