@@ -31,14 +31,13 @@ export const root: IConfigContainer = {
 async function fillRoot() {
   const configModule = await import(`${servicesDir}/src/services/config.ts`);
   const config = configModule.config;
-  Object.assign(root.cfg, config);
-  return root;
+  root.cfg = config;
 }
 
 const fillRootPromise = fillRoot();
 
 /** 获取当前 faas 的指定项的配置 */
-export function getConfig<K extends keyof IConfig>(s: K, ctx?: ICallState): IConfig[K] | undefined {
+export function getConfig(s: symbol, ctx?: ICallState): any {
   const { fassModule } = ctx || getCallState();
   const config = getConfigByFaas(fassModule);
   if (config) {

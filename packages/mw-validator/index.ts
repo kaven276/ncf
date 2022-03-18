@@ -3,7 +3,7 @@ import { throwServiceError } from '@ncf/engine';
 import Ajv from 'ajv';
 
 /** 校验请求响应规格，内置 ajv 校验 json schema 配置 */
-export const validate: IMiddleWare = async (ctx, cfg, next) => {
+export const validate: IMiddleWare = async (ctx, next) => {
   const fassModule = ctx.fassModule;
 
   // // 校验请求规格

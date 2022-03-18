@@ -26,7 +26,7 @@ const prefix = 'Bearer ';
 const prefixLen = prefix.length;
 
 /** jwt 检查校验和解析中间件 */
-export const jwtMiddleware: IMiddleWare = async (ctx, cfg, next) => {
+export const jwtMiddleware: IMiddleWare = async (ctx, next) => {
   const token = ctx.http.req.headers.authorization;
   if (token) {
     const jwt = token.substring(prefixLen);
