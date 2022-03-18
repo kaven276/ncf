@@ -1,6 +1,6 @@
 import { throwServiceError } from '@ncf/engine';
 import { getConnFromThread } from '@ncf/baas-typeorm';
-import { getJWT, getJWTStruct } from '../middlewares/mw-jwt';
+import { getJWT, getJWTStruct } from '@ncf/mw-jwt';
 
 export async function getManager() {
   const queryRunner = await getConnFromThread('postgis');
@@ -22,5 +22,3 @@ export function checkIsAdmin() {
   if (getJWTStruct() && getJWTStruct()!.user !== 'admin')
     throwServiceError(403, '不是管理员')
 }
-
-

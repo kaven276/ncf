@@ -1,4 +1,4 @@
-import { getJWT, getJWTStruct } from '../middlewares/mw-jwt';
+import { getJWT, getJWTStruct } from '@ncf/mw-jwt';
 import { throwServiceError } from '@ncf/engine';
 
 /** 测试通过专用 API 二维从 asyncLocalStorage 中拿到 jwt 信息，用户标识等等 */

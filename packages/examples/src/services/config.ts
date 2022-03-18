@@ -3,7 +3,7 @@ import { check401, checkIsAdmin } from '.';
 import { IMiddleWare } from '@ncf/engine';
 import { validate } from '@ncf/mw-validator';
 import { logTimeUse } from '../middlewares/logTimeUse';
-import { jwtMiddleware, setJWT } from '../middlewares/mw-jwt';
+import { jwtMiddleware, setJWT } from '@ncf/mw-jwt';
 import { randomLatency, setRandomLatencyConfig } from '../middlewares/randomLatency';
 import { setPoolName } from '../baas/testPgPool';
 

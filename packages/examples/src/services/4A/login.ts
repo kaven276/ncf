@@ -1,6 +1,6 @@
 import { throwServiceError, getDebug } from '@ncf/engine';
 import { setRandomLatencyConfig } from 'src/middlewares/randomLatency';
-import { signToken } from '../../middlewares/mw-jwt';
+import { signToken } from '@ncf/mw-jwt';
 
 interface ILoginInfo {
   user: string,
