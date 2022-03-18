@@ -1,5 +1,5 @@
 import { IncomingMessage } from 'http';
-import { JSONSchemaType, ValidateFunction } from 'ajv';
+
 import { IConfig } from './config';
 
 export interface IApi {
@@ -15,10 +15,6 @@ export type Service<T extends { path: string, request?: any, response?: any }> =
 
 export interface IFaasModule {
   faas: Service<any>,
-  checkRequest?: ValidateFunction,
-  checkResponse?: ValidateFunction,
-  requestSchema?: JSONSchemaType<any>,
-  responseSchema?: JSONSchemaType<any>,
   /** faas 服务模块可能带有配置 */
   config?: IConfig,
 }

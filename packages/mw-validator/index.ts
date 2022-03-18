@@ -1,6 +1,17 @@
 import { IMiddleWare } from '@ncf/engine';
 import { throwServiceError } from '@ncf/engine';
 import Ajv from 'ajv';
+import { JSONSchemaType, ValidateFunction } from 'ajv';
+
+declare module '@ncf/engine' {
+  export interface IFaasModule {
+    checkRequest?: ValidateFunction,
+    checkResponse?: ValidateFunction,
+    requestSchema?: JSONSchemaType<any>,
+    responseSchema?: JSONSchemaType<any>,
+  }
+}
+
 
 /** 校验请求响应规格，内置 ajv 校验 json schema 配置 */
 export const validate: IMiddleWare = async (ctx, next) => {
