@@ -30,15 +30,6 @@ export function getCallState(): ICallState {
   return asyncLocalStorage.getStore()!;
 }
 
-/** 获取当前 faas 的指定项的配置 */
-export function getConfig<K extends keyof IConfig>(s: K): IConfig[K] | undefined {
-  const { fassModule } = getCallState();
-  const config = getConfigByFaas(fassModule);
-  if (config) {
-    return config[s];
-  }
-}
-
 interface ISuccessResponse {
   status: number,
   /** 服务处理成功为0 */
