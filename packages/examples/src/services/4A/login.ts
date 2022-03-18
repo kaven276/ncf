@@ -1,6 +1,7 @@
 import { throwServiceError, getDebug } from '@ncf/engine';
 import { sign } from 'jsonwebtoken';
 import { setRandomLatencyConfig } from 'src/middlewares/randomLatency';
+import { getSecret, getJwtOption } from '../../middlewares/mw-jwt';
 
 interface ILoginInfo {
   user: string,
@@ -24,10 +25,9 @@ export async function faas(req: ILoginInfo): Promise<Result | undefined> {
   if (['test', 'admin'].includes(req.user) && req.password === '123456') {
     const token = sign({
       user: req.user,
-    }, 'has a van', {
+    }, getSecret(), {
       expiresIn: 3600,
-      issuer: 'NCF',
-      subject: 'examples',
+      ...getJwtOption(),
     });
     return { token };
   }

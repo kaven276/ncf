@@ -1,4 +1,4 @@
-import { getDebug, getCallState, throwServiceError, IMiddleWare } from '@ncf/engine';
+import { getDebug, getCallState, getConfig, throwServiceError, IMiddleWare } from '@ncf/engine';
 import { verify, JwtPayload, TokenExpiredError } from 'jsonwebtoken';
 
 const debug = getDebug(module);
@@ -21,7 +21,35 @@ declare module 'jsonwebtoken' {
   }
 }
 
-const secret = 'has a van';
+const secretKey = Symbol('secret');
+const jwtOptionKey = Symbol('jwtOption');
+
+interface JWTOption {
+  issuer: string,
+  subject: string,
+}
+
+export function setJWT(secret: string, jwtOption: JWTOption) {
+  return {
+    [secretKey]: secret,
+    [jwtOptionKey]: jwtOption,
+  }
+}
+
+export function getSecret(): string {
+  return getConfig(secretKey);
+}
+
+export function getJwtOption(): JWTOption {
+  return getConfig(jwtOptionKey);
+}
+
+const defaultSecret = 'has a van';
+const defaultJwtOption: JWTOption = {
+  issuer: 'NCF',
+  subject: 'examples',
+}
+
 const prefix = 'Bearer ';
 const prefixLen = prefix.length;
 
@@ -32,10 +60,9 @@ export const jwtMiddleware: IMiddleWare = async (ctx, next) => {
     const jwt = token.substring(prefixLen);
     ctx[JWT] = jwt;
     try {
-      const parsed: JwtPayload = verify(jwt, secret, {
-        issuer: 'NCF',
-        subject: 'examples',
-      }) as JwtPayload;
+      const secret: string = getConfig(secretKey, ctx) || defaultSecret;
+      const option: JWTOption = getConfig(jwtOptionKey, ctx) || defaultJwtOption;
+      const parsed: JwtPayload = verify(jwt, secret, option) as JwtPayload;
       ctx[JWTParsed] = parsed;
     } catch (e) {
       if (e instanceof TokenExpiredError) {

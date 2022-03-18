@@ -3,7 +3,7 @@ import { check401, checkIsAdmin } from '.';
 import { IMiddleWare } from '@ncf/engine';
 import { validate } from '@ncf/mw-validator';
 import { logTimeUse } from '../middlewares/logTimeUse';
-import { jwtMiddleware } from '../middlewares/mw-jwt';
+import { jwtMiddleware, setJWT } from '../middlewares/mw-jwt';
 import { randomLatency, setRandomLatencyConfig } from '../middlewares/randomLatency';
 import { setPoolName } from '../baas/testPgPool';
 
@@ -32,6 +32,10 @@ export const middlewares = [
 
 
 export const config = {
+  ...setJWT('ncf is best', {
+    issuer: 'kaven276',
+    subject: 'ncf example',
+  }),
   ...setRandomLatencyConfig({
     maxLatencyMs: 0,
   }),
