@@ -13,11 +13,6 @@ declare module "@ncf/engine" {
     pgClient?: PoolClient,
   }
 
-  interface IConfig {
-    /** 连接池名称 */
-    [poolNameKey]?: string,
-  }
-
 }
 
 type PoolNames = 'test' | 'echarts';

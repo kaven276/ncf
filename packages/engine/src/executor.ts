@@ -4,7 +4,7 @@ import { ICallState } from './lib/callState';
 import { ServiceError, throwServiceError } from './lib/ServiceError';
 import { watchHotUpdate, registerDep } from './hotUpdate';
 import { IFaasModule } from './lib/faas';
-import { getConfigByFaas, ensureFaasConfig, IConfig } from './lib/config';
+import { getConfigByFaas, ensureFaasConfig } from './lib/config';
 import { IMiddleWare } from './lib/middleware';
 import { servicesDir } from './util/resolve';
 import { getDebug } from './util/debug';
@@ -89,7 +89,9 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
   }
 
   // 如果 config 已经创建，则为同步执行；否则第一次加载配置会是异步执行
-  let config: IConfig = getConfigByFaas(fassModule) || (await ensureFaasConfig(faasPath, fassModule));
+  if (!getConfigByFaas(fassModule)) {
+    await ensureFaasConfig(faasPath, fassModule);
+  }
 
   registerDep(resolvedPath);
 
@@ -128,7 +130,7 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
         }).catch(reject));
       };
       //@ts-ignore
-      return mw(als, mw.configKey ? config[mw.configKey] : {}, () => runMiddware(n + 1));
+      return mw(als, () => runMiddware(n + 1));
     }
 
     try {

@@ -1,6 +1,6 @@
 import { makeRe } from 'minimatch';
 import { check401, checkIsAdmin } from '.';
-import { IMiddleWare, IConfig } from '@ncf/engine';
+import { IMiddleWare } from '@ncf/engine';
 import { validate } from '@ncf/mw-validator';
 import { logTimeUse } from '../middlewares/logTimeUse';
 import { jwtMiddleware } from '../middlewares/mw-jwt';
@@ -10,7 +10,7 @@ import { setPoolName } from '../baas/testPgPool';
 const faasRegExp = makeRe('/faas2*');
 
 /** 延迟开始执行不超过任意毫秒数  */
-export const checkAuth: IMiddleWare = async (ctx, cfg, next) => {
+export const checkAuth: IMiddleWare = async (ctx, next) => {
   // console.log(`${ctx.path} is calling`);
   // console.log(path, faasRegExp.test(path));
   if (faasRegExp.test(ctx.path)) {
@@ -31,7 +31,7 @@ export const middlewares = [
 ];
 
 
-export const config: IConfig = {
+export const config = {
   ...setRandomLatencyConfig({
     maxLatencyMs: 0,
   }),

@@ -19,5 +19,6 @@ export interface IFaasModule {
   checkResponse?: ValidateFunction,
   requestSchema?: JSONSchemaType<any>,
   responseSchema?: JSONSchemaType<any>,
+  /** faas 服务模块可能带有配置 */
   config?: IConfig,
 }

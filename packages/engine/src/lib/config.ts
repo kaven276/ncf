@@ -2,6 +2,7 @@ import { servicesDir } from '../util/resolve';
 import { IFaasModule } from '../lib/faas';
 import { getDebug } from '../util/debug';
 import { getCallState } from '../executor';
+import { ICallState } from './callState';
 
 const debug = getDebug(module);
 
@@ -37,8 +38,8 @@ async function fillRoot() {
 const fillRootPromise = fillRoot();
 
 /** 获取当前 faas 的指定项的配置 */
-export function getConfig<K extends keyof IConfig>(s: K): IConfig[K] | undefined {
-  const { fassModule } = getCallState();
+export function getConfig<K extends keyof IConfig>(s: K, ctx?: ICallState): IConfig[K] | undefined {
+  const { fassModule } = ctx || getCallState();
   const config = getConfigByFaas(fassModule);
   if (config) {
     return config[s];
@@ -91,9 +92,4 @@ export async function ensureFaasConfig(path: string, fassModule: IFaasModule): P
   }
   configMap.set(fassModule, faasConfig);
   return faasConfig;
-}
-
-/** 返回获取指定 faas 模块配置的函数 */
-export function createGetConfig(m: NodeModule) {
-  return () => configMap.get(m.exports);
 }
