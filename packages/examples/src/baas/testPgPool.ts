@@ -5,6 +5,8 @@ import { getCallState, getDebug, getConfig } from '@ncf/engine';
 
 const debug = getDebug(module);
 
+const poolNameKey = Symbol('poolname');
+
 declare module "@ncf/engine" {
 
   interface ICallState {
@@ -13,7 +15,7 @@ declare module "@ncf/engine" {
 
   interface IConfig {
     /** 连接池名称 */
-    pool?: string,
+    [poolNameKey]?: string,
   }
 
 }
@@ -39,9 +41,15 @@ export function getPGPool(name: PoolNames) {
   return pool;
 }
 
+export function setPoolName(poolName: string) {
+  return {
+    [poolNameKey]: poolName,
+  }
+}
+
 /** 从服务线程中获取指定名称的连接池中的连接 */
 export async function getPGPoolByServiceThread(name?: PoolNames): Promise<PoolClient> {
-  const poolName = name || (getConfig('pool') as PoolNames);
+  const poolName = name || (getConfig(poolNameKey) as PoolNames);
   debug('pool name', poolName);
   const threadStore = getCallState();
   let client = threadStore.pgClient;

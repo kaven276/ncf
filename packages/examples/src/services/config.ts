@@ -5,6 +5,7 @@ import { validate } from '@ncf/mw-validator';
 import { logTimeUse } from '../middlewares/logTimeUse';
 import { jwtMiddleware } from '../middlewares/mw-jwt';
 import { randomLatency, setRandomLatencyConfig } from '../middlewares/randomLatency';
+import { setPoolName } from '../baas/testPgPool';
 
 const faasRegExp = makeRe('/faas2*');
 
@@ -34,6 +35,6 @@ export const config: IConfig = {
   ...setRandomLatencyConfig({
     maxLatencyMs: 0,
   }),
-  pool: 'test',
+  ...setPoolName('echarts'),
 }
 
