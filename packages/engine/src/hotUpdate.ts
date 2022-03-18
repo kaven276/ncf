@@ -35,6 +35,10 @@ export function watchHotUpdate() {
         cfgNode = cfgNode.subs[dir];
         if (!cfgNode) return; // 还没有被使用过，等待 faas 模块加载时再加载
       }
+      // 先删除之前 prototype chain node 上的配置；因为只有开发时热更新用，无需考虑处理性能
+      Object.getOwnPropertySymbols(cfgNode.cfg).forEach(symbolKey => {
+        delete cfgNode.cfg[symbolKey];
+      })
       // 随后动态加载配置更新
       import(path).then(dirModule => {
         if (dirModule.config) {
