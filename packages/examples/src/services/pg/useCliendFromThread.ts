@@ -11,7 +11,7 @@ interface IResult {
 
 /** 测试直接使用 pg 单个连接提供服务 */
 export async function faas() {
-  const client = await getPGPoolByServiceThread('test');
+  const client = await getPGPoolByServiceThread();
   const res = await client.query<IResult>('SELECT  NOW()');
   const resSub = await sub();
   if (Math.random() < 0.5) {

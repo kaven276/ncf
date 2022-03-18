@@ -1,4 +1,7 @@
 import { Pool } from 'pg';
+import { getDebug } from '@ncf/engine';
+
+const debug = getDebug(module);
 
 const pool = new Pool({
   user: 'echarts',

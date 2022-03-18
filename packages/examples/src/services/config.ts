@@ -20,6 +20,7 @@ export const checkAuth: IMiddleWare = async (ctx, cfg, next) => {
   await next();
 }
 
+
 export const middlewares = [
   jwtMiddleware,
   validate,
@@ -33,5 +34,6 @@ export const config: IConfig = {
   ...setRandomLatencyConfig({
     maxLatencyMs: 0,
   }),
+  pool: 'test',
 }
 
