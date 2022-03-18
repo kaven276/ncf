@@ -23,7 +23,7 @@ interface IConfigContainer {
 }
 
 export const root: IConfigContainer = {
-  cfg: {},
+  cfg: undefined as unknown as IConfig,
   subs: {},
 }
 
@@ -62,6 +62,9 @@ export function getConfigByFaas(fassModule: IFaasModule): IConfig | undefined {
 /** 获取指定 faas 对应的配置，配置数据为 prototype chain 按照 /config.ts 向上找 */
 export async function ensureFaasConfig(path: string, fassModule: IFaasModule): Promise<IConfig> {
   // 从 faas 模块，确保创建 prototype chain，并 fill root config container
+  if (!root.cfg) {
+    await fillRootPromise;
+  }
   const parentDirs = path.split('/');
   let upper: IConfigContainer = root;
   let currentPath = servicesDir + '/src/services';
