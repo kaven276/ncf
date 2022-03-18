@@ -31,9 +31,9 @@ export function getCallState(): ICallState {
 }
 
 /** 获取当前 faas 的指定项的配置 */
-export async function getConfig<K extends keyof IConfig>(s: K): Promise<IConfig[K]> {
+export function getConfig<K extends keyof IConfig>(s: K): IConfig[K] {
   const { path, fassModule } = getCallState();
-  const config = await getFaasConfig(path, fassModule);
+  const config = getFaasConfig(path, fassModule);
   return config[s];
 }
 

@@ -39,14 +39,14 @@ dir1/dir2/faas 的 prototype chain，必须保持稳定。
 */
 
 /** 获取指定 faas 对应的配置，配置数据为 prototype chain 按照 /config.ts 向上找 */
-export async function getFaasConfig(path: string, fassModule: IFaasModule): Promise<IConfig> {
+export function getFaasConfig(path: string, fassModule: IFaasModule): IConfig {
   let config = configMap.get(fassModule);
   if (config) {
     return config;
   }
   // 从 faas 模块，确保创建 prototype chain，并 fill root config container
   const parentDirs = path.split('/');
-  let upper: IConfigContainer = await fillRootPromise;
+  let upper: IConfigContainer = root;
   let currentPath = servicesDir + '/src/services';
   for (let i = 1; i < parentDirs.length - 1; i++) {
     const thisDirName = parentDirs[i];
@@ -54,20 +54,16 @@ export async function getFaasConfig(path: string, fassModule: IFaasModule): Prom
     currentPath = currentPath + '/' + thisDirName;
     if (!thisDirConfig) {
       const newConfig = Object.create(upper.cfg);
-      // 需要动态加载
-      let dirModule: any;
-      try {
-        dirModule = await import(`${currentPath}/config.ts`);
-        if (dirModule.config) {
-          Object.assign(newConfig, dirModule.config);
-        }
-      } catch (e) {
-        ;
-      }
       upper.subs[thisDirName] = {
         cfg: newConfig,
         subs: {},
       };
+      // 随后动态加载配置更新
+      import(`${currentPath}/config.ts`).then(dirModule => {
+        if (dirModule.config) {
+          Object.assign(newConfig, dirModule.config);
+        }
+      }).catch();
     }
     upper = upper.subs[thisDirName];
   }
