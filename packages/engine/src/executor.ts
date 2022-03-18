@@ -4,7 +4,7 @@ import { ICallState } from './lib/callState';
 import { ServiceError, throwServiceError } from './lib/ServiceError';
 import { watchHotUpdate, registerDep } from './hotUpdate';
 import { IFaasModule } from './lib/faas';
-import { getFaasConfig, IConfig } from './lib/config';
+import { getConfigByFaas, ensureFaasConfig, IConfig } from './lib/config';
 import { IMiddleWare } from './lib/middleware';
 import { servicesDir } from './util/resolve';
 import { getDebug } from './util/debug';
@@ -31,10 +31,12 @@ export function getCallState(): ICallState {
 }
 
 /** 获取当前 faas 的指定项的配置 */
-export function getConfig<K extends keyof IConfig>(s: K): IConfig[K] {
-  const { path, fassModule } = getCallState();
-  const config = getFaasConfig(path, fassModule);
-  return config[s];
+export function getConfig<K extends keyof IConfig>(s: K): IConfig[K] | undefined {
+  const { fassModule } = getCallState();
+  const config = getConfigByFaas(fassModule);
+  if (config) {
+    return config[s];
+  }
 }
 
 interface ISuccessResponse {
@@ -94,7 +96,10 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
       msg: '找不到服务定义',
     }
   }
-  const config: IConfig = await getFaasConfig(faasPath, fassModule);
+
+  // 如果 config 已经创建，则为同步执行；否则第一次加载配置会是异步执行
+  let config: IConfig = getConfigByFaas(fassModule) || (await ensureFaasConfig(faasPath, fassModule));
+
   registerDep(resolvedPath);
 
   // 反向登记依赖的 children，child 改变时，可以将依赖服务删除

@@ -41,12 +41,15 @@ dir1/dir2/faas 的 prototype chain，必须保持稳定。
 相关的固定配置对象建立在 root 上。
 */
 
-/** 获取指定 faas 对应的配置，配置数据为 prototype chain 按照 /config.ts 向上找 */
-export function getFaasConfig(path: string, fassModule: IFaasModule): IConfig {
+export function getConfigByFaas(fassModule: IFaasModule): IConfig | undefined {
   let config = configMap.get(fassModule);
   if (config) {
     return config;
   }
+}
+
+/** 获取指定 faas 对应的配置，配置数据为 prototype chain 按照 /config.ts 向上找 */
+export async function ensureFaasConfig(path: string, fassModule: IFaasModule): Promise<IConfig> {
   // 从 faas 模块，确保创建 prototype chain，并 fill root config container
   const parentDirs = path.split('/');
   let upper: IConfigContainer = root;
@@ -62,7 +65,7 @@ export function getFaasConfig(path: string, fassModule: IFaasModule): IConfig {
         subs: {},
       };
       // 随后动态加载配置更新
-      import(`${currentPath}/config.ts`).then(dirModule => {
+      await import(`${currentPath}/config.ts`).then(dirModule => {
         if (dirModule.config) {
           Object.assign(newConfig, dirModule.config);
         }
@@ -77,8 +80,6 @@ export function getFaasConfig(path: string, fassModule: IFaasModule): IConfig {
     Object.assign(faasConfig, fassModule.config);
   }
   configMap.set(fassModule, faasConfig);
-  //@ts-ignore
-  // console.log('faasConfig.randomLatency', faasConfig.randomLatency);
   return faasConfig;
 }
 
