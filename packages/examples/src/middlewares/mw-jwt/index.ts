@@ -1,5 +1,5 @@
 import { getDebug, getCallState, getConfig, throwServiceError, IMiddleWare } from '@ncf/engine';
-import { verify, JwtPayload, TokenExpiredError } from 'jsonwebtoken';
+import { verify, JwtPayload, TokenExpiredError, sign, SignOptions } from 'jsonwebtoken';
 
 const debug = getDebug(module);
 const JWT = Symbol.for('JWT');
@@ -36,12 +36,16 @@ export function setJWT(secret: string, jwtOption: JWTOption) {
   }
 }
 
-export function getSecret(): string {
-  return getConfig(secretKey);
-}
-
-export function getJwtOption(): JWTOption {
-  return getConfig(jwtOptionKey);
+/** 生成 JWT token */
+export function signToken(user: string, opt: SignOptions) {
+  const ctx = getCallState();
+  const token = sign({
+    user: user,
+  }, getConfig(secretKey, ctx), {
+    ...getConfig(jwtOptionKey, ctx),
+    ...opt,
+  });
+  return token;
 }
 
 const defaultSecret = 'has a van';
