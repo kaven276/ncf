@@ -6,9 +6,9 @@ import { ISpec } from './faas1.spec';
 export * from './faas1.check';
 
 const { children, "exports": ex, paths, ...m } = module;
-console.dir(m);
 
 const debug = getDebug(module);
+debug(m);
 
 export const faas: Service<ISpec> = async (req) => {
   check401();
