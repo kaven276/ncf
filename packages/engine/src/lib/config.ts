@@ -9,7 +9,7 @@ const debug = getDebug(module);
 // export const proxySettingKey = Symbol('proxySettingKey');
 export const proxyTriggerPrefixKey = Symbol('proxyTriggerPrefix');
 
-/** 一个配置的全部内容，配置从 faas module 向上看各上级目录的 config.ts 中的 export config，通过 prototype 融合 */
+/** 一个配置的全部内容，配置从 faas module 向上看各上级目录的 index.ts 中的 export config，通过 prototype 融合 */
 export interface IConfig {
   /** 该目录默认的文件后缀，能加速快速解析，不配置默认按照 .ts 处理，可以配置成 .yml, .xml 等等 */
   ext?: string,
@@ -38,7 +38,7 @@ export const root: IConfigContainer = {
 
 /** 配置根配置 */
 async function fillRoot() {
-  const configModule = await import(`${servicesDir}/src/services/config.ts`);
+  const configModule = await import(`${servicesDir}/src/services/index.ts`);
   const config = configModule.config;
   root.cfg = config;
 }
@@ -67,7 +67,7 @@ export function getConfigByFaas(fassModule: IFaasModule): IConfig | undefined {
   }
 }
 
-/** 获取指定 faas 对应的配置，配置数据为 prototype chain 按照 /config.ts 向上找 */
+/** 获取指定 faas 对应的配置，配置数据为 prototype chain 按照 /index.ts 向上找 */
 export async function ensureDirConfig(path: string): Promise<IConfig> {
   // 从 faas 模块，确保创建 prototype chain，并 fill root config container
   if (!root.cfg) {
@@ -87,7 +87,7 @@ export async function ensureDirConfig(path: string): Promise<IConfig> {
         subs: {},
       };
       // 随后动态加载配置更新
-      await import(`${currentPath}/config.ts`).then(dirModule => {
+      await import(`${currentPath}/index.ts`).then(dirModule => {
         debug('load', currentPath, dirModule);
         if (dirModule.config) {
           Object.assign(newConfig, dirModule.config);
@@ -106,7 +106,7 @@ export async function ensureDirConfig(path: string): Promise<IConfig> {
   return upper.cfg;
 }
 
-/** 获取指定 faas 对应的配置，配置数据为 prototype chain 按照 /config.ts 向上找 */
+/** 获取指定 faas 对应的配置，配置数据为 prototype chain 按照 /index.ts 向上找 */
 export function ensureFaasConfig(dirConfig: IConfig, fassModule: IFaasModule): IConfig {
   const faasConfig: IConfig = Object.create(dirConfig);
   if (fassModule.config) {

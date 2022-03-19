@@ -156,7 +156,7 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
 
     // 最终做成像 koa 式的包洋葱中间件
 
-    const middlewares: IMiddleWare = await import(`${servicesDir}/src/services/config`).then((m) => (m.middlewares)).catch(() => []);
+    const middlewares: IMiddleWare = await import(`${servicesDir}/src/services/index.ts`).then((m) => (m.middlewares)).catch(() => []);
 
     function runMiddware(n: number): Promise<void> {
       debug(`executing middleware ${n}`);

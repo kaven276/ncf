@@ -24,7 +24,7 @@ export function watchHotUpdate() {
         delete require.cache[servicePath];
       })
     }
-    if (path.endsWith('/config.ts')) {
+    if (path.endsWith('/index.ts')) {
       // 目录配置改变的话，更新 config prototype chain
       debug('config changed for', path.substring(ServiceDir.length));
       const dirs = path.substring(ServiceDir.length + 1).split('/');
