@@ -3,6 +3,9 @@ import Koa from 'koa';
 import koaBody from 'koa-body';
 import { execute } from './executor';
 import { URL } from 'url';
+import { getDebug } from './util/debug';
+
+const debug = getDebug(module);
 
 /*
 * 选 KOA 而非裸 nodejs http 的原因
@@ -44,6 +47,10 @@ function useNCF() {
     const faasPath = url.pathname;
     const mock = !!url.searchParams.get('mock');
     const isPost = ctx.request.method.toLocaleUpperCase() === 'POST';
+    if (!isPost) {
+      // koaBody 没有识别出可处理的请求 content-type，则默认返回 {}，需要改成 undefined
+      ctx.request.body = undefined;
+    }
     const request = ctx.request.body || ctx.request.query;
 
     let stream: IncomingMessage | undefined;
