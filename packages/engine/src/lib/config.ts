@@ -6,11 +6,20 @@ import { ICallState } from './callState';
 
 const debug = getDebug(module);
 
+// export const proxySettingKey = Symbol('proxySettingKey');
+export const proxyTriggerPrefixKey = Symbol('proxyTriggerPrefix');
+
 /** 一个配置的全部内容，配置从 faas module 向上看各上级目录的 config.ts 中的 export config，通过 prototype 融合 */
 export interface IConfig {
+  /** 该目录默认的文件后缀，能加速快速解析，不配置默认按照 .ts 处理，可以配置成 .yml, .xml 等等 */
+  ext?: string,
+  // [proxySettingKey]?: string | boolean,
+  /** 在该前缀下，使用代理来处理，没有 faas module .faas 时，使用 dir/index.ts 中的 .faas 替换 */
+  [proxyTriggerPrefixKey]?: string,
   //@ts-ignore
   [key: symbol]: any,
 }
+
 
 /** 因为不想造成原始源码模块在框架内被改变，所以外部记录对应的配置 */
 const configMap = new WeakMap<IFaasModule, IConfig>()
@@ -59,7 +68,7 @@ export function getConfigByFaas(fassModule: IFaasModule): IConfig | undefined {
 }
 
 /** 获取指定 faas 对应的配置，配置数据为 prototype chain 按照 /config.ts 向上找 */
-export async function ensureFaasConfig(path: string, fassModule: IFaasModule): Promise<IConfig> {
+export async function ensureDirConfig(path: string): Promise<IConfig> {
   // 从 faas 模块，确保创建 prototype chain，并 fill root config container
   if (!root.cfg) {
     await fillRootPromise;
@@ -79,8 +88,14 @@ export async function ensureFaasConfig(path: string, fassModule: IFaasModule): P
       };
       // 随后动态加载配置更新
       await import(`${currentPath}/config.ts`).then(dirModule => {
+        debug('load', currentPath, dirModule);
         if (dirModule.config) {
           Object.assign(newConfig, dirModule.config);
+        }
+        // dirModule.proxy 可能配置成 true 或者代理到的对端的 url prefix
+        if (dirModule.proxy) {
+          debug('have proxy', currentPath);
+          newConfig[proxyTriggerPrefixKey] = parentDirs.slice(0, i + 1).join('/');
         }
       }).catch(() => {
         debug('config not exists for dir', currentPath);
@@ -88,7 +103,12 @@ export async function ensureFaasConfig(path: string, fassModule: IFaasModule): P
     }
     upper = upper.subs[thisDirName];
   }
-  const faasConfig: IConfig = Object.create(upper.cfg);
+  return upper.cfg;
+}
+
+/** 获取指定 faas 对应的配置，配置数据为 prototype chain 按照 /config.ts 向上找 */
+export function ensureFaasConfig(dirConfig: IConfig, fassModule: IFaasModule): IConfig {
+  const faasConfig: IConfig = Object.create(dirConfig);
   if (fassModule.config) {
     Object.assign(faasConfig, fassModule.config);
   }

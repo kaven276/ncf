@@ -15,6 +15,8 @@ export interface ICallState {
   readonly id: number,
   /** 调用服务路径 */
   path: string,
+  /** 代理的路径 */
+  proxiedPath?: string,
   /** 请求 */
   request: any,
   /** 响应 */

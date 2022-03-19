@@ -4,7 +4,7 @@ import { ICallState } from './lib/callState';
 import { ServiceError, throwServiceError } from './lib/ServiceError';
 import { watchHotUpdate, registerDep } from './hotUpdate';
 import { IFaasModule } from './lib/faas';
-import { getConfigByFaas, ensureFaasConfig } from './lib/config';
+import { getConfigByFaas, proxyTriggerPrefixKey, ensureDirConfig, ensureFaasConfig } from './lib/config';
 import { IMiddleWare } from './lib/middleware';
 import { servicesDir } from './util/resolve';
 import { getDebug } from './util/debug';
@@ -28,6 +28,11 @@ const asyncLocalStorage = new AsyncLocalStorage<ICallState>();
 
 export function getCallState(): ICallState {
   return asyncLocalStorage.getStore()!;
+}
+
+/** 供 index.ts 中的代理模块获取代理目标的路径，也即去掉 prefix 部分的路径 */
+export function getProxiedPath(): string | undefined {
+  return getCallState().proxiedPath;
 }
 
 interface ISuccessResponse {
@@ -56,28 +61,58 @@ type IFinalResponse = ISuccessResponse | IFailureResponse;
  */
 export async function execute({ faasPath, request, stream, mock, http }: IEntranceProps): Promise<IFinalResponse> {
 
+  debug(`request ${idSeq + 1} ${faasPath} coming...`);
+
+  const dirConfig = await ensureDirConfig(faasPath);
+  /** 即便是代理，依然尝试加载 faas 模块，因为里面可能有请求响应校验和其他配置，虽然没有 export faas */
+  const proxyTriggerPrefix: string | undefined = dirConfig[proxyTriggerPrefixKey];
+
+  debug('proxyTriggerPrefix', proxyTriggerPrefix);
+
   // step1: 定位服务模块文件路径
   let resolvedPath: string;
   try {
+    // 即便 dir 配置 proxy，也可能内部存在 faas module 做特殊处理的，或者提供请求响应校验，因此也要尝试解析
     resolvedPath = require.resolve(`src/services${faasPath}${mock ? '.mock' : ''}`, {
       paths: [servicesDir],
     });
   } catch (e) {
-    return {
-      status: 404,
-      code: 404,
-      msg: '找不到 mock 定义',
+    if (proxyTriggerPrefix) {
+      resolvedPath = '';
+    } else {
+      return {
+        status: 404,
+        code: 404,
+        msg: '找不到处理模块',
+      }
     }
   }
-  console.log(`request ${idSeq + 1} ${faasPath} coming...`, resolvedPath);
+
+
+  // 新的 resolve 方式，自顶而下查看 dir config，如果 proxy:true, ext:xxx 则影响 faas resolve
+  // 输出为 faas 地址，到具体文件名和后缀，可能来自 dir config (proxy faasPath) 或 faas module
 
   // step2: 加载服务模块
-  const fassModule: IFaasModule = await import(resolvedPath).catch(e => {
-    // console.log('---- no found ---', e, resolvedPath);
-    throwServiceError(404, '找不到服务模块', {
-      path: faasPath,
-    })
-  });
+  let fassModule!: IFaasModule;
+  if (resolvedPath) {
+    fassModule = await import(resolvedPath).catch(e => {
+      // console.log('---- no found ---', e, resolvedPath);
+      throwServiceError(404, '找不到服务模块', {
+        path: faasPath,
+      });
+    });
+  } else {
+    fassModule = { fake: true } as IFaasModule;
+
+  }
+
+  if (proxyTriggerPrefix && !fassModule.faas) {
+    const dirPath = `${servicesDir}/src/services${proxyTriggerPrefix}/index.ts`;
+    const dirModule = await import(dirPath);
+    fassModule.faas = dirModule.faas;
+  }
+
+
   const faas = fassModule.faas;
   if (!faas) {
     // console.log('fassModule', fassModule);
@@ -90,10 +125,13 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
 
   // 如果 config 已经创建，则为同步执行；否则第一次加载配置会是异步执行
   if (!getConfigByFaas(fassModule)) {
-    await ensureFaasConfig(faasPath, fassModule);
+    ensureFaasConfig(dirConfig, fassModule);
   }
 
-  registerDep(resolvedPath);
+  if (!fassModule.fake) {
+    registerDep(resolvedPath);
+  }
+
 
   // 反向登记依赖的 children，child 改变时，可以将依赖服务删除
   // console.log(resolvedPath);
@@ -105,6 +143,7 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
     id: ++idSeq,
     http,
     path: faasPath,
+    proxiedPath: proxyTriggerPrefix ? faasPath.substring(proxyTriggerPrefix!.length) : undefined,
     request,
     response: null,
     fassModule,

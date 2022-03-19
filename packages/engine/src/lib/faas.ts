@@ -14,6 +14,7 @@ export type Service<T extends { path: string, request?: any, response?: any }> =
 }
 
 export interface IFaasModule {
+  fake: boolean,
   faas: Service<any>,
   /** faas 服务模块可能带有配置 */
   config?: IConfig,
