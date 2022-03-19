@@ -17,7 +17,7 @@ export function loadMarkdown(text: string) {
   const tokens = lexer.lex(text);
   // console.log(tokens);
   const table = tokens.filter(item => item.type === 'table')[0];
-  console.dir(table);
+  // console.dir(table);
   //@ts-ignore
   const header = table.header.map((v: any) => {
     const vv = v.text.split(':');
@@ -28,7 +28,7 @@ export function loadMarkdown(text: string) {
   });
   //@ts-ignore
   const data = table.rows.map(row => row.reduce((obj, col, idx) => {
-    console.log(idx, col);
+    // console.log(idx, col);
     const hc = header[idx];
     obj[hc.key] = (hc.type && hc.type.startsWith('num')) ? Number(col.text) : col.text;
     return obj;

@@ -1,4 +1,5 @@
 import { IncomingMessage } from 'http';
+import { extname } from 'path';
 import { AsyncLocalStorage } from 'async_hooks';
 import { ICallState } from './lib/callState';
 import { ServiceError, throwServiceError } from './lib/ServiceError';
@@ -72,11 +73,20 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
   // step1: 定位服务模块文件路径
   let resolvedPath: string;
   try {
+    let ext = extname(faasPath);
+    if (!ext && dirConfig.ext) {
+      debug('auto append ext', dirConfig.ext);
+      ext = dirConfig.ext;
+    }
+
     // 即便 dir 配置 proxy，也可能内部存在 faas module 做特殊处理的，或者提供请求响应校验，因此也要尝试解析
-    resolvedPath = require.resolve(`src/services${faasPath}${mock ? '.mock' : ''}`, {
+    const tryPath = `src/services${faasPath}${mock ? '.mock' : ''}${ext}`;
+    debug('tryPath', tryPath);
+    resolvedPath = require.resolve(tryPath, {
       paths: [servicesDir],
     });
   } catch (e) {
+    debug(e);
     if (proxyTriggerPrefix) {
       resolvedPath = '';
     } else {
