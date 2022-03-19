@@ -92,8 +92,8 @@ export async function ensureDirConfig(path: string): Promise<IConfig> {
         if (dirModule.config) {
           Object.assign(newConfig, dirModule.config);
         }
-        // dirModule.proxy 可能配置成 true 或者代理到的对端的 url prefix
-        if (dirModule.proxy) {
+        // dirModule.faas 配置代表该路径是代理服务
+        if (dirModule.faas) {
           debug('have proxy', currentPath);
           newConfig[proxyTriggerPrefixKey] = parentDirs.slice(0, i + 1).join('/');
         }
