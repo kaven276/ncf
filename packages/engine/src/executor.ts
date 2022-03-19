@@ -71,57 +71,30 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
   debug('proxyTriggerPrefix', proxyTriggerPrefix);
 
   // step1: 定位服务模块文件路径
-  let resolvedPath: string;
-  try {
-    let ext = extname(faasPath);
-    if (!ext && dirConfig.ext) {
-      debug('auto append ext', dirConfig.ext);
-      ext = dirConfig.ext;
-    }
-
-    // 即便 dir 配置 proxy，也可能内部存在 faas module 做特殊处理的，或者提供请求响应校验，因此也要尝试解析
-    const tryPath = `src/services${faasPath}${mock ? '.mock' : ''}${ext}`;
-    debug('tryPath', tryPath);
-    resolvedPath = require.resolve(tryPath, {
-      paths: [servicesDir],
-    });
-  } catch (e) {
-    debug(e);
-    if (proxyTriggerPrefix) {
-      resolvedPath = '';
-    } else {
-      return {
-        status: 404,
-        code: 404,
-        msg: '找不到处理模块',
-      }
-    }
-  }
-
-
   // 新的 resolve 方式，自顶而下查看 dir config，如果 proxy:true, ext:xxx 则影响 faas resolve
   // 输出为 faas 地址，到具体文件名和后缀，可能来自 dir config (proxy faasPath) 或 faas module
+  const ext = extname(faasPath) || dirConfig.ext || '.ts';
+  const tryPath = `${servicesDir}/src/services${faasPath}${mock ? '.mock' : ''}${ext}`;
+  debug('tryPath', tryPath);
 
   // step2: 加载服务模块
-  let fassModule!: IFaasModule;
-  if (resolvedPath) {
-    fassModule = await import(resolvedPath).catch(e => {
-      // console.log('---- no found ---', e, resolvedPath);
+  // 即便 dir 配置 proxy，也可能内部存在 faas module 做特殊处理的，或者提供请求响应校验，因此也要尝试解析
+  const fassModule: IFaasModule = await import(tryPath).catch(e => {
+    if (proxyTriggerPrefix) {
+      return { fake: true } as IFaasModule;
+    } else {
+      debug('---- no found ---', e, tryPath);
       throwServiceError(404, '找不到服务模块', {
         path: faasPath,
       });
-    });
-  } else {
-    fassModule = { fake: true } as IFaasModule;
-
-  }
+    }
+  });
 
   if (proxyTriggerPrefix && !fassModule.faas) {
     const dirPath = `${servicesDir}/src/services${proxyTriggerPrefix}/index.ts`;
     const dirModule = await import(dirPath);
     fassModule.faas = dirModule.faas;
   }
-
 
   const faas = fassModule.faas;
   if (!faas) {
@@ -139,7 +112,7 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
   }
 
   if (!fassModule.fake) {
-    registerDep(resolvedPath);
+    registerDep(tryPath);
   }
 
 
