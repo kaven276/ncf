@@ -1,7 +1,7 @@
 import { IncomingMessage } from 'http';
 import { createWriteStream } from 'fs';
 import { Writable } from 'stream'
-import { ServiceError } from '@ncf/engine';
+import { ServiceError } from '@ncf/microkernel';
 import { join } from 'path';
 
 /** 等待写结束才返回 */

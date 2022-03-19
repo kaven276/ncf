@@ -1,6 +1,6 @@
 import { add } from './util1';
 import { PI, check401, checkIsAdmin } from '.';
-import { Service } from '@ncf/engine';
+import { Service } from '@ncf/microkernel';
 import { ISpec } from './faas1.spec';
 
 export const faas: Service<ISpec> = async (req) => {

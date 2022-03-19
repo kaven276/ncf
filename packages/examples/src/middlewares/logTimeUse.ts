@@ -1,4 +1,4 @@
-import { getDebug, IMiddleWare } from '@ncf/engine';
+import { getDebug, IMiddleWare } from '@ncf/microkernel';
 
 const debug = getDebug(module);
 export const logTimeUse: IMiddleWare = async (ctx, next) => {

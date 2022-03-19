@@ -4,7 +4,7 @@
   "private": true,
   "description": "nodejs concise framework",
   "workspaces": [
-    "packages/engine",
+    "packages/microkernel",
     "packages/mw-validator",
     "packages/mw-jwt",
     "packages/baas-typeorm",

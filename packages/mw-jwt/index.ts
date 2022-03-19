@@ -1,4 +1,4 @@
-import { getDebug, getCallState, getConfig, throwServiceError, IMiddleWare } from '@ncf/engine';
+import { getDebug, getCallState, getConfig, throwServiceError, IMiddleWare } from '@ncf/microkernel';
 import { verify, JwtPayload, TokenExpiredError, sign, SignOptions } from 'jsonwebtoken';
 
 const debug = getDebug(module);
@@ -6,7 +6,7 @@ const JWT = Symbol.for('JWT');
 const JWTParsed = Symbol.for('JWTParsed');
 
 /** 服务调用期间的全部内容 */
-declare module '@ncf/engine' {
+declare module '@ncf/microkernel' {
   interface ICallState {
     // 使用 Symbol 作为本功能模块在调用线程数据结构中的 key，防止其他第三方中间件 key 命名重复造成 bug
     [JWT]?: string,

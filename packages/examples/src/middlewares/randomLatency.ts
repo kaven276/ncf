@@ -1,4 +1,4 @@
-import { IMiddleWare, getConfig } from '@ncf/engine';
+import { IMiddleWare, getConfig } from '@ncf/microkernel';
 
 export interface LatencyConfig {
   /** 最大延迟的毫秒数 */  maxLatencyMs: number,

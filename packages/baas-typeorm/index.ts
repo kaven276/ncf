@@ -1,11 +1,11 @@
-import { getCallState, getDebug } from '@ncf/engine';
+import { getCallState, getDebug } from '@ncf/microkernel';
 import { getConnection, QueryRunner } from "typeorm";
 
 const debug = getDebug(module);
 const ORMKey = Symbol.for('ORMKey');
 
 /** 服务调用期间的全部内容 */
-declare module '@ncf/engine' {
+declare module '@ncf/microkernel' {
   interface ICallState {
     // 使用 Symbol 作为本功能模块在调用线程数据结构中的 key，防止其他第三方中间件 key 命名重复造成 bug
     [ORMKey]?: {

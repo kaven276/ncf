@@ -1,5 +1,5 @@
 import { User, UserRole } from "src/entity/User";
-import { ServiceError } from '@ncf/engine';
+import { ServiceError } from '@ncf/microkernel';
 import { getManager } from '.';
 
 /**

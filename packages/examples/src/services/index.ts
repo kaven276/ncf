@@ -1,12 +1,12 @@
 import { makeRe } from 'minimatch';
-import { IMiddleWare } from '@ncf/engine';
+import { IMiddleWare } from '@ncf/microkernel';
 import { validate } from '@ncf/mw-validator';
 import { logTimeUse } from '../middlewares/logTimeUse';
 import { jwtMiddleware, setJWT } from '@ncf/mw-jwt';
 import { randomLatency, setRandomLatencyConfig } from '../middlewares/randomLatency';
 import { setPoolName } from '../baas/testPgPool';
 
-import { throwServiceError } from '@ncf/engine';
+import { throwServiceError } from '@ncf/microkernel';
 import { getConnFromThread } from '@ncf/baas-typeorm';
 import { getJWT, getJWTStruct } from '@ncf/mw-jwt';
 

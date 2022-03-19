@@ -1,13 +1,13 @@
 /* 需要
  */
 import { Pool, PoolClient } from 'pg';
-import { getCallState, getDebug, getConfig } from '@ncf/engine';
+import { getCallState, getDebug, getConfig } from '@ncf/microkernel';
 
 const debug = getDebug(module);
 
 const poolNameKey = Symbol('poolname');
 
-declare module "@ncf/engine" {
+declare module "@ncf/microkernel" {
 
   interface ICallState {
     pgClient?: PoolClient,

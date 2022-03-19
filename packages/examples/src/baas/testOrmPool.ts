@@ -1,4 +1,4 @@
-import {  getDebug } from '@ncf/engine';
+import {  getDebug } from '@ncf/microkernel';
 import { createConnection } from "typeorm";
 import { ormconfig } from './ormconfig';
 

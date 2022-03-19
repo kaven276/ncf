@@ -1,5 +1,5 @@
 import { getPGPoolByServiceThread } from 'src/baas/testPgPool';
-import { getDebug } from '@ncf/engine';
+import { getDebug } from '@ncf/microkernel';
 
 const debug = getDebug(module);
 

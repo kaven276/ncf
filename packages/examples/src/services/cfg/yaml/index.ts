@@ -1,4 +1,4 @@
-import { IConfig } from '@ncf/engine';
+import { IConfig } from '@ncf/microkernel';
 
 export const config: IConfig = {
   ext: '.yml',

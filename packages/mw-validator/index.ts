@@ -1,9 +1,9 @@
-import { IMiddleWare } from '@ncf/engine';
-import { throwServiceError } from '@ncf/engine';
+import { IMiddleWare } from '@ncf/microkernel';
+import { throwServiceError } from '@ncf/microkernel';
 import Ajv from 'ajv';
 import { JSONSchemaType, ValidateFunction } from 'ajv';
 
-declare module '@ncf/engine' {
+declare module '@ncf/microkernel' {
   export interface IFaasModule {
     checkRequest?: ValidateFunction,
     checkResponse?: ValidateFunction,

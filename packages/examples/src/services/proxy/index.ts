@@ -1,4 +1,4 @@
-import { getProxiedPath } from '@ncf/engine';
+import { getProxiedPath } from '@ncf/microkernel';
 import { setRandomLatencyConfig } from '../../middlewares/randomLatency';
 
 /** 目录模块导出 faas 代表该目录路径使用反向代理 */

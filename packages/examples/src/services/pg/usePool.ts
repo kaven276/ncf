@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-import { getDebug } from '@ncf/engine';
+import { getDebug } from '@ncf/microkernel';
 
 const debug = getDebug(module);
 

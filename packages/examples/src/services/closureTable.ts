@@ -1,5 +1,5 @@
 import { Category } from "src/entity/Category";
-import { ServiceError } from '@ncf/engine';
+import { ServiceError } from '@ncf/microkernel';
 import { getManager } from '.';
 
 export const faas = async (req: any) => {

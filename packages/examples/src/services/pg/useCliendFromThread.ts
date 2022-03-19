@@ -1,6 +1,6 @@
 import { getPGPoolByServiceThread } from 'src/baas/testPgPool';
 import { faas as sub } from './useCliendFromThreadSub';
-import { getDebug, throwServiceError } from '@ncf/engine';
+import { getDebug, throwServiceError } from '@ncf/microkernel';
 
 const debug = getDebug(module);
 
