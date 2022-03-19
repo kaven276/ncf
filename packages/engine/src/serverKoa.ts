@@ -41,8 +41,7 @@ function useCors(allowedOrigin?: string) {
 /** KOA 中间件，支持到 NCF core 的调用，NCF 架构网关 */
 function useNCF() {
   return async (ctx: Koa.ParameterizedContext<Koa.DefaultState, Koa.DefaultContext, any>) => {
-    const reqBody = ctx.request.body;
-    // console.log('buffer -----', reqBody instanceof buffer, reqBody instanceof String, reqBody);
+    // debug('buffer -----', [ctx.method, ctx.request.body, ctx.request.query]);
 
     const req = ctx.req;
     // 动态根据访问路径找到对应的处理 ts 文件
@@ -59,10 +58,12 @@ function useNCF() {
     }
 
     // 给核心服务环境信息，然后调用
-    const result = await execute({ faasPath, request, stream, mock, http: {
-      req: ctx.req,
-      res: ctx.res,
-    } });
+    const result = await execute({
+      faasPath, request, stream, mock, http: {
+        req: ctx.req,
+        res: ctx.res,
+      }
+    });
     ctx.response.type = 'application/json';
     ctx.body = result;
     // console.log('ctx.body', ctx.body);
@@ -77,7 +78,7 @@ function startServer() {
 
   const koa = new Koa();
   koa.use(useCors());
-  // koa.use(koaBody());
+  koa.use(koaBody({}));
   koa.use(useNCF());
 
   koa.on('error', (err, ctx) => {
