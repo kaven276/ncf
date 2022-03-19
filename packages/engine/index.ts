@@ -1,4 +1,5 @@
 export { start as startKoa } from './src/serverKoa';
+export { httpGateway } from './src/serverHttp';
 export { ServiceError, throwServiceError } from './src/lib/ServiceError';
 export { ICallState, TransactionDealer } from './src/lib/callState';
 export { getCallState, getProxiedPath } from './src/executor';

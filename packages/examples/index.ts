@@ -1,4 +1,5 @@
-import { startKoa } from '@ncf/engine';
+import { startKoa, httpGateway } from '@ncf/engine';
+import { createServer } from 'http';
 import '@ncf/loader-cfg-json5';
 import '@ncf/loader-cfg-yaml';
 import '@ncf/loader-cfg-xml';
@@ -11,4 +12,6 @@ import './src/baas/testOrmPool';
 if (require.main !== module) {
   process.exit()
 }
-startKoa();
+// startKoa();
+
+createServer(httpGateway).listen(8081);
