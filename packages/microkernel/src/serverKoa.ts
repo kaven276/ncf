@@ -39,24 +39,31 @@ function useCors(allowedOrigin?: string) {
 /** KOA 中间件，支持到 NCF core 的调用，NCF 架构网关 */
 function useNCF() {
   return async (ctx: Koa.ParameterizedContext<Koa.DefaultState, Koa.DefaultContext, any>) => {
-    // debug('buffer -----', [ctx.method, ctx.request.body, ctx.request.query]);
+    // debug('request', [ctx.method, ctx.request.body, ctx.request.query]);
 
     const req = ctx.req;
+    const method = ctx.request.method.toLocaleUpperCase();
+    if (method === 'HEAD') {
+      return;
+    }
     // 动态根据访问路径找到对应的处理 ts 文件
     const url = new URL(ctx.url!, `http://${req.headers.host}`);
     const faasPath = url.pathname;
     const mock = !!url.searchParams.get('mock');
-    const isPost = ctx.request.method.toLocaleUpperCase() === 'POST';
-    if (!isPost) {
-      // koaBody 没有识别出可处理的请求 content-type，则默认返回 {}，需要改成 undefined
-      ctx.request.body = undefined;
-    }
-    const request = ctx.request.body || ctx.request.query;
-
+    const isGet = (method === 'GET');
+    let request: any;
     let stream: IncomingMessage | undefined;
-    if (isPost && !ctx.request.body) {
-      stream = ctx.req;
-      // console.log('found stream');
+    if (isGet) {
+      request = ctx.request.query;
+    } else {
+      if (!ctx.request.body || (ctx.request.body && Object.values(ctx.request.body).length === 0)) {
+        request = ctx.request.query;
+        stream = req;
+        debug('found stream');
+      } else {
+        // request = Object.assign({}, ctx.request.body, ctx.request.query);
+        request = ctx.request.body;
+      }
     }
 
     // 给核心服务环境信息，然后调用
@@ -78,7 +85,9 @@ function useNCF() {
 export function createKoaApp() {
   const koa = new Koa();
   koa.use(useCors());
-  koa.use(koaBody({}));
+  koa.use(koaBody({
+    strict: true,
+  }));
   koa.use(useNCF());
 
   koa.on('error', (err, ctx) => {
