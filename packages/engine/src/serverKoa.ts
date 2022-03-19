@@ -12,9 +12,6 @@ import { URL } from 'url';
 * error fallback
 */
 
-const PORT = 8081;
-
-
 /** KOA 中间件，配置服务的网站，支持其跨域 cors 访问 */
 function useCors(allowedOrigin?: string) {
   return async (ctx: Koa.ParameterizedContext<Koa.DefaultState, Koa.DefaultContext, any>, next: Koa.Next) => {
@@ -32,8 +29,6 @@ function useCors(allowedOrigin?: string) {
       // console.log(ctx.response.headers);
       return;
     }
-    const reqBody = ctx.request.body;
-    // console.log('prelog -----', ctx.request.method, reqBody instanceof buffer, reqBody instanceof String, ctx.origin, ctx.request.headers);
     await next();
   }
 }
@@ -73,9 +68,7 @@ function useNCF() {
   }
 }
 
-
-function startServer() {
-
+export function createKoaApp() {
   const koa = new Koa();
   koa.use(useCors());
   koa.use(koaBody({}));
@@ -88,10 +81,5 @@ function startServer() {
     };
   });
 
-  koa.listen(PORT);
-}
-
-
-export async function start() {
-  startServer();
+  return koa;
 }

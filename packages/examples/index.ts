@@ -1,4 +1,4 @@
-import { startKoa, httpGateway } from '@ncf/engine';
+import { createKoaApp, httpGateway } from '@ncf/engine';
 import { createServer } from 'http';
 import '@ncf/loader-cfg-json5';
 import '@ncf/loader-cfg-yaml';
@@ -12,6 +12,7 @@ import './src/baas/testOrmPool';
 if (require.main !== module) {
   process.exit()
 }
-// startKoa();
 
-createServer(httpGateway).listen(8081);
+// 使用多个 NCF app 接入层，分别监听不同的端口
+createServer(createKoaApp().callback()).listen(8081);
+createServer(httpGateway).listen(8082);

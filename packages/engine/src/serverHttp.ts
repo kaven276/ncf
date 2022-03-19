@@ -18,6 +18,7 @@ export const httpGateway: RequestListener = async (req, res) => {
   if (isPost) {
     stream = req;
     // console.log('found stream');
+
   }
 
   // 给核心服务环境信息，然后调用
