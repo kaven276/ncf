@@ -68,14 +68,16 @@ type IFinalResponse = ISuccessResponse | IFailureResponse;
  * 返回 Promise
  */
 export async function execute({ faasPath, request, stream, mock, http }: IEntranceProps): Promise<IFinalResponse> {
-
-  debug(`request ${idSeq + 1} ${faasPath} coming...`);
+  idSeq += 1;
+  debug(`request ${idSeq} ${faasPath} coming...`);
 
   const dirConfig = await ensureDirConfig(faasPath);
   /** 即便是代理，依然尝试加载 faas 模块，因为里面可能有请求响应校验和其他配置，虽然没有 export faas */
   const proxyTriggerPrefix: string | undefined = dirConfig[proxyTriggerPrefixKey];
 
-  debug('proxyTriggerPrefix', proxyTriggerPrefix);
+  if (proxyTriggerPrefix) {
+    debug('proxyTriggerPrefix', proxyTriggerPrefix);
+  }
 
   // step1: 定位服务模块文件路径
   // 新的 resolve 方式，自顶而下查看 dir config，如果 proxy:true, ext:xxx 则影响 faas resolve
@@ -130,7 +132,7 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
 
   // step 3: 执行服务模块
   const als: ICallState = {
-    id: ++idSeq,
+    id: idSeq,
     http,
     path: faasPath,
     proxiedPath: proxyTriggerPrefix ? faasPath.substring(proxyTriggerPrefix!.length) : undefined,
