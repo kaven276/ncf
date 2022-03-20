@@ -1,6 +1,7 @@
 import { watch } from 'chokidar';
 import { getDebug } from './util/debug';
 import { root } from './lib/config';
+import { servicesDir } from './util/resolve';
 const ServiceDir = process.cwd() + '/src/services';
 
 const debug = getDebug(module);
@@ -17,13 +18,8 @@ export function watchHotUpdate() {
   });
 
   watcher.on("change", (path) => {
-    delete require.cache[path];
-    const depServiceSet = depsMap.get(path);
-    if (depServiceSet) {
-      depServiceSet.forEach(servicePath => {
-        delete require.cache[servicePath];
-      })
-    }
+    deleteCacheFromUpated(path);
+
     if (path.endsWith('/index.ts')) {
       // 目录配置改变的话，更新 config prototype chain
       debug('config changed for', path.substring(ServiceDir.length));
@@ -49,19 +45,41 @@ export function watchHotUpdate() {
   });
 }
 
+/** 都是按照解析完的 module.filename 来记录关系的 */
 const depsMap = new Map<string, Set<string>>();
-export function registerDep(absServicePath: string) {
-  if (!started) return;
-  const children = require.cache[absServicePath]!.children;
-  if (!children) return;
-  children.forEach((depModule) => {
-    // 只对服务目录内的依赖登记
-    if (!depModule.id.startsWith(ServiceDir)) return;
-    const depSet = depsMap.get(depModule.id) || (() => {
-      const m = new Set<string>();
-      depsMap.set(depModule.id, m);
-      return m;
-    })();
-    depSet.add(absServicePath);
+
+function collectWhoDependMe(parentModule: NodeModule) {
+  if (!parentModule) return;
+  const absFileName = parentModule.filename;
+  parentModule.children.forEach(subModule => {
+    let depSet = depsMap.get(subModule.filename);
+    if (!depSet) {
+      depSet = new Set<string>();
+      depsMap.set(subModule.filename, depSet);
+    }
+    // 如果判断 subModule 可能会改变，则加入到依赖跟踪中
+    if (subModule.filename.startsWith(servicesDir)) {
+      depSet.add(absFileName);
+      collectWhoDependMe(subModule);
+    }
   })
 }
+
+function deleteCacheFromUpated(updatedFileName: string) {
+  debug('delete cache', updatedFileName);
+  delete require.cache[updatedFileName];
+  const importers = depsMap.get(updatedFileName);
+  if (!importers) return;
+  for (let importer of importers) {
+    if (importer === updatedFileName) {
+      process.exit();
+    }
+    deleteCacheFromUpated(importer);
+  }
+}
+
+export function registerDep(absServicePath: string) {
+  if (!started) return;
+  collectWhoDependMe(require.cache[absServicePath]!);
+}
+
