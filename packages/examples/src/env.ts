@@ -5,14 +5,17 @@ import Ajv from 'ajv';
 interface ENV {
   /** 默认第一个监听端口 */
   PORT: number,
+  /** JWT 有效期(秒) */
+  JWT_EFFECT_TIME: number,
 };
 
 const envSchema: JSONSchemaType<ENV> = {
   type: "object",
   properties: {
     PORT: { type: "integer", default: 8081, maximum: 65535, minimum: 8000 },
+    JWT_EFFECT_TIME: { type: "integer", default: 24 * 60 * 60, maximum: 24 * 60 * 60, minimum: 10 * 60 },
   },
-  required: ['PORT'],
+  required: ['PORT', 'JWT_EFFECT_TIME'],
   additionalProperties: false,
 }
 

@@ -1,6 +1,7 @@
 import { throwServiceError, getDebug } from '@ncf/microkernel';
 import { setRandomLatencyConfig } from 'src/middlewares/randomLatency';
 import { signToken } from '@ncf/mw-jwt';
+import { env } from 'src/env';
 
 interface ILoginInfo {
   user: string,
@@ -24,7 +25,7 @@ export async function faas(req: ILoginInfo): Promise<Result | undefined> {
   debug(req);
   if (['test', 'admin'].includes(req.user) && req.password === '123456') {
     const token = signToken(req.user, {
-      expiresIn: 3600,
+      expiresIn: env.JWT_EFFECT_TIME,
     });
     return { token };
   }
