@@ -1,7 +1,8 @@
 import { add } from './util1';
 import { PI, check401, checkIsAdmin } from '.';
-import { Service, getDebug } from '@ncf/microkernel';
-import { ISpec } from './faas1.spec';
+import type { Service  } from '@ncf/microkernel';
+import { getDebug } from '@ncf/microkernel';
+import type { ISpec } from './faas1.spec';
 
 export * from './faas1.check';
 
