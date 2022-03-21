@@ -4,7 +4,7 @@ import { Entity, Column, PrimaryColumn } from "typeorm";
 export class Org {
 
   @PrimaryColumn({ type: 'cidr' })
-  orgId;
+  orgId: string;
 
   @Column({ type: 'int4' })
   rank: number;
@@ -27,7 +27,7 @@ export class Org {
     nullable: false,
     default: {},
   })
-  attrs;
+  attrs: any;
 
   @Column({
     nullable: true,

@@ -68,7 +68,7 @@ export const jwtMiddleware: IMiddleWare = async (ctx, next) => {
       const option: JWTOption = getConfig(jwtOptionKey, ctx) || defaultJwtOption;
       const parsed: JwtPayload = verify(jwt, secret, option) as JwtPayload;
       ctx[JWTParsed] = parsed;
-    } catch (e) {
+    } catch (e: any) {
       if (e instanceof TokenExpiredError) {
         throwServiceError(403, `JWT 过期，超过 ${e.expiredAt}`);
       }

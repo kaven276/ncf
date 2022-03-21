@@ -141,14 +141,14 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
     fassModule,
     trans: [],
   }
-  return asyncLocalStorage.run(als, async () => {
+  const resp = asyncLocalStorage.run<Promise<IFinalResponse>, ICallState[]>(als, async () => {
     const store = asyncLocalStorage.getStore()!;
 
     assert.equal(als, store);
 
     // 最终做成像 koa 式的包洋葱中间件
 
-    const middlewares: IMiddleWare = await import(`${servicesDir}/src/services/index.ts`).then((m) => (m.middlewares)).catch(() => []);
+    const middlewares: IMiddleWare[] = await import(`${servicesDir}/src/services/index.ts`).then((m) => (m.middlewares)).catch(() => []);
 
     function runMiddware(n: number): Promise<void> {
       debug(`executing middleware ${n}`);
@@ -173,7 +173,7 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
 
       // 正常返回响应
       return { code: 0, data: als.response };
-    } catch (e) {
+    } catch (e: any) {
 
       // 处理出现异常会，事务自动回滚
       await Promise.all(store.trans.map(tran => tran.rollback()));
@@ -191,5 +191,5 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
     }
     // console.log(require.cache);
   });
-
+  return resp;
 }

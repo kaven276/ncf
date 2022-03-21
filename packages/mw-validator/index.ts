@@ -31,7 +31,7 @@ export const validate: IMiddleWare = async (ctx, next) => {
           errors: fassModule.checkRequest.errors
         })
       }
-    } catch (e) {
+    } catch (e: any) {
       throwServiceError(400, e.toString());
     }
   }
@@ -51,7 +51,7 @@ export const validate: IMiddleWare = async (ctx, next) => {
           errors: fassModule.checkResponse.errors,
         });
       }
-    } catch (e) {
+    } catch (e: any) {
       throwServiceError(500, e.toString());
     }
   }
