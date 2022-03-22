@@ -1,0 +1,8 @@
+- route: /home
+  buttons:
+  - 算费
+  - 扩容
+- route: /product/introduce/*
+   button:
+# 这里面故意写错格式，看看服务是否会导致进程退出，还是会按照标准格式返回错误信息
+  - 详情

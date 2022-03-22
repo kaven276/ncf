@@ -7,8 +7,19 @@ import { load } from "js-yaml";
 
 //@ts-ignore
 Module._extensions['.yaml'] = Module._extensions['.yml'] = function loaderYAML(m: any, filename: string) {
-  const contentPromise = readFile(filename, { 'encoding': 'utf8' }).then(txt => load(txt, { json: true }));
+  const contentPromise = readFile(filename, { 'encoding': 'utf8' }).then(txt => load(txt, { json: true }))
+    .catch(e => ({ error: e }));
   m.exports = {
-    faas: async () => contentPromise,
+    faas: async () => {
+      const result: any = await contentPromise;
+      if (result.error) {
+        throw {
+          code: 1,
+          msg: 'loader-cfg-yaml convert failed',
+          data: result.error,
+        }
+      }
+      return result;
+    },
   }
 }
