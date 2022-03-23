@@ -15,7 +15,7 @@ declare module "@ncf/microkernel" {
 
 }
 
-type PoolNames = 'test' | 'echarts';
+type PoolNames = 'test' | 'echarts' | 'pgsqlib';
 
 /** 按照名称记录每个已创建的连接池 */
 const pools = new Map<PoolNames, Pool>();
@@ -25,12 +25,29 @@ export function getPGPool(name: PoolNames) {
   debug('pool name', name);
   let pool = pools.get(name);
   if (!pool) {
-    pool = new Pool({
-      user: 'echarts',
-      host: "127.0.0.1",
-      password: "echarts",
-      port: 25432,
-    });
+    if (name === 'echarts') {
+      pool = new Pool({
+        user: 'echarts',
+        host: "127.0.0.1",
+        password: "echarts",
+        port: 25432,
+      });
+    } else if (name === 'pgsqlib') {
+      pool = new Pool({
+        user: 'postgres',
+        host: "127.0.0.1",
+        // password: "echarts",
+        port: 25432,
+        database: 'pgsqlib',
+      });
+    } else {
+      pool = new Pool({
+        user: 'echarts',
+        host: "127.0.0.1",
+        password: "echarts",
+        port: 25432,
+      });
+    }
     pools.set(name, pool);
   }
   return pool;
