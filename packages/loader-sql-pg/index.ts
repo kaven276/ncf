@@ -6,8 +6,6 @@ export { setHowToGetPgConnection } from './config';
 
 const debug = getDebug(module);
 
-
-
 //@ts-ignore
 Module._extensions['.sql'] = function loadPGSQL(m: any, filename: string) {
   debug(filename);

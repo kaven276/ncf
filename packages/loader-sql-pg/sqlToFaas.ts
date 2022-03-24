@@ -3,7 +3,7 @@ import { resultAutoConcise } from "./resultAutoConcise";
 import * as sqlparser from "./sqlParser";
 import type { SqlModue } from './SqlModule';
 import { getDebug, getConfig } from '@ncf/microkernel';
-import type { QueryConfig, Client, Pool } from 'pg';
+import type { QueryConfig, Pool, PoolClient } from 'pg';
 import { configKey } from './config';
 
 const debug = getDebug(module);
@@ -103,9 +103,9 @@ export async function loaderPostgresSQL(abspath: string, regPath: string, dirCon
     // 第一步取得连接池
     // const pool = getPGPool();
     // 这里的 Client 也可能是 pool 或者纳入事务管理的 client。
-    const conn: Client | Pool = getConfig(configKey)();
-    debug('executing', m.path, Object.keys(m));
-    debug(conn, conn.query);
+    const conn: Pool | PoolClient = getConfig(configKey)();
+    // debug('executing', m.path, Object.keys(m));
+    // debug(conn, conn.query);
     let queryOption: QueryConfig;
     if (m.sqlType === 'sf') {
       await conn.query(m.fnSql); // 先部署存储过程，后面再执行
@@ -136,7 +136,7 @@ export async function loaderPostgresSQL(abspath: string, regPath: string, dirCon
       //@ts-ignore
       const { _parsers, _types, ...resOthers } = res;
       // return resOthers;
-      debug(resOthers, { depth: 5 });
+      // debug(resOthers, { depth: 5 });
       return resOthers;
       return resultAutoConcise(res, m);
     });
