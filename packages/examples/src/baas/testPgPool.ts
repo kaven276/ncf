@@ -34,11 +34,11 @@ export function getPGPool(name: PoolNames) {
       });
     } else if (name === 'pgsqlib') {
       pool = new Pool({
-        user: 'postgres',
         host: "127.0.0.1",
-        // password: "echarts",
         port: 25432,
         database: 'pgsqlib',
+        user: 'test1',
+        password: "test1",
       });
     } else {
       pool = new Pool({

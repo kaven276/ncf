@@ -12,7 +12,8 @@
     "packages/loader-cfg-json5",
     "packages/loader-cfg-yaml",
     "packages/loader-cfg-xml",
-    "packages/loader-cfg-markdown"
+    "packages/loader-cfg-markdown",
+    "packages/loader-sql-pg"
   ],
   "devDependencies": {
     "lerna": "^4.0.0",

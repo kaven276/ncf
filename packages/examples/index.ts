@@ -4,6 +4,7 @@ import '@ncf/loader-cfg-json5';
 import '@ncf/loader-cfg-yaml';
 import '@ncf/loader-cfg-xml';
 import '@ncf/loader-cfg-markdown';
+import '@ncf/loader-sql-pg';
 import { env } from './src/env';
 
 // 如果想没有访问上来就创建连接池的话，就上来就 import 下一行

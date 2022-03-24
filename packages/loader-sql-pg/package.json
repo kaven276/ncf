@@ -1,11 +1,8 @@
 {
-  "name": "expr",
+  "name": "@ncf/loader-sql-pg",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "optionalDependencies": {
-    "nats": "^2.6.1"
-  },
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,6 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "njstrace": "^2.0.1"
+    "pg": "^8.7.3"
   }
 }
