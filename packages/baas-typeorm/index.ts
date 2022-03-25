@@ -1,8 +1,13 @@
 import { getCallState, getDebug } from '@ncf/microkernel';
-import { getConnection, QueryRunner } from "typeorm";
+import { QueryRunner } from "typeorm";
+import { getConnection } from './config';
+
+export { setTypeormConnectionConfigs, getConnection } from './config';
 
 const debug = getDebug(module);
 const ORMKey = Symbol.for('ORMKey');
+
+type DbNames = 'postgis' | 'test1';
 
 /** 服务调用期间的全部内容 */
 declare module '@ncf/microkernel' {
@@ -15,7 +20,7 @@ declare module '@ncf/microkernel' {
 }
 
 /** service thread 中需要获取执行名称的链接并开启事务的时候调用 */
-export async function getConnFromThread(name: string): Promise<QueryRunner> {
+export async function getConnFromThread(name: DbNames): Promise<QueryRunner> {
   const threadStore = getCallState();
   // TLS 没有配置 typeorm 连接的话，就给初始化一个
   if (!threadStore[ORMKey]) {
@@ -25,8 +30,10 @@ export async function getConnFromThread(name: string): Promise<QueryRunner> {
   if (threadStore[ORMKey]![name]) {
     return threadStore[ORMKey]![name];
   }
+
   // 创建新的链接，并设置事务环境，最后返回 queryRunner
-  const c = getConnection(name);
+  const c = await getConnection(name);
+
   const queryRunner = c.createQueryRunner();
   await queryRunner.startTransaction("READ COMMITTED");
   debug('start transaction');

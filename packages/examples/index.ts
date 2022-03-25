@@ -7,9 +7,6 @@ import '@ncf/loader-cfg-markdown';
 import '@ncf/loader-sql-pg';
 import { env } from './src/env';
 
-// 如果想没有访问上来就创建连接池的话，就上来就 import 下一行
-import './src/baas/testOrmPool';
-
 // 作为应用模块使用，不被 import/require，否则退出
 if (require.main !== module) {
   process.exit()

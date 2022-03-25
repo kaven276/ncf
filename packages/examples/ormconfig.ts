@@ -37,6 +37,24 @@ export const ormconfig: ConnectionOptions[] = [{
     subscribersDir: "src/subscriber"
   }
 }, {
+  name: "test1",
+  type: "postgres",
+  host: "127.0.0.1",
+  port: 25432,
+  database: 'pgsqlib',
+  username: "test1",
+  password: "test1",
+  synchronize: true,
+  logging: true,
+  entities: ["src/entity/**/*.ts"],
+  migrations: ["src/migration/**/*.ts"],
+  subscribers: ["src/subscriber/**/*.ts"],
+  cli: {
+    entitiesDir: "src/entity",
+    migrationsDir: "src/migration",
+    subscribersDir: "src/subscriber"
+  }
+}, {
   name: "postgres208",
   type: "postgres",
   host: "127.0.0.1",
