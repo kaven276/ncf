@@ -4,7 +4,7 @@ import { validate } from '@ncf/mw-validator';
 import { logTimeUse } from '../middlewares/logTimeUse';
 import { jwtMiddleware, setJWT } from '@ncf/mw-jwt';
 import { randomLatency, setRandomLatencyConfig } from '../middlewares/randomLatency';
-import { pgPoolConfigs } from '../baas/pgPools';
+import { pgPoolConfigs } from '../baas-config/pgPools';
 import { setPgPoolConfigs, setPgDefaultPoolName } from '@ncf/baas-pg';
 import { throwServiceError } from '@ncf/microkernel';
 import { getConnFromThread } from '@ncf/baas-typeorm';

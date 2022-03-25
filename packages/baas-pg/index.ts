@@ -30,7 +30,7 @@ export async function getConnFromThread(name: string = getDefaultPoolName()): Pr
   // 如果当前 TLS 中找到指定名称的连接，则直接使用了
   let client: PoolClient | undefined = threadStore[PgKey]![name];
   if (client) {
-    debug(`pool ${name} return cached`, client);
+    debug(`pool ${name} return cached`);
     return client;
   }
 
