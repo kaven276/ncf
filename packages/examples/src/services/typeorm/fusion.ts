@@ -1,5 +1,5 @@
 import { Photo, Post, Question } from "src/entity/Fusion";
-import { getManager } from '.';
+import { getManager } from '..';
 
 export const faas = async (req: any) => {
   const m = await getManager();

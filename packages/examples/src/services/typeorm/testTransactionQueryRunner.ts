@@ -1,6 +1,6 @@
 import { User, UserRole } from "src/entity/User";
 import { ServiceError } from '@ncf/microkernel';
-import { getManager } from '.';
+import { getManager } from '..';
 
 /**
  * 模拟参与 service 的一个调用单元，参与了事务。

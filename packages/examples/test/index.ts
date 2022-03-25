@@ -3,7 +3,7 @@ import { createConnection, getConnection } from "typeorm";
 import { User } from "src/entity/User";
 import { Org } from "src/entity/Org";
 import { asyncLocalStorage } from '@ncf/microkernel';
-import { testTransactionQueryRunner } from 'src/services/testTransactionQueryRunner';
+import { testTransactionQueryRunner } from 'src/services/typeorm/testTransactionQueryRunner';
 
 async function testUser(connection) {
   console.log("Inserting a new user into the database...");
