@@ -1,13 +1,7 @@
 import { EntitySchema } from "typeorm";
+import type { Person } from './types';
 
-interface Person {
-  id: string,
-  name: string,
-  mobile: string,
-  regtime: Date,
-}
-
-export const PeopleEntity = new EntitySchema<Person>({
+export const People = new EntitySchema<Person>({
   name: "person",
   columns: {
     /** 18位身份证ID */
