@@ -1,5 +1,7 @@
 import { ConnectionOptions } from 'typeorm';
 
+export type PoolNames = 'postgis' | 'test1';
+
 export const ormconfig: ConnectionOptions[] = [{
   name: "postgresmac",
   type: "postgres",
@@ -45,7 +47,7 @@ export const ormconfig: ConnectionOptions[] = [{
   username: "test1",
   password: "test1",
   synchronize: true,
-  logging: true,
+  logging: false,
   entities: ["src/entity/**/*.ts"],
   migrations: ["src/migration/**/*.ts"],
   subscribers: ["src/subscriber/**/*.ts"],

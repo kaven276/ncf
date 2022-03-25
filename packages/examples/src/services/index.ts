@@ -47,7 +47,7 @@ export const config = {
 }
 
 export async function getManager() {
-  const queryRunner = await getConnFromThread('postgis');
+  const queryRunner = await getConnFromThread();
   const manager = queryRunner.manager;
   return manager;
 }

@@ -1,6 +1,6 @@
 import { User, UserRole } from "src/entity/User";
 import { ServiceError } from '@ncf/microkernel';
-import { getManager } from '..';
+import { getConnFromThread } from '@ncf/baas-typeorm';
 
 /**
  * 模拟参与 service 的一个调用单元，参与了事务。
@@ -9,7 +9,7 @@ import { getManager } from '..';
  */
 export async function testTransactionQueryRunner(id: number) {
   // 在 async thread 开始时自动进行
-  const manager = await getManager();
+  const manager = (await getConnFromThread()).manager;
   const ly = (await manager.findOne(User, { where: { firstName: 'LiYong' } }));
 
   if (ly) {
