@@ -4,8 +4,8 @@ import { validate } from '@ncf/mw-validator';
 import { logTimeUse } from '../middlewares/logTimeUse';
 import { jwtMiddleware, setJWT } from '@ncf/mw-jwt';
 import { randomLatency, setRandomLatencyConfig } from '../middlewares/randomLatency';
-import { setPoolName } from '../baas/testPgPool';
-
+import { pgPoolConfigs } from '../baas/pgPools';
+import { setPgPoolConfigs, setPgDefaultPoolName } from '@ncf/baas-pg';
 import { throwServiceError } from '@ncf/microkernel';
 import { getConnFromThread } from '@ncf/baas-typeorm';
 import { getJWT, getJWTStruct } from '@ncf/mw-jwt';
@@ -43,7 +43,8 @@ export const config = {
   ...setRandomLatencyConfig({
     maxLatencyMs: 0,
   }),
-  ...setPoolName('echarts'),
+  ...setPgPoolConfigs(pgPoolConfigs),
+  ...setPgDefaultPoolName('test1'),
 }
 
 export async function getManager() {

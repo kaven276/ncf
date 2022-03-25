@@ -8,6 +8,7 @@
     "packages/mw-validator",
     "packages/mw-jwt",
     "packages/baas-typeorm",
+    "packages/baas-pg",
     "packages/examples",
     "packages/loader-cfg-json5",
     "packages/loader-cfg-yaml",

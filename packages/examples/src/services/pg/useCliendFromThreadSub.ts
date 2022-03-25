@@ -1,4 +1,4 @@
-import { getPGPoolByServiceThread } from 'src/baas/testPgPool';
+import { getConnFromThread } from '@ncf/baas-pg';
 import { getDebug } from '@ncf/microkernel';
 
 const debug = getDebug(module);
@@ -11,7 +11,7 @@ interface IResult {
 /** 测试直接使用 pg 单个连接提供服务 */
 export async function faas() {
   debug('enter');
-  const client = await getPGPoolByServiceThread();
+  const client = await getConnFromThread();
   const res = await client.query<IResult>('SELECT $1::text as message', ['Hello world!']);
   const resAge = await client.query('update user2 set age=age + $1 where "firstName"=$2 RETURNING "age"', [Math.floor(Math.random() * 10) - 5, 'LiYong']);
   debug('will return', resAge.rows);
