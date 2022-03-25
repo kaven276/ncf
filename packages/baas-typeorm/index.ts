@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { getCallState, getDebug } from '@ncf/microkernel';
 import { QueryRunner } from "typeorm";
 import { getConnection, getDefaultPoolName } from './config';
