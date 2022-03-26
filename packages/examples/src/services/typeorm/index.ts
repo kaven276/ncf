@@ -4,5 +4,5 @@ import { ormconfig, PoolNames } from '../../baas-config/ormconfig';
 
 export const config: IConfig = {
   ...setTypeormConnectionConfigs(ormconfig),
-  ...setTypeormDefaultPoolName<PoolNames>('echarts'),
+  ...setTypeormDefaultPoolName<PoolNames>('test1'),
 }

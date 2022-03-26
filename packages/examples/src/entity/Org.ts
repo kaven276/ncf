@@ -1,27 +1,27 @@
 import { Entity, Column, PrimaryColumn } from "typeorm";
 
-@Entity({ name: 'org2' })
+@Entity({ name: 'org' })
 export class Org {
 
   @PrimaryColumn({ type: 'cidr' })
-  orgId: string;
+  orgId!: string;
 
   @Column({ type: 'int4' })
-  rank: number;
+  rank!: number;
 
   @Column()
-  orgName: string;
+  orgName!: string;
 
   @Column("simple-array", {
     nullable: true,
   })
-  tags: string[];
+  tags!: string[];
 
   @Column({
     array: true,
     nullable: true,
   })
-  tagarr: string;
+  tagarr!: string;
 
   @Column('jsonb', {
     nullable: false,
@@ -33,6 +33,6 @@ export class Org {
     nullable: true,
     comment: '是否是官方正式组织机构',
   })
-  formal: boolean;
+  formal!: boolean;
 
 }

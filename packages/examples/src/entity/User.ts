@@ -15,41 +15,46 @@ export type FeTechType = "vue" | "react" | "angular"
 export class User implements IUser {
 
   /** 用户标识 */
+  /** 用户标识 */
+
   @PrimaryGeneratedColumn()
-
-  id: number;
-
-  @Column()
-  firstName: string;
+  id!: number;
 
   @Column()
-  lastName: string;
+  firstName!: string;
+
+  @Column({ nullable: true })
+  lastName!: string;
 
   /** 年龄 */
+  /** 年龄 */
+
   @Column()
-  age: number;
+  age!: number;
 
   @Column({ default: 'male', comment: 'user is male or female' })
-  sex: string;
+  sex!: string;
 
   @Column({ type: "enum", enum: UserRole, default: UserRole.ADMIN })
-  role: UserRole;
+  role!: UserRole;
 
   @Column("simple-array", { nullable: true })
-  names: string[];
+  names!: string[];
 
   @Column({
     type: "enum",
     enum: ["react", "vue", "angular"],
     default: "react"
   })
-  fetech: FeTechType;
+  fetech!: FeTechType;
 
   /** 喜好 */
+  /** 喜好 */
+
   @Column("simple-array", { nullable: true })
-  likes: string[];
+  likes!: string[];
 
   @Column("simple-json", { nullable: true })
-  profile: { name: string; nickname: string };
+  profile!: { name: string; nickname: string; };
 
 }
