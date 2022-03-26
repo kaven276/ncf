@@ -28,5 +28,11 @@ export const People = new EntitySchema<Person>({
       comment: '录入数据库时间',
     },
   },
-
+  indices: [
+    { name: 'people_id', columns: ['id'], unique: true },
+    { columns: ['mobile'], unique: false },
+    { columns: ['name'], unique: false },
+  ],
+  checks: [
+  ],
 });
