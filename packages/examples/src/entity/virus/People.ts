@@ -27,5 +27,6 @@ export const People = new EntitySchema<Person>({
       createDate: true,
       comment: '录入数据库时间',
     },
-  }
+  },
+
 });

@@ -1,6 +1,6 @@
 import { OrmPoolConfigMap } from '@ncf/baas-typeorm';
 
-export type PoolNames = 'postgis' | 'test1';
+export type PoolNames = 'postgis' | 'test1' | 'echarts';
 
 export const ormconfig: OrmPoolConfigMap = {
   postgresmac: {
@@ -16,7 +16,7 @@ export const ormconfig: OrmPoolConfigMap = {
     migrations: ["src/migration/**/*.ts"],
     subscribers: ["src/subscriber/**/*.ts"],
   },
-  postgis: {
+  echarts: {
     name: "postgis",
     type: "postgres",
     host: "127.0.0.1",
