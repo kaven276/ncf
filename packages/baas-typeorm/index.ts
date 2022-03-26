@@ -1,9 +1,9 @@
 import "reflect-metadata";
 import { getCallState, getDebug } from '@ncf/microkernel';
 import { QueryRunner } from "typeorm";
-import { getConnection, getDefaultPoolName } from './config';
+import { getDataSource, getDefaultPoolName } from './config';
 
-export { setTypeormConnectionConfigs, getConnection, setTypeormDefaultPoolName } from './config';
+export { setTypeormConnectionConfigs, getDataSource, setTypeormDefaultPoolName, OrmPoolConfigMap } from './config';
 
 const debug = getDebug(module);
 const ORMKey = Symbol.for('ORMKey');
@@ -31,7 +31,7 @@ export async function getConnFromThread(name: string = getDefaultPoolName()): Pr
   }
 
   // 创建新的链接，并设置事务环境，最后返回 queryRunner
-  const c = await getConnection(name);
+  const c = await getDataSource(name);
 
   const queryRunner = c.createQueryRunner();
   await queryRunner.startTransaction("READ COMMITTED");

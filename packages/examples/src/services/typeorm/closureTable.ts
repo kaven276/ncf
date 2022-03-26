@@ -17,7 +17,7 @@ export const faas = async (req: any) => {
     c2.name = 'second';
     c2.description = 'second category';
     c2.level = 2;
-    const c1 = (await m.findOne(Category, 1))!;
+    const c1 = (await m.findOneBy(Category, { id: 1 }))!;
     c2.parent = c1;
     m.save(c2);
   } else {

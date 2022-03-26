@@ -25,7 +25,7 @@ export async function testTransactionQueryRunner(id: number) {
     await manager.save(ly);
   }
 
-  const user1 = (await manager.findOne(User, 1));
+  const user1 = (await manager.findOneBy(User, { id: 1 }));
   if (user1) {
     user1.age++;
     user1.role = UserRole.GHOST;
