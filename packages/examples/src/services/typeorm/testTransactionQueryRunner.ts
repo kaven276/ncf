@@ -9,8 +9,9 @@ import { getConnFromThread } from '@ncf/baas-typeorm';
  */
 export async function testTransactionQueryRunner(id: number) {
   // 在 async thread 开始时自动进行
-  const manager = (await getConnFromThread()).manager;
-  const ly = (await manager.findOne(User, { where: { firstName: 'LiYong' } }));
+  const ds = await getConnFromThread();
+  const userRepo = ds.manager.getRepository(User);
+  const ly = await userRepo.findOneBy({ firstName: 'LiYong' });
 
   if (ly) {
     // console.log('ly', ly);
@@ -22,17 +23,16 @@ export async function testTransactionQueryRunner(id: number) {
       name: '安德范',
       nickname: 'kiv',
     };
-    await manager.save(ly);
+    await userRepo.save(ly);
   }
 
-  const user1 = (await manager.findOneBy(User, { id: 1 }));
+  const user1 = await userRepo.findOneBy({ id: 1 });
   if (user1) {
     user1.age++;
     user1.role = UserRole.GHOST;
     user1.fetech = "react";
-    await manager.save(user1);
+    await userRepo.save(user1);
   }
-
 
   if (Math.random() < 0.25) {
     throw new ServiceError(1, '随机制造的异常!');
