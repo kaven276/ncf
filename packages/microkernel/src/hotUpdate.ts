@@ -69,7 +69,14 @@ function deleteCacheFromUpated(updatedFileName: string) {
   debug('delete cache', updatedFileName);
   delete require.cache[updatedFileName];
   const importers = depsMap.get(updatedFileName);
-  if (!importers) return;
+  if (!importers) {
+    if (!updatedFileName.endsWith('./test.ts')) {
+      debug('top depender', updatedFileName);
+      const testPath = updatedFileName.replace(/\.ts/, '.test.ts');
+      import(testPath).catch(console.warn);
+    }
+    return;
+  };
   for (let importer of importers) {
     if (importer === updatedFileName) {
       process.exit();

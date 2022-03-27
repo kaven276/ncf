@@ -7,3 +7,4 @@ export { getConfig, IConfig } from './src/lib/config';
 export { IApi, IFaasModule, Service } from './src/lib/faas';
 export { IMiddleWare } from './src/lib/middleware';
 export { getDebug } from './src/util/debug';
+export { test } from './src/testClient';
