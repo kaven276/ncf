@@ -71,9 +71,15 @@ function deleteCacheFromUpated(updatedFileName: string) {
   const importers = depsMap.get(updatedFileName);
   if (!importers) {
     if (!updatedFileName.endsWith('./test.ts')) {
-      debug('top depender', updatedFileName);
+      debug('top depender modified', updatedFileName);
       const testPath = updatedFileName.replace(/\.ts/, '.test.ts');
-      import(testPath).catch(console.warn);
+      import(testPath).catch(e => {
+        if (e.code === 'MODULE_NOT_FOUND') {
+          return;
+        } else {
+          console.warn(e);
+        }
+      });
     }
     return;
   };
