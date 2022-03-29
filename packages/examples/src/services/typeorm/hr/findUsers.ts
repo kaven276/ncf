@@ -21,13 +21,14 @@ export async function faas(req: IRequest) {
   return await userRepo.find({
     comment: 'test typeorm find options',
     relations: {
-      org: false,
+      org: true,
     },
     select: {
-      names: req.showNames,
+      id: true,
+      names: req.showNames ? true : undefined, // 需要设置为 undefined 才能去除展示该字段，其他值都相当于 true
       firstName: true,
       lastName: true,
-      age: false,
+      age: true, // order 里面出现的，这里必须配置，否则报异常 errorMissingColumn
       profile: {
         name: false,
         nickname: true,

@@ -13,7 +13,7 @@ export const faas = async (req: undefined) => {
 
   const org1 = orgRepo.create({
     orgName: '亚信科技',
-    orgId: '132.168.7.0/24',
+    orgId: 'fe',
     rank: 1,
     tags: ['IT', 'CT', 'BOSS'],
   });
