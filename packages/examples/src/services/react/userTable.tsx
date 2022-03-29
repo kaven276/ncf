@@ -1,7 +1,7 @@
 import React from 'react';
 import { User } from "src/entity/User";
 import { faas as findUsers } from '../typeorm/hr/findUsers';
-import { renderToString } from 'react-dom/server';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { innerCall } from '@ncf/microkernel';
 
 const header = (
@@ -45,7 +45,7 @@ export async function faas(req: IRequest) {
       </td>
     </tr>)
   );
-  return '<!DOCTYPE html>' + renderToString(
+  return '<!DOCTYPE html>' + renderToStaticMarkup(
     <html lang="zh-CN">
       <table cellPadding={10} style={{ border: "1px solid lime" }}>{header}<tbody>{rows}</tbody></table>
     </html>
