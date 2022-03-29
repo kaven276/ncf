@@ -37,10 +37,10 @@ export class Org {
   formal!: boolean;
 
   // RangeError: Maximum call stack size exceeded
-  // @OneToMany(org => User, user => user.org, {
-  //   deferrable: 'INITIALLY DEFERRED',
-  //   nullable: true,
-  // })
-  // users!: User[];
+  @OneToMany(org => User, user => user.org, {
+    // deferrable: 'INITIALLY DEFERRED',
+    nullable: true,
+  })
+  users!: User[];
 
 }

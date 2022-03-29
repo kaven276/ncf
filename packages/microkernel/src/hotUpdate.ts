@@ -49,20 +49,22 @@ export function watchHotUpdate() {
 const depsMap = new Map<string, Set<string>>();
 
 function collectWhoDependMe(parentModule: NodeModule) {
-  if (!parentModule) return;
+  // if (!parentModule) return;
   const absFileName = parentModule.filename;
   parentModule.children.forEach(subModule => {
+    // 可能会出现两个模块互相引用的情况造成死循环
+    // debug('collectWhoDependMe', absFileName.substring(ServiceDir.length), subModule.filename.substring(ServiceDir.length));
+    if (!subModule.filename.startsWith(ServiceDir)) return;
+    if (subModule.loaded === false) return;
     let depSet = depsMap.get(subModule.filename);
     if (!depSet) {
       depSet = new Set<string>();
       depsMap.set(subModule.filename, depSet);
     }
     // 如果判断 subModule 可能会改变，则加入到依赖跟踪中
-    if (subModule.filename.startsWith(servicesDir)) {
-      depSet.add(absFileName);
-      collectWhoDependMe(subModule);
-    }
-  })
+    depSet.add(absFileName);
+    collectWhoDependMe(subModule);
+  });
 }
 
 function deleteCacheFromUpated(updatedFileName: string) {
