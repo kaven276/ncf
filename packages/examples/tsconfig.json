@@ -9,6 +9,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
+    "jsx": "react",
     "strict": true,
     "skipLibCheck": true,
     "strictNullChecks": true,

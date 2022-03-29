@@ -73,6 +73,15 @@ function useNCF() {
         res: ctx.res,
       }
     });
+
+    // 如果返回的内容是 html 则直接返回页面
+    if (typeof result.data === 'string' && result.data.startsWith('<')) {
+      ctx.body = result.data;
+      // console.log('ctx.body', ctx.body);
+      ctx.response.set('content-type', 'text/html;charset=utf-8');
+      ctx.response.status = result.status || 200;
+      return;
+    }
     ctx.response.type = 'application/json';
     ctx.body = result;
     // console.log('ctx.body', ctx.body);

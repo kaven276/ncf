@@ -10,11 +10,15 @@
     "@ncf/microkernel": "*",
     "elasticsearch": "^16.7.3",
     "pg": "^8.7.3",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "typeorm": "^0.3.3"
   },
   "devDependencies": {
     "@types/elasticsearch": "^5.0.40",
     "@types/pg": "^8.6.4",
+    "@types/react": "^17.0.43",
+    "@types/react-dom": "^17.0.14",
     "tslib": "^2.3.1"
   },
   "keywords": [],
