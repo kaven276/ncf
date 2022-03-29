@@ -82,7 +82,8 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
   // step1: 定位服务模块文件路径
   // 新的 resolve 方式，自顶而下查看 dir config，如果 proxy:true, ext:xxx 则影响 faas resolve
   // 输出为 faas 地址，到具体文件名和后缀，可能来自 dir config (proxy faasPath) 或 faas module
-  const ext = extname(faasPath) || dirConfig.ext || '.ts';
+  const ext = dirConfig.ext || '.ts';
+  // debug(ext, faasPath, extname(faasPath));
   const tryPath = `${servicesDir}/src/services${faasPath}${mock ? '.mock' : ''}${ext}`;
   debug('tryPath', tryPath);
 

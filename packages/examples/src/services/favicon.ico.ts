@@ -1,5 +1,3 @@
-export function faas() {
-  return {
-    msg: 'not exists',
-  }
+export async function faas() {
+
 }
