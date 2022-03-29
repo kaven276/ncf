@@ -19,6 +19,7 @@ export async function faas(req: IRequest) {
   const ds = await getDataSource();
   const userRepo = ds.getRepository(User);
   return await userRepo.find({
+    comment: 'test typeorm find options',
     relations: {
       org: false,
     },

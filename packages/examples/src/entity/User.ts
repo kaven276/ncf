@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, ManyToOne, Index } from "typeorm";
 import { IUser } from 'src/interfaces/user';
+import { Org } from "./Org";
 
 export enum UserRole {
   ADMIN = "admin",
@@ -20,9 +21,11 @@ export class User implements IUser {
   @PrimaryGeneratedColumn()
   id!: number;
 
+  @Index('user_first_name', { unique: false })
   @Column()
   firstName!: string;
 
+  @Index('user_last_name', { unique: false })
   @Column({ nullable: true })
   lastName!: string;
 
@@ -35,6 +38,7 @@ export class User implements IUser {
   @Column({ default: 'male', comment: 'user is male or female' })
   sex!: string;
 
+  @Index('user_role', { unique: false })
   @Column({ type: "enum", enum: UserRole, default: UserRole.ADMIN })
   role!: UserRole;
 
@@ -54,7 +58,15 @@ export class User implements IUser {
   @Column("simple-array", { nullable: true })
   likes!: string[];
 
+  // @Index('user_nickname', { unique: false })
   @Column("simple-json", { nullable: true })
   profile!: { name: string; nickname: string; };
+
+  @ManyToOne(user => Org, {
+    nullable: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'RESTRICT',
+  })
+  org!: Org;
 
 }
