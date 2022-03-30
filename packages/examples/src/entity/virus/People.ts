@@ -15,7 +15,7 @@ export class People implements Person {
   @Column('varchar', {
     length: 10,
     nullable: false,
-    comment: '人员姓名',
+    comment: '人员身份证姓名',
   })
   name!: string;
 
