@@ -38,7 +38,7 @@ export const ormconfig: OrmPoolConfigMap = {
     schema: 'test1',
     username: "test1",
     password: "test1",
-    synchronize: true,
+    synchronize: false,
     logging: false,
     entities: ["src/entity/**/*.ts"],
     migrations: ["src/migration/**/*.ts"],
