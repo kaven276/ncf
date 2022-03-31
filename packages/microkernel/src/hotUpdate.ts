@@ -1,6 +1,7 @@
 import { watch } from 'chokidar';
 import { getDebug } from './util/debug';
 import { root } from './lib/config';
+import { registerBaas } from './baasManager';
 import { servicesDir } from './util/resolve';
 const ServiceDir = servicesDir + '/src/services';
 
@@ -61,8 +62,13 @@ function collectWhoDependMe(parentModule: NodeModule) {
     if (subModule.loaded === false) return; // 此时必定 loaded=true
     let depSet = depsMap.get(subModule.filename);
     if (!depSet) {
+      // submodule 第一次被依赖
       depSet = new Set<string>();
       depsMap.set(subModule.filename, depSet);
+      if (subModule.exports.baas) {
+        // 依赖了一个 baas
+        registerBaas(subModule);
+      }
     }
     // 如果判断 subModule 可能会改变，则加入到依赖跟踪中
     depSet.add(absFileName);
