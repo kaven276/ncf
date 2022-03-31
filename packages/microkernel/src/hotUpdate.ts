@@ -58,22 +58,23 @@ function collectWhoDependMe(parentModule: NodeModule) {
   // if (!parentModule) return;
   const absFileName = parentModule.filename;
   parentModule.children.forEach(subModule => {
+    const subPath = subModule.filename;
     // 可能会出现两个模块互相引用的情况造成死循环
-    // debug('collectWhoDependMe', absFileName.substring(ServiceDir.length), subModule.filename.substring(ServiceDir.length));
-    if (!subModule.filename.startsWith(servicesDir)) return;
+    // debug('collectWhoDependMe', absFileName.substring(ServiceDir.length), subPath.substring(ServiceDir.length));
+    if (!subPath.startsWith(servicesDir)) return;
     if (subModule.loaded === false) return; // 此时必定 loaded=true
 
     // inner 依赖了一个 faas，注入自标注路径，来支持内部调用寻址
     if (subModule.exports.faas) {
-      const endPos = subModule.filename.length - extname(subModule.filename).length
-      subModule.exports.faas.faasPath = subModule.filename.substring(prefixLenght, endPos);
+      const endPos = subPath.length - extname(subPath).length
+      subModule.exports.faas.faasPath = subPath.substring(prefixLenght, endPos);
     }
 
-    let depSet = depsMap.get(subModule.filename);
+    let depSet = depsMap.get(subPath);
     if (!depSet) {
       // submodule 第一次被依赖
       depSet = new Set<string>();
-      depsMap.set(subModule.filename, depSet);
+      depsMap.set(subPath, depSet);
       if (subModule.exports.baas) {
         // 依赖了一个 baas
         registerBaas(subModule);
@@ -81,7 +82,7 @@ function collectWhoDependMe(parentModule: NodeModule) {
     }
     // 如果判断 subModule 可能会改变，则加入到依赖跟踪中
     depSet.add(absFileName);
-    if (depsMap.get(parentModule.filename)?.has(subModule.filename)) return; // 防止循环引用造成 stack overflow
+    if (depsMap.get(parentModule.filename)?.has(subPath)) return; // 防止循环引用造成 stack overflow
     collectWhoDependMe(subModule);
   });
 }
