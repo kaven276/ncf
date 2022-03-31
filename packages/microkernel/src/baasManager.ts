@@ -50,5 +50,6 @@ process.on('SIGINT', function () {
   });
   Promise.all(promises).then(() => {
     debug('all baas module destroyed');
+    process.exit(0);
   });
 });

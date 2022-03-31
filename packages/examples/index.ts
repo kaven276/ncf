@@ -13,5 +13,10 @@ if (require.main !== module) {
 }
 
 // 使用多个 NCF app 接入层，分别监听不同的端口
-createServer(createKoaApp().callback()).listen(env.PORT);
-createServer(createRequestListener()).listen(env.PORT + 1);
+const server1 = createServer(createKoaApp().callback()).listen(env.PORT);
+const server2 =  createServer(createRequestListener()).listen(env.PORT + 1);
+
+process.on('SIGINT', () => {
+  server1.close();
+  server2.close();
+});
