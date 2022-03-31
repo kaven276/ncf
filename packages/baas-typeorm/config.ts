@@ -16,6 +16,9 @@ export interface OrmPoolConfigMap {
 
 /** 配置 typeorm 的连接池配置，数组 */
 export function setTypeormConnectionConfigs(configs: OrmPoolConfigMap) {
+  Object.keys(configs).forEach(poolname => {
+    poolMap.delete(poolname);
+  })
   return {
     [configKey!]: configs,
   }
