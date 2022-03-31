@@ -2,7 +2,7 @@ import { watch } from 'chokidar';
 import { getDebug } from './util/debug';
 import { root } from './lib/config';
 import { servicesDir } from './util/resolve';
-const ServiceDir = process.cwd() + '/src';
+const ServiceDir = servicesDir + '/src/services';
 
 const debug = getDebug(module);
 let started = false;
@@ -25,7 +25,9 @@ function updateConfig(absPath: string) {
   // 随后动态加载配置更新
   import(absPath).then(dirModule => {
     if (dirModule.config) {
+      debug('update config by', dirModule.config, root);
       Object.assign(cfgNode.cfg, dirModule.config);
+      debug(cfgNode.cfg)
     }
   }).catch();
 }
@@ -35,12 +37,13 @@ export function watchHotUpdate() {
 
   started = true;
 
-  const watcher = watch(ServiceDir, {
+  const watcher = watch(servicesDir, {
     depth: 9,
     persistent: true,
   });
 
   watcher.on("change", (absPath) => {
+    debug(absPath);
     deleteCacheFromUpated(absPath);
   });
 }
@@ -54,7 +57,7 @@ function collectWhoDependMe(parentModule: NodeModule) {
   parentModule.children.forEach(subModule => {
     // 可能会出现两个模块互相引用的情况造成死循环
     // debug('collectWhoDependMe', absFileName.substring(ServiceDir.length), subModule.filename.substring(ServiceDir.length));
-    if (!subModule.filename.startsWith(ServiceDir)) return;
+    if (!subModule.filename.startsWith(servicesDir)) return;
     if (subModule.loaded === false) return; // 此时必定 loaded=true
     let depSet = depsMap.get(subModule.filename);
     if (!depSet) {
@@ -114,6 +117,7 @@ function deleteCacheFromUpated(updatedFileName: string) {
 
 export let registerDep = (absServicePath: string) => {
   if (!started) return;
+  debug('collecting from', absServicePath);
   collectWhoDependMe(require.cache[absServicePath]!);
 }
 
