@@ -1,7 +1,7 @@
 import { watch } from 'chokidar';
 import { getDebug } from './util/debug';
 import { root } from './lib/config';
-import { registerBaas } from './baasManager';
+import { registerBaas, destroyOldBaas } from './baasManager';
 import { servicesDir } from './util/resolve';
 const ServiceDir = servicesDir + '/src/services';
 
@@ -26,9 +26,9 @@ function updateConfig(absPath: string) {
   // 随后动态加载配置更新
   import(absPath).then(dirModule => {
     if (dirModule.config) {
-      debug('update config by', dirModule.config, root);
+      // debug('update config by', dirModule.config, root);
       Object.assign(cfgNode.cfg, dirModule.config);
-      debug(cfgNode.cfg)
+      // debug(cfgNode.cfg)
     }
   }).catch();
 }
@@ -44,8 +44,8 @@ export function watchHotUpdate() {
   });
 
   watcher.on("change", (absPath) => {
-    debug(absPath);
-    deleteCacheFromUpated(absPath);
+    debug('file change', absPath);
+    deleteCacheForUpdated(absPath);
   });
 }
 
@@ -77,14 +77,14 @@ function collectWhoDependMe(parentModule: NodeModule) {
   });
 }
 
-function deleteCacheFromUpated(updatedFileName: string) {
+function deleteCacheForUpdated(updatedFileName: string) {
   debug('delete cache', updatedFileName);
 
   // 如果是 BAAS 模块更新，老的 BAAS 资源需要先清除掉释放资源
   const m = require.cache[updatedFileName];
   if (m?.exports.baas) {
-    debug(`try close baas pool/resource for ${m.filename}`);
-    m.exports.destroy?.();
+    depsMap.delete(m.filename);
+    destroyOldBaas(m);
   }
 
   // 从模块缓存是删除，这样再次加载改模块就能看到更新的版本
@@ -117,7 +117,7 @@ function deleteCacheFromUpated(updatedFileName: string) {
     if (importer === updatedFileName) {
       process.exit();
     }
-    deleteCacheFromUpated(importer);
+    deleteCacheForUpdated(importer);
   }
 }
 
