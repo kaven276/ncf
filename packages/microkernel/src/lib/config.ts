@@ -3,6 +3,7 @@ import { IFaasModule } from '../lib/faas';
 import { getDebug } from '../util/debug';
 import { getCallState } from '../executor';
 import { ICallState } from './callState';
+import { registerDep } from '../hotUpdate';
 
 const debug = getDebug(module);
 
@@ -87,8 +88,10 @@ export async function ensureDirConfig(path: string): Promise<IConfig> {
         subs: {},
       };
       // 随后动态加载配置更新
+      const configPath = `${currentPath}/index.ts`;
       await import(`${currentPath}/index.ts`).then(dirModule => {
         debug('load', currentPath, dirModule);
+        registerDep(configPath);
         if (dirModule.config) {
           Object.assign(newConfig, dirModule.config);
         }
