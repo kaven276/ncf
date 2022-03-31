@@ -30,7 +30,7 @@ interface IRequest {
 export async function faas(req: IRequest) {
   // return innerCall(findUsers, req);
   //@ts-ignore
-  const users: User[] = (await innerCall('/typeorm/hr/findUsers', req)).data;
+  const users: User[] = (await innerCall(findUsers, req)).data;
   const rows = users.map(user => (
     <tr key={user.id}>
       <td>{user.firstName}</td>

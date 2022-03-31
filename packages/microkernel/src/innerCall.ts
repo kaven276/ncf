@@ -7,7 +7,7 @@ const JWT: string | undefined = process.env.JWT;
 let innerCallSeq: number = 0;
 
 /** 各个 faas unit 测试模块使用 */
-async function innerCall0(faas: Service<any> , req?: any) {
+async function innerCall0(faas: Service<any>, req?: any) {
   innerCallSeq += 1;
   //@ts-ignore
   const faasPath = faas.path!;
@@ -31,7 +31,8 @@ async function innerCall0(faas: Service<any> , req?: any) {
 }
 
 /** 各个 faas unit 测试模块使用 */
-export async function innerCall(faasPath: string , req?: any) {
+export async function innerCall(faas: { faasPath: string }, req?: any) {
+  const faasPath: string = faas.faasPath;
   innerCallSeq += 1;
   debug('inner call', innerCallSeq, faasPath, req);
   const response = await execute({

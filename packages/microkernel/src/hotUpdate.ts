@@ -3,15 +3,17 @@ import { getDebug } from './util/debug';
 import { root } from './lib/config';
 import { registerBaas, destroyOldBaas } from './baasManager';
 import { servicesDir } from './util/resolve';
+import { extname } from 'path';
 const ServiceDir = servicesDir + '/src/services';
 
+const prefixLenght = ServiceDir.length;
 const debug = getDebug(module);
 let started = false;
 
 function updateConfig(absPath: string) {
   // 目录配置改变的话，更新 config prototype chain
-  debug('config changed for', absPath.substring(ServiceDir.length));
-  const dirs = absPath.substring(ServiceDir.length + 1).split('/');
+  debug('config changed for', absPath.substring(prefixLenght));
+  const dirs = absPath.substring(prefixLenght + 1).split('/');
   dirs.pop();
   debug('config dirs', dirs);
   let cfgNode = root;
@@ -60,6 +62,13 @@ function collectWhoDependMe(parentModule: NodeModule) {
     // debug('collectWhoDependMe', absFileName.substring(ServiceDir.length), subModule.filename.substring(ServiceDir.length));
     if (!subModule.filename.startsWith(servicesDir)) return;
     if (subModule.loaded === false) return; // 此时必定 loaded=true
+
+    // inner 依赖了一个 faas，注入自标注路径，来支持内部调用寻址
+    if (subModule.exports.faas) {
+      const endPos = subModule.filename.length - extname(subModule.filename).length
+      subModule.exports.faas.faasPath = subModule.filename.substring(prefixLenght, endPos);
+    }
+
     let depSet = depsMap.get(subModule.filename);
     if (!depSet) {
       // submodule 第一次被依赖
