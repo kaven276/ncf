@@ -70,6 +70,11 @@ function collectWhoDependMe(parentModule: NodeModule) {
 
 function deleteCacheFromUpated(updatedFileName: string) {
   debug('delete cache', updatedFileName);
+  const m = require.cache[updatedFileName];
+  if (m?.exports.baas) {
+    debug(`try close baas pool/resource for ${m.filename}`);
+    m.exports.destroy?.();
+  }
   delete require.cache[updatedFileName];
   const importers = depsMap.get(updatedFileName);
   if (!importers) {

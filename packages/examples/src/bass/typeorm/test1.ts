@@ -9,8 +9,8 @@ const dsOptions: DataSourceOptions = {
   schema: 'test1',
   username: "test1",
   password: "test1",
-  synchronize: true,
-  logging: true,
+  synchronize: false,
+  logging: false,
   // driver: {
   //   max: 2,
   // },
@@ -27,4 +27,12 @@ export const baas = async () => {
     await ds.initialize();
   }
   return ds;
+}
+
+/** hotUpdate 时，或者进程退出时，将会被系统自动执行，正常的清理资源 */
+export async function destroy() {
+  if (ds && ds.isInitialized) {
+    // console.info('test1 baas typeorm pool destroying...')
+    await ds.destroy();
+  }
 }
