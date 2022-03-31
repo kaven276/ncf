@@ -9,18 +9,9 @@ import { IMiddleWare } from './lib/middleware';
 import { servicesDir } from './util/resolve';
 import { getDebug } from './util/debug';
 import assert from 'assert/strict';
+import { registerDep } from './hotUpdate';
 
 const debug = getDebug(module);
-
-
-let registerDep: (absFilePath: string) => void = () => { };
-// 只有开发环境才会启用自动热更新，生产环境可以节省资源
-if (process.env.NODE_ENV === 'development') {
-  import('./hotUpdate').then(hotUpdateModule => {
-    hotUpdateModule.watchHotUpdate();
-    registerDep = hotUpdateModule.registerDep;
-  });
-}
 
 let idSeq = 0;
 
@@ -184,9 +175,10 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
         const status = (e.code >= 100 && e.code <= 999) ? e.code : 500;
         return { status, code: e.code, msg: e.message, data: e.data };
       } else if (e.code) {
+        console.error(e);
         return e;
       } else {
-        // console.log('--------- not ServiceError', e.code, e.message);
+        console.log('--------- not ServiceError', e.code, e.message);
         return { status: 500, code: e.code, msg: e.message };
       }
     }

@@ -99,8 +99,17 @@ function deleteCacheFromUpated(updatedFileName: string) {
   }
 }
 
-export function registerDep(absServicePath: string) {
+export let registerDep = (absServicePath: string) => {
   if (!started) return;
   collectWhoDependMe(require.cache[absServicePath]!);
 }
 
+
+// 只有开发环境才会启用自动热更新，生产环境可以节省资源
+if (process.env.NODE_ENV === 'development') {
+  import('./hotUpdate').then(hotUpdateModule => {
+    watchHotUpdate();
+  });
+} else {
+  registerDep = () => { };
+}
