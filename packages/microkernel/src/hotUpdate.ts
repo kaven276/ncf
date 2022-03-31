@@ -2,7 +2,7 @@ import { watch } from 'chokidar';
 import { getDebug } from './util/debug';
 import { root } from './lib/config';
 import { servicesDir } from './util/resolve';
-const ServiceDir = process.cwd() + '/src/services';
+const ServiceDir = process.cwd() + '/src';
 
 const debug = getDebug(module);
 let started = false;
@@ -55,7 +55,7 @@ function collectWhoDependMe(parentModule: NodeModule) {
     // 可能会出现两个模块互相引用的情况造成死循环
     // debug('collectWhoDependMe', absFileName.substring(ServiceDir.length), subModule.filename.substring(ServiceDir.length));
     if (!subModule.filename.startsWith(ServiceDir)) return;
-    if (subModule.loaded === false) return;
+    if (subModule.loaded === false) return; // 此时必定 loaded=true
     let depSet = depsMap.get(subModule.filename);
     if (!depSet) {
       depSet = new Set<string>();
@@ -63,6 +63,7 @@ function collectWhoDependMe(parentModule: NodeModule) {
     }
     // 如果判断 subModule 可能会改变，则加入到依赖跟踪中
     depSet.add(absFileName);
+    if (depsMap.get(parentModule.filename)?.has(subModule.filename)) return; // 防止循环引用造成 stack overflow
     collectWhoDependMe(subModule);
   });
 }
