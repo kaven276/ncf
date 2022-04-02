@@ -74,23 +74,24 @@ async function collectWhoDependMe(parentModule: NodeModule) {
     }
 
     let depSet = depsMap.get(subPath);
-    if (!depSet) {
+    let isNew = !depSet;
+    if (isNew) {
       // submodule 第一次被依赖
       depSet = new Set<string>();
       depsMap.set(subPath, depSet);
-      if (isBaasModule(subModule)) {
-        // 依赖了一个 baas
-        await registerBaas(subModule);
-      }
     }
     // 如果判断 subModule 可能会改变，则加入到依赖跟踪中
-    depSet.add(absFileName);
+    depSet!.add(absFileName);
     // if (subPath.endsWith('/test1.ts')) {
     //   debug('track', subPath, [...depsMap.get(subPath)!]);
     // }
 
     if (depsMap.get(parentModule.filename)?.has(subPath)) return; // 防止循环引用造成 stack overflow
     await collectWhoDependMe(subModule);
+    if (isNew && isBaasModule(subModule)) {
+      // 依赖了一个 baas，确保在依赖 tree 都处理完再处理状态模块的初始化
+      await registerBaas(subModule);
+    }
   });
   await Promise.all(promises);
 }
