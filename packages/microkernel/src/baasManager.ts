@@ -35,26 +35,32 @@ export async function registerBaas(bm: BassNodeModule) {
   baasSet.set(path, bm.exports as BassModuleExport);
   const exp = bm.exports as BassModuleExport;
 
-  const ds = bm.exports.baas = await exp._lifecycle.initialize(); // 注册 baas 后立即就确保连接池创建好
+  try {
+    const ds = bm.exports.baas = await exp._lifecycle.initialize(); // 注册 baas 后立即就确保连接池创建好
 
-  // 如果 baas 模块没有定义如何 destroy，做一定的智能判断
-  if (!exp._lifecycle.destroy) {
-    if (ds.destroy && (typeof ds.destroy === 'function')) {
-      // https://github.com/typeorm/typeorm
-      exp._lifecycle.destroy = async (ds) => {
-        await ds.destroy();
-      }
-    } else if (ds.end && (typeof ds.end === 'function')) {
-      // https://node-postgres.com/api/pool#poolend
-      exp._lifecycle.destroy = async (ds) => {
-        await ds.end();
-      }
-    } else if (ds.close && (typeof ds.close === 'function')) {
-      // https://oracle.github.io/node-oracledb/doc/api.html#poolclose
-      exp._lifecycle.destroy = async (ds) => {
-        await ds.close();
+    // 如果 baas 模块没有定义如何 destroy，做一定的智能判断
+    if (!exp._lifecycle.destroy) {
+      if (ds.destroy && (typeof ds.destroy === 'function')) {
+        // https://github.com/typeorm/typeorm
+        exp._lifecycle.destroy = async (ds) => {
+          await ds.destroy();
+        }
+      } else if (ds.end && (typeof ds.end === 'function')) {
+        // https://node-postgres.com/api/pool#poolend
+        exp._lifecycle.destroy = async (ds) => {
+          await ds.end();
+        }
+      } else if (ds.close && (typeof ds.close === 'function')) {
+        // https://oracle.github.io/node-oracledb/doc/api.html#poolclose
+        exp._lifecycle.destroy = async (ds) => {
+          await ds.close();
+        }
       }
     }
+  } catch (e) {
+    debug('register baas failed', path);
+    console.error(e);
+    // throw e;
   }
   return bm;
 }
