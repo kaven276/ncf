@@ -7,7 +7,7 @@ export let baas: DataSource;
 // 直接 export baas，使用的时候只需 import { baas } from 即可，非常的方便
 // 但是如何复用 initialize/destroy 逻辑呢？
 
-export const _manager = makeTypeOrmDataSource({
+export const _lifecycle = makeTypeOrmDataSource({
   type: "postgres",
   host: "127.0.0.1",
   port: 25432,

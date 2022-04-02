@@ -12,7 +12,7 @@ import { DataSource, makeTypeOrmDataSource } from './makeTypeOrmDataSource';
 
 export let baas: DataSource;
 
-export const _manager = makeTypeOrmDataSource({
+export const _lifecycle = makeTypeOrmDataSource({
   type: "postgres",
   host: "10.39.38.53",
   port: 5432,

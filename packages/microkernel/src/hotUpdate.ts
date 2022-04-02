@@ -1,7 +1,7 @@
 import { watch } from 'chokidar';
 import { getDebug } from './util/debug';
 import { root } from './lib/config';
-import { registerBaas, destroyOldBaas } from './baasManager';
+import { registerBaas, destroyOldBaas, isBaasModule } from './baasManager';
 import { servicesDir } from './util/resolve';
 import { extname } from 'path';
 const ServiceDir = servicesDir + '/src/services';
@@ -75,7 +75,7 @@ async function collectWhoDependMe(parentModule: NodeModule) {
       // submodule 第一次被依赖
       depSet = new Set<string>();
       depsMap.set(subPath, depSet);
-      if (subModule.exports._manager) {
+      if (isBaasModule(subModule)) {
         // 依赖了一个 baas
         await registerBaas(subModule);
       }
