@@ -1,1 +1,1 @@
-export { baas } from '..';
+export { default } from '..';
