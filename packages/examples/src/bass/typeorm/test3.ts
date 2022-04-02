@@ -10,7 +10,8 @@ import { DataSource, makeTypeOrmDataSource } from './makeTypeOrmDataSource';
 // set search_path= 'test1';
 // You are connected to database "fe" as user "fe" on host "10.39.38.53" at port "5432".
 
-export let baas: DataSource;
+let baas: DataSource = undefined!;
+export default baas;
 
 export const _lifecycle = makeTypeOrmDataSource({
   type: "postgres",

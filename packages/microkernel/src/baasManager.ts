@@ -5,7 +5,7 @@ const prefixLength = servicesDir.length;
 const debug = getDebug(module);
 
 export interface BassModuleExport<T = any> {
-  baas: T,
+  default: T,
   _lifecycle: {
     /* ncf 确保一个 BAAS 连接池只被创建和初始化一次 */
     initialize: () => Promise<T>,
@@ -36,7 +36,7 @@ export async function registerBaas(bm: BassNodeModule) {
   const exp = bm.exports as BassModuleExport;
 
   try {
-    const ds = bm.exports.baas = await exp._lifecycle.initialize(); // 注册 baas 后立即就确保连接池创建好
+    const ds = bm.exports.default = await exp._lifecycle.initialize(); // 注册 baas 后立即就确保连接池创建好
 
     // 如果 baas 模块没有定义如何 destroy，做一定的智能判断
     if (!exp._lifecycle.destroy) {
@@ -74,7 +74,7 @@ export function destroyOldBaas(bm: BassNodeModule) {
   if (oldBaas && oldBaas._lifecycle.destroy) {
     // https://node-postgres.com/api/pool#poolend
     debug(`hot update BAAS for ${path}, destroying the old`);
-    oldBaas._lifecycle.destroy(oldBaas.baas); // 如果热更新了 baas 模块，则先要清理原来的连接池
+    oldBaas._lifecycle.destroy(oldBaas.default); // 如果热更新了 baas 模块，则先要清理原来的连接池
   }
   baasSet.delete(path);
 }
@@ -84,10 +84,10 @@ export function destroyOldBaas(bm: BassNodeModule) {
 process.on('SIGINT', function () {
   const promises: Promise<void>[] = [];
   baasSet.forEach((bm, path) => {
-    if (!bm.baas) return; // 还未初始化完成
+    if (!bm.default) return; // 还未初始化完成
     if (!bm._lifecycle.destroy) return; // 没有注册消耗处理器
     debug(`destroying baas for ${path}`);
-    const promise = bm._lifecycle.destroy(bm.baas);
+    const promise = bm._lifecycle.destroy(bm.default);
     promise.then(() => {
       debug(`destroyed baas for ${path}`);
     }).catch((e) => {

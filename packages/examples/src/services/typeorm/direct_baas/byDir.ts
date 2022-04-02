@@ -1,8 +1,11 @@
 import { User, UserRole } from "src/entity/User";
-// import { baas as ds } from 'src/bass/typeorm/test1'; // 通常 faas 模块不会直接引用提供 baas 的模块，因为不方便批量修改
-import { baas as ds } from '.'; // 因此通过目录模块统一指向连接池模块
+import ds from 'src/bass/typeorm/test1'; // 通常 faas 模块不会直接引用提供 baas 的模块，因为不方便批量修改
+// import ds from '.'; // 因此通过目录模块统一指向连接池模块
 // import { baas as getDataSource } from '.'; // 因此通过目录模块统一指向连接池模块
 import { IsNull, LessThan, MoreThan } from "typeorm";
+import { getDebug } from '@ncf/microkernel';
+
+const debug = getDebug(module);
 
 interface IRequest {
   sex?: User["sex"],

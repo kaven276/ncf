@@ -1,7 +1,8 @@
 import { DataSource, makeTypeOrmDataSource } from './makeTypeOrmDataSource';
 
 /** 创建并初始化好的连接池，使用者直接 ts import 即可，不用关系创建和初始化工作 */
-export let baas: DataSource;
+let baas: DataSource = undefined!;
+export default baas;
 
 // 如果 export config object，使用的时候还需要解耦，非常的麻烦
 // 直接 export baas，使用的时候只需 import { baas } from 即可，非常的方便
@@ -16,7 +17,7 @@ export const _lifecycle = makeTypeOrmDataSource({
   username: "test1",
   password: "test1",
   synchronize: true,
-  logging: true,
+  logging: false,
   // driver: {
   //   max: 2,
   // },

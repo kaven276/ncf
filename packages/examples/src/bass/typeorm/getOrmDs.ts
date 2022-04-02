@@ -21,6 +21,6 @@ const creators = {
 
 export async function getOrmDs(name: keyof typeof creators = 'test1'): Promise<DataSource> {
   let bm: BassModule<DataSource> = await creators[name]()
-  console.log(bm, bm.baas);
-  return bm.baas;
+  // console.log(bm, bm.default);
+  return bm.default;
 }
