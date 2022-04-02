@@ -1,7 +1,7 @@
 import { User, UserRole } from "src/entity/User";
-// import { getDataSource } from '@ncf/baas-typeorm';
-// import { baas as getDataSource } from 'src/bass/typeorm/test1'; // 通常 faas 模块不会直接引用提供 baas 的模块，因为不方便批量修改
-import { getDataSource } from '.'; // 因此通过目录模块统一指向连接池模块
+// import { baas as ds } from 'src/bass/typeorm/test1'; // 通常 faas 模块不会直接引用提供 baas 的模块，因为不方便批量修改
+import { baas as ds } from '.'; // 因此通过目录模块统一指向连接池模块
+// import { baas as getDataSource } from '.'; // 因此通过目录模块统一指向连接池模块
 import { IsNull, LessThan, MoreThan } from "typeorm";
 
 interface IRequest {
@@ -17,8 +17,8 @@ interface IRequest {
  * 4) dynamic query/sql
  */
 export async function faas(req: IRequest) {
+  // const ds = await getDataSource();
   // 在 async thread 开始时自动进行
-  const ds = await getDataSource();
   const userRepo = ds.getRepository(User);
   return await userRepo.find({
     comment: 'test typeorm find options',

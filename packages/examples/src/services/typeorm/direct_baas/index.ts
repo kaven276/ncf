@@ -1,1 +1,1 @@
-export { getDataSource } from '..';
+export { baas } from '..';

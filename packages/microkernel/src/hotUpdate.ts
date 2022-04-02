@@ -54,10 +54,10 @@ export function watchHotUpdate() {
 /** 都是按照解析完的 module.filename 来记录关系的 */
 const depsMap = new Map<string, Set<string>>();
 
-function collectWhoDependMe(parentModule: NodeModule) {
+async function collectWhoDependMe(parentModule: NodeModule) {
   // if (!parentModule) return;
   const absFileName = parentModule.filename;
-  parentModule.children.forEach(subModule => {
+  const promises = parentModule.children.map(async subModule => {
     const subPath = subModule.filename;
     // 可能会出现两个模块互相引用的情况造成死循环
     // debug('collectWhoDependMe', absFileName.substring(ServiceDir.length), subPath.substring(ServiceDir.length));
@@ -75,16 +75,17 @@ function collectWhoDependMe(parentModule: NodeModule) {
       // submodule 第一次被依赖
       depSet = new Set<string>();
       depsMap.set(subPath, depSet);
-      if (subModule.exports.baas) {
+      if (subModule.exports._manager) {
         // 依赖了一个 baas
-        registerBaas(subModule);
+        await registerBaas(subModule);
       }
     }
     // 如果判断 subModule 可能会改变，则加入到依赖跟踪中
     depSet.add(absFileName);
     if (depsMap.get(parentModule.filename)?.has(subPath)) return; // 防止循环引用造成 stack overflow
-    collectWhoDependMe(subModule);
+    await collectWhoDependMe(subModule);
   });
+  await Promise.all(promises);
 }
 
 function deleteCacheForUpdated(updatedFileName: string) {
@@ -130,11 +131,13 @@ function deleteCacheForUpdated(updatedFileName: string) {
     deleteCacheForUpdated(importer);
   }
 }
-
-export let registerDep = (absServicePath: string) => {
+/** 从 faas/config 出发，查看依赖树，登记反向依赖树。
+ * 因为中间遇到 baas 需要等待其完成异步初始化，所以是 async 函数
+ */
+export let registerDep = async (absServicePath: string) => {
   if (!started) return;
   debug('collecting from', absServicePath);
-  collectWhoDependMe(require.cache[absServicePath]!);
+  await collectWhoDependMe(require.cache[absServicePath]!);
 }
 
 
@@ -144,5 +147,5 @@ if (process.env.NODE_ENV === 'development') {
     watchHotUpdate();
   });
 } else {
-  registerDep = () => { };
+  registerDep = async () => { };
 }

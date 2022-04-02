@@ -113,7 +113,7 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
   }
 
   if (!fassModule.fake) {
-    registerDep(tryPath);
+    await registerDep(tryPath);
   }
 
 
