@@ -1,6 +1,7 @@
 import { useLifecycle } from '@ncf/microkernel';
 
 interface IState {
+  /** 计数 */
   count: number,
 }
 
