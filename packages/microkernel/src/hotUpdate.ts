@@ -85,6 +85,10 @@ async function collectWhoDependMe(parentModule: NodeModule) {
     }
     // 如果判断 subModule 可能会改变，则加入到依赖跟踪中
     depSet.add(absFileName);
+    // if (subPath.endsWith('/test1.ts')) {
+    //   debug('track', subPath, [...depsMap.get(subPath)!]);
+    // }
+
     if (depsMap.get(parentModule.filename)?.has(subPath)) return; // 防止循环引用造成 stack overflow
     await collectWhoDependMe(subModule);
   });
@@ -96,8 +100,7 @@ function deleteCacheForUpdated(updatedFileName: string) {
 
   // 如果是 BAAS 模块更新，老的 BAAS 资源需要先清除掉释放资源
   const m = require.cache[updatedFileName];
-  if (m?.exports.baas) {
-    depsMap.delete(m.filename);
+  if (m && isBaasModule(m)) {
     destroyOldBaas(m);
   }
 
@@ -111,6 +114,12 @@ function deleteCacheForUpdated(updatedFileName: string) {
 
   // 回溯再无引用者，则退出
   const importers = depsMap.get(updatedFileName);
+  // if (updatedFileName.endsWith('/test1.ts')) {
+  //   debug('on delete importers', updatedFileName, importers);
+  // }
+
+  depsMap.delete(updatedFileName); // 依赖自己的部分全完成
+
   if (!importers) {
     if (!updatedFileName.endsWith('./test.ts')) {
       debug('top depender modified', updatedFileName);
