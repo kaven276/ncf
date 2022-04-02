@@ -10,7 +10,7 @@ interface IRequest {
  */
 export async function faas(req: IRequest) {
   // 在 async thread 开始时自动进行
-  const ds = await getOrmDs("test3");
+  const ds = await getOrmDs("test2");
   const userRepo = ds.getRepository(User);
   return await userRepo.find({
     comment: 'test typeorm find options',
