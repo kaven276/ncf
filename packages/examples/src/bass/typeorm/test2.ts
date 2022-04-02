@@ -1,20 +1,18 @@
-import { DataSource, makeTypeOrmDataSource } from './makeTypeOrmDataSource';
+import { lifecycle } from './makeTypeOrmDataSource';
 
-/** 创建并初始化好的连接池，使用者直接 ts import 即可，不用关系创建和初始化工作 */
-let baas: DataSource = undefined!;
-export default baas;
-
-export const _lifecycle = makeTypeOrmDataSource({
+let baas = lifecycle(module, {
   type: "postgres",
-  host: "127.0.0.1",
-  port: 25432,
-  database: 'pgsqlib',
+  host: "10.39.38.53",
+  port: 5432,
+  database: 'fe',
   schema: 'test1',
-  username: "test1",
-  password: "test1",
+  username: "fe",
+  password: "typeorm2022",
   synchronize: true,
   logging: true,
   entities: ["src/entity/**/*.ts"],
   migrations: ["src/migration/**/*.ts"],
   subscribers: ["src/subscriber/**/*.ts"],
 });
+
+export default baas;

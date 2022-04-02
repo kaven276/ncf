@@ -4,14 +4,27 @@ import { servicesDir } from './util/resolve';
 const prefixLength = servicesDir.length;
 const debug = getDebug(module);
 
+interface ILifecycle<T> {
+  default?: T,
+  /** 模块加载时执行的代码，返回的结果将被用于替换 exports.default。ncf 确保一个 BAAS 连接池只被创建和初始化一次 */
+  initialize: () => Promise<T>,
+  /** hotUpdate 时，或者进程退出时，将会被系统自动执行，正常的清理资源 */
+  destroy?: (baas: T) => Promise<void>,
+}
+
 export interface BassModuleExport<T = any> {
   default: T,
-  _lifecycle: {
-    /* ncf 确保一个 BAAS 连接池只被创建和初始化一次 */
-    initialize: () => Promise<T>,
-    /** hotUpdate 时，或者进程退出时，将会被系统自动执行，正常的清理资源 */
-    destroy?: (baas: T) => Promise<void>,
-  },
+  _lifecycle: ILifecycle<T>,
+}
+
+/** 设置模块 lifecycle 钩子，并同步返回默认值，无默认值返回 undefined 等待 initialize 的值覆盖
+ * @example
+ * let datasource = useLifecycle(module, { initialize(){}, destroy(){} })
+ * export default datasource;
+  */
+export function useLifecycle<T>(bm: NodeModule, lifecycle: ILifecycle<T>): T {
+  (bm.exports as unknown as BassModuleExport<T>)._lifecycle = lifecycle;
+  return lifecycle.default as T;
 }
 
 type BassNodeModule = NodeModule;
@@ -25,7 +38,7 @@ export function isBaasModule(m: NodeModule) {
 }
 
 /** 登记一个 BAAS NodeModule，该退出服务进程时，好做连接池清理等清理善后工作 */
-export async function registerDynamicBaas(absPath: string): Promise<BassModuleExport> {
+export async function registerDynamicBaas<T>(absPath: string): Promise<BassModuleExport<T>> {
   return (await registerBaas(require.cache[absPath] as BassNodeModule)).exports;
 }
 
@@ -36,7 +49,7 @@ export async function registerBaas(bm: BassNodeModule) {
   const exp = bm.exports as BassModuleExport;
 
   try {
-    const ds = bm.exports.default = await exp._lifecycle.initialize(); // 注册 baas 后立即就确保连接池创建好
+    const ds = exp.default = await exp._lifecycle.initialize(); // 注册 baas 后立即就确保连接池创建好
 
     // 如果 baas 模块没有定义如何 destroy，做一定的智能判断
     if (!exp._lifecycle.destroy) {

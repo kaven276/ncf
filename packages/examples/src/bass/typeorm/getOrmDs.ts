@@ -14,10 +14,14 @@ import { DataSource } from 'typeorm';
 import * as baasTest2 from './test2';
 
 const creators = {
-  test1: () => import(`./test1`).then(() => registerDynamicBaas(require.resolve('./test1.ts'))),
-  test2: () => Promise.resolve(baasTest2),
-  test3: () => import(`./test3`).then(() => registerDynamicBaas(require.resolve('./test3.ts'))),
+  /* 动态引用 BAAS 范例 */
+  test1: () => import(`./test1`).then(() => registerDynamicBaas<DataSource>(require.resolve('./test1.ts'))),
+  /* 静态引用 BAAS 范例 */
+  test2: () => Promise.resolve(baasTest2 as BassModule<DataSource>),
+  test3: () => import(`./test3`).then(() => registerDynamicBaas<DataSource>(require.resolve('./test3.ts'))),
 }
+
+export type DsName = keyof typeof creators;
 
 export async function getOrmDs(name: keyof typeof creators = 'test1'): Promise<DataSource> {
   let bm: BassModule<DataSource> = await creators[name]()

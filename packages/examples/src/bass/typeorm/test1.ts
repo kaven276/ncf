@@ -1,27 +1,23 @@
-import { DataSource, makeTypeOrmDataSource } from './makeTypeOrmDataSource';
-
-/** 创建并初始化好的连接池，使用者直接 ts import 即可，不用关系创建和初始化工作 */
-let baas: DataSource = undefined!;
-export default baas;
+import { lifecycle } from './makeTypeOrmDataSource';
 
 // 如果 export config object，使用的时候还需要解耦，非常的麻烦
 // 直接 export baas，使用的时候只需 import { baas } from 即可，非常的方便
 // 但是如何复用 initialize/destroy 逻辑呢？
 
-export const _lifecycle = makeTypeOrmDataSource({
+/** 创建并初始化好的连接池，使用者直接 ts import 即可，不用关系创建和初始化工作 */
+let baas = lifecycle(module, {
   type: "postgres",
-  host: "127.0.0.1",
-  port: 25432,
-  database: 'pgsqlib',
+  host: "10.39.38.53",
+  port: 5432,
+  database: 'fe',
   schema: 'test1',
-  username: "test1",
-  password: "test1",
+  username: "fe",
+  password: "typeorm2022",
   synchronize: true,
-  logging: false,
-  // driver: {
-  //   max: 2,
-  // },
+  logging: true,
   entities: ["src/entity/**/*.ts"],
   migrations: ["src/migration/**/*.ts"],
   subscribers: ["src/subscriber/**/*.ts"],
 });
+
+export default baas;

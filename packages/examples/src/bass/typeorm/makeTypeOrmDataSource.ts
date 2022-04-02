@@ -1,15 +1,12 @@
 import type { DataSourceOptions } from 'typeorm';
 import { DataSource } from 'typeorm';
-import { getDebug } from '@ncf/microkernel';
+import { getDebug, useLifecycle } from '@ncf/microkernel';
 
 const debug = getDebug(module);
 
-export { DataSource } from 'typeorm';
-
 /** 根据连接池配置，可以创建一个管理器对象，用于 NCF 创建和初始化连接池还有注册关闭连接池函数 */
-export function makeTypeOrmDataSource(dsOptions: DataSourceOptions) {
-
-  return {
+export function lifecycle(m: NodeModule, dsOptions: DataSourceOptions): DataSource {
+  return useLifecycle<DataSource>(m, {
     /* ncf 确保一个 BAAS 连接池只被创建和初始化一次 */
     async initialize() {
       const baas = new DataSource(dsOptions);
@@ -25,5 +22,5 @@ export function makeTypeOrmDataSource(dsOptions: DataSourceOptions) {
         await baas.destroy();
       }
     },
-  }
+  });
 }
