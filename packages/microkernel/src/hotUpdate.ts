@@ -43,6 +43,9 @@ export function watchHotUpdate() {
   const watcher = watch(servicesDir, {
     depth: 9,
     persistent: true,
+    ignoreInitial: true,
+    followSymlinks: true,
+    atomic: 200,
   });
 
   watcher.on("change", (absPath) => {
