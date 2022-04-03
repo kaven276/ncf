@@ -34,31 +34,10 @@ export function getProxiedPath(): string | undefined {
   return getCallState().proxiedPath;
 }
 
-interface ISuccessResponse {
-  status: number,
-  /** 服务处理成功为0 */
-  code: 0,
-  /** 服务处理的响应数据 */
-  data?: any,
-}
-
-interface IFailureResponse {
-  status: number,
-  /** 服务处理失败，值不为 0 */
-  code: number,
-  /** 伴随异常需要返回给人看的异常信息文字 */
-  msg: string,
-  /** 其他伴随信息，调用方可能用到 */
-  data?: any,
-}
-
-/** 提供给各种接入 gateway 使用的响应。核心永远不会 throw 异常，必须返回这个规格的数据 */
-type IFinalResponse = ISuccessResponse | IFailureResponse;
-
 /** 进入服务执行，提供执行环境，事务管理。
  * 返回 Promise
  */
-export async function execute({ faasPath, request, stream, mock, http }: IEntranceProps): Promise<IFinalResponse> {
+export async function execute({ faasPath, request, stream, mock, http }: IEntranceProps): Promise<any> {
   idSeq += 1;
   debug(`request ${idSeq} ${faasPath} coming...`);
 
@@ -133,7 +112,7 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
     fassModule,
     trans: [],
   }
-  const resp = asyncLocalStorage.run<Promise<IFinalResponse>, ICallState[]>(als, async () => {
+  const resp = asyncLocalStorage.run<Promise<any>, ICallState[]>(als, async () => {
     const store = asyncLocalStorage.getStore()!;
 
     assert.equal(als, store);
@@ -164,7 +143,7 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
       debug('trans committed');
 
       // 正常返回响应
-      return { code: 0, data: als.response };
+      return als.response;
     } catch (e: any) {
 
       // 处理出现异常会，事务自动回滚
@@ -172,14 +151,12 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
 
       // console.log('---------', e instanceof ServiceError, e);
       if (e instanceof ServiceError) {
-        const status = (e.code >= 100 && e.code <= 999) ? e.code : 500;
-        return { status, code: e.code, msg: e.message, data: e.data };
+        throw e;
       } else if (e.code) {
         console.error(e);
-        return e;
+        throwServiceError(e.code, e.message, e.data);
       } else {
-        console.log('--------- not ServiceError', e.code, e.message);
-        return { status: 500, code: e.code, msg: e.message };
+        throw e;
       }
     }
     // console.log(require.cache);

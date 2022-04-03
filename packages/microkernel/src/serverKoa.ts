@@ -4,8 +4,32 @@ import koaBody from 'koa-body';
 import { execute } from './executor';
 import { URL } from 'url';
 import { getDebug } from './util/debug';
+import { ServiceError } from './lib/ServiceError';
 
 const debug = getDebug(module);
+
+
+interface ISuccessResponse {
+  status: number,
+  /** 服务处理成功为0 */
+  code: 0,
+  /** 服务处理的响应数据 */
+  data?: any,
+}
+
+interface IFailureResponse {
+  status: number,
+  /** 服务处理失败，值不为 0 */
+  code: number,
+  /** 伴随异常需要返回给人看的异常信息文字 */
+  msg: string,
+  /** 其他伴随信息，调用方可能用到 */
+  data?: any,
+}
+
+/** 提供给各种接入 gateway 使用的响应。核心永远不会 throw 异常，必须返回这个规格的数据 */
+type IFinalResponse = ISuccessResponse | IFailureResponse;
+
 
 /*
 * 选 KOA 而非裸 nodejs http 的原因
@@ -66,27 +90,36 @@ function useNCF() {
       }
     }
 
-    // 给核心服务环境信息，然后调用
-    const result = await execute({
-      faasPath, request, stream, mock, http: {
-        req: ctx.req,
-        res: ctx.res,
+    let result: any;
+    try {
+      // 给核心服务环境信息，然后调用
+      result = await execute({
+        faasPath, request, stream, mock, http: {
+          req: ctx.req,
+          res: ctx.res,
+        }
+      });
+    } catch (e) {
+      if (e instanceof ServiceError) {
+        const status = (e.code >= 100 && e.code <= 999) ? e.code : 500;
+        ctx.response.status = status;
+        ctx.response.set('content-type', 'application/json');
+        ctx.body = { status, code: e.code, msg: e.message, data: e.data };
+        return;
       }
-    });
+      throw e; // 如果不是 ncf 异常，则直接重新抛出，由 koa 处理
+    }
 
     // 如果返回的内容是 html 则直接返回页面
-    if (typeof result.data === 'string' && result.data.startsWith('<')) {
-      ctx.body = result.data;
-      // console.log('ctx.body', ctx.body);
+    if (typeof result === 'string' && result.startsWith('<')) {
+      ctx.body = result;
       ctx.response.set('content-type', 'text/html;charset=utf-8');
-      ctx.response.status = result.status || 200;
+      ctx.response.status = 200;
       return;
     }
-    ctx.response.type = 'application/json';
-    ctx.body = result;
-    // console.log('ctx.body', ctx.body);
+    ctx.body = { code: 0, data: result };
     ctx.response.set('content-type', 'application/json');
-    ctx.response.status = result.status || 200;
+    ctx.response.status = 200;
     // console.log('final response', result.status, ctx.status, ctx.response.status, ctx.response.headers);
   }
 }
@@ -100,6 +133,7 @@ export function createKoaApp() {
   koa.use(useNCF());
 
   koa.on('error', (err, ctx) => {
+    console.error('koa error', err);
     ctx.status = 500;
     ctx.body = {
       status: 500,
