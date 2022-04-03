@@ -1,4 +1,5 @@
-import { createKoaApp, createRequestListener } from '@ncf/microkernel';
+import { createRequestListener } from '@ncf/microkernel';
+import { createKoaApp } from '@ncf/gateway-koa';
 import { createServer } from 'http';
 import '@ncf/loader-cfg-json5';
 import '@ncf/loader-cfg-yaml';
@@ -14,7 +15,7 @@ if (require.main !== module) {
 
 // 使用多个 NCF app 接入层，分别监听不同的端口
 const server1 = createServer(createKoaApp().callback()).listen(env.PORT);
-const server2 =  createServer(createRequestListener()).listen(env.PORT + 1);
+const server2 = createServer(createRequestListener()).listen(env.PORT + 1);
 
 process.on('SIGINT', () => {
   server1.close();

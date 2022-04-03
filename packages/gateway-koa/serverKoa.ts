@@ -1,10 +1,8 @@
 import { IncomingMessage } from 'http';
 import Koa from 'koa';
 import koaBody from 'koa-body';
-import { execute } from './executor';
+import { execute, getDebug, ServiceError } from '@ncf/microkernel';
 import { URL } from 'url';
-import { getDebug } from './util/debug';
-import { ServiceError } from './lib/ServiceError';
 
 const debug = getDebug(module);
 
