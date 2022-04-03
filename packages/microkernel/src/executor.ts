@@ -138,9 +138,9 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
     try {
       await runMiddware(0);
       // 一切执行成功无异常后，自动提交事务
-      debug('trans committing');
+      store.trans.length && debug('trans committing');
       await Promise.all(store.trans.map(tran => tran.commit()));
-      debug('trans committed');
+      store.trans.length && debug('trans committed');
 
       // 正常返回响应
       return als.response;

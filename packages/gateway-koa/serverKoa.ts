@@ -76,16 +76,22 @@ function useNCF() {
     let request: any;
     let stream: IncomingMessage | undefined;
     if (isGet) {
+      // debug('is GET');
       request = ctx.request.query;
     } else {
       if (!ctx.request.body || (ctx.request.body && Object.values(ctx.request.body).length === 0)) {
         request = ctx.request.query;
         stream = req;
-        debug('found stream');
+        // debug('found stream');
       } else {
+        // debug(' = ctx.request.body');
         // request = Object.assign({}, ctx.request.body, ctx.request.query);
         request = ctx.request.body;
       }
+    }
+
+    if (ctx.request.files) {
+      Object.assign(request, { files: ctx.request.files });
     }
 
     let result: any;
@@ -126,7 +132,13 @@ export function createKoaApp() {
   const koa = new Koa();
   koa.use(useCors());
   koa.use(koaBody({
-    strict: true,
+    // strict: true,
+    patchKoa: true,
+    multipart: true,
+    formLimit: '2M',
+    formidable: {
+      uploadDir: process.cwd() + '/upload',
+    }
   }));
   koa.use(useNCF());
 
