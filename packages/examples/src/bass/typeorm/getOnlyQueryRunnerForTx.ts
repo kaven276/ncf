@@ -16,7 +16,7 @@ declare module '@ncf/microkernel' {
 export async function getOnlyQueryRunnerForTx(ds: DataSource): Promise<QueryRunner> {
   const threadStore = getCallState();
   // TLS 没有配置 typeorm 连接的话，就给初始化一个
-  /** 持有当前 service thread 中所有 typeorm DataSource 对应的 QueryRunner */
+  /** 持有当前 service thread 中所有 typeorm DataSource 对应的唯一 QueryRunner */
   let txMap = threadStore[ORMKey];
   if (!txMap) {
     txMap = threadStore[ORMKey] = new Map();
@@ -29,14 +29,14 @@ export async function getOnlyQueryRunnerForTx(ds: DataSource): Promise<QueryRunn
   // 创建新的链接，并设置事务环境，最后返回 queryRunner
   queryRunner = ds.createQueryRunner();
   await queryRunner.startTransaction("READ COMMITTED");
-  debug('start transaction', threadStore.trans);
+  debug('typeorm QueryRunner start transaction', threadStore.trans);
   threadStore.trans.push({
     commit: () => {
-      debug('typeorm commit');
+      debug('typeorm QueryRunner commit');
       queryRunner!.commitTransaction();
     },
     rollback: () => {
-      debug('typeorm rollback');
+      debug('typeorm QueryRunner rollback');
       queryRunner!.rollbackTransaction();
     },
   });
