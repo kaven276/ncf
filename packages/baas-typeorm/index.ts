@@ -6,7 +6,7 @@ import { getDataSource, getDefaultPoolName } from './config';
 export { setTypeormConnectionConfigs, getDataSource, setTypeormDefaultPoolName, OrmPoolConfigMap } from './config';
 
 const debug = getDebug(module);
-const ORMKey = Symbol.for('ORMKey');
+const ORMKey = Symbol('ORMKey');
 
 /** 服务调用期间的全部内容 */
 declare module '@ncf/microkernel' {
