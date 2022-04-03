@@ -3,6 +3,7 @@ import Koa from 'koa';
 import koaBody from 'koa-body';
 import { execute, getDebug, ServiceError } from '@ncf/microkernel';
 import { URL } from 'url';
+import { Readable } from 'node:stream';
 
 const debug = getDebug(module);
 
@@ -119,11 +120,16 @@ function useNCF() {
       ctx.body = result;
       ctx.response.set('content-type', 'text/html;charset=utf-8');
       ctx.response.status = 200;
-      return;
+    } else if (result instanceof Readable) {
+      ctx.body = result;
+      // ctx.response.set('content-type', 'text/html;charset=utf-8');
+      ctx.response.status = 200;
+    } else {
+      ctx.body = { code: 0, data: result };
+      ctx.response.set('content-type', 'application/json');
+      ctx.response.status = 200;
     }
-    ctx.body = { code: 0, data: result };
-    ctx.response.set('content-type', 'application/json');
-    ctx.response.status = 200;
+
     // console.log('final response', result.status, ctx.status, ctx.response.status, ctx.response.headers);
   }
 }
