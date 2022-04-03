@@ -15,7 +15,7 @@ export const faas = async (req: any, stream: IncomingMessage) => {
   const filename = req.filename || String(Date.now());
   console.log('stream', !!stream, filename);
   /** 上传文件在文件系统的路径 */
-  const path: string = join(__dirname, '../../upload', filename);
+  const path: string = join(__dirname, '../../../upload', filename);
   const wstream = createWriteStream(path);
   if (stream) {
     await waitWritable(stream.pipe(wstream));
@@ -25,17 +25,3 @@ export const faas = async (req: any, stream: IncomingMessage) => {
   }
 };
 
-/** 浏览器测试范例 */
-function test() {
-  const testUrl = 'http://localhost:8081/upload';
-  const obj = { hello: 'uploaded content' };
-  const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/octet' });
-
-  fetch(testUrl, {
-    method: 'post',
-    mode: 'cors', // cors no-cors 都能在服务端接口请求流，但是浏览器都看不到 response 中内容，status 分别为 0 和 404
-    body: blob,
-  }).then(resp => {
-    console.log(resp.ok, resp.status, resp);
-  });
-}
