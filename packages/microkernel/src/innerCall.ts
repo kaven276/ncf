@@ -1,6 +1,7 @@
 import { execute } from './executor';
 import { getDebug } from './util/debug';
 import { Service } from './lib/faas';
+import { registerDep } from './hotUpdate';
 
 const debug = getDebug(module);
 const JWT: string | undefined = process.env.JWT;
@@ -29,6 +30,12 @@ async function innerCall0(faas: Service<any>, req?: any) {
   // console.dir(inspected, { maxArrayLength: 3, breakLength: 20, depth: 7 });
   return response;
 }
+
+export async function runFaasAsTask(faasPath: string, req?: any) {
+  await registerDep(faasPath);
+  return innerCall({ faasPath }, req);
+}
+
 
 /** 各个 faas unit 测试模块使用 */
 export async function innerCall(faas: { faasPath: string }, req?: any) {

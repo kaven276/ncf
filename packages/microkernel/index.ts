@@ -8,5 +8,5 @@ export { IApi, IFaasModule, Service } from './src/lib/faas';
 export { IMiddleWare } from './src/lib/middleware';
 export { getDebug } from './src/util/debug';
 export { test } from './src/testClient';
-export { innerCall } from './src/innerCall';
+export { innerCall, runFaasAsTask } from './src/innerCall';
 export { BassModuleExport as BassModule, registerDynamicBaas, useLifecycle } from './src/baasManager';
