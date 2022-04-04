@@ -3,7 +3,8 @@ import { getCallState, getDebug } from '@ncf/microkernel';
 import { QueryRunner } from "typeorm";
 import { getDataSource, getDefaultPoolName } from './config';
 
-export { setTypeormConnectionConfigs, getDataSource, setTypeormDefaultPoolName, OrmPoolConfigMap } from './config';
+export { setTypeormConnectionConfigs, getDataSource, setTypeormDefaultPoolName } from './config';
+export type { OrmPoolConfigMap } from './config';
 
 const debug = getDebug(module);
 const ORMKey = Symbol('ORMKey');

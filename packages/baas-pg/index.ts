@@ -2,7 +2,8 @@ import { getCallState, getDebug } from '@ncf/microkernel';
 import type { PoolClient } from "pg";
 import { getPool, getDefaultPoolName } from './config';
 
-export { setPgPoolConfigs, setPgDefaultPoolName, getPool, PgPoolConfigMap } from './config';
+export { setPgPoolConfigs, setPgDefaultPoolName, getPool } from './config';
+export type { PgPoolConfigMap } from './config';
 
 const debug = getDebug(module);
 const PgKey = Symbol('pg pool client key');
