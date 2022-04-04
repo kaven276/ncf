@@ -1,11 +1,13 @@
 export { createRequestListener } from './src/serverHttp';
 export { ServiceError, throwServiceError } from './src/lib/ServiceError';
-export { ICallState, TransactionDealer } from './src/lib/callState';
+export type { ICallState, TransactionDealer } from './src/lib/callState';
 export { execute, getCallState, getProxiedPath } from './src/executor';
-export { getConfig, IConfig } from './src/lib/config';
-export { IApi, IFaasModule, Service } from './src/lib/faas';
-export { IMiddleWare } from './src/lib/middleware';
+export { getConfig } from './src/lib/config';
+export type { IConfig } from './src/lib/config';
+export type { IApi, IFaasModule, Service } from './src/lib/faas';
+export type { IMiddleWare } from './src/lib/middleware';
 export { getDebug } from './src/util/debug';
 export { test } from './src/testClient';
 export { innerCall, runFaasAsTask } from './src/innerCall';
-export { BassModuleExport as BassModule, registerDynamicBaas, useLifecycle } from './src/baasManager';
+export type { BassModuleExport as BassModule } from './src/baasManager';
+export { registerDynamicBaas, useLifecycle } from './src/baasManager';
