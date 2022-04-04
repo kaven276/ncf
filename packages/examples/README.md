@@ -1,4 +1,12 @@
 
+## pm2 集成
+
+开发模式 pm2 启动 
+
+```shell
+pm2 start ecosystem.config.js --env development
+```
+
 ## migration
 
 ```
