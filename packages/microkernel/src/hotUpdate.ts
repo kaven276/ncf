@@ -52,6 +52,10 @@ export function watchHotUpdate() {
     debug('file change', absPath);
     deleteCacheForUpdated(absPath);
   });
+
+  process.on('SIGINT', () => {
+    watcher.close();
+  });
 }
 
 /** 都是按照解析完的 module.filename 来记录关系的 */
