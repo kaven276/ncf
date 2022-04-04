@@ -10,6 +10,7 @@ import { servicesDir } from './util/resolve';
 import { getDebug } from './util/debug';
 import assert from 'assert/strict';
 import { registerDep } from './hotUpdate';
+import { normalize } from 'path';
 
 const debug = getDebug(module);
 
@@ -54,7 +55,8 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
   // 输出为 faas 地址，到具体文件名和后缀，可能来自 dir config (proxy faasPath) 或 faas module
   const ext = dirConfig.ext || '.ts';
   // debug(ext, faasPath, extname(faasPath));
-  const tryPath = `${servicesDir}/src/services${faasPath}${mock ? '.mock' : ''}${ext}`;
+  const tryPath = normalize(`${servicesDir}/src/services${faasPath}${mock ? '.mock' : ''}${ext}`);
+ 
   debug('tryPath', tryPath);
 
   // step2: 加载服务模块
