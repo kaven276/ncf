@@ -3,7 +3,7 @@ import { getDebug } from './util/debug';
 import { root } from './lib/config';
 import { registerBaas, destroyOldBaas, isBaasModule } from './baasManager';
 import { ProjectDir } from './util/resolve';
-import { extname, sep, dirname } from 'path';
+import { extname, sep, dirname, normalize } from 'path';
 const ServiceDir = ProjectDir + '/src/services';
 
 const prefixLength = ServiceDir.length;
@@ -99,6 +99,9 @@ async function collectWhoDependMe(parentModule: NodeModule) {
   await Promise.all(promises);
 }
 
+/** 级联删除依赖自己的模块的缓存，使得再次 import() 他们能加载新版。
+ * 其中 updatedFileName 来自自动从 module.children 的收集，路径为系统相关格式。
+ */
 function deleteCacheForUpdated(updatedFileName: string) {
   debug('delete cache', updatedFileName);
 
@@ -153,7 +156,7 @@ function deleteCacheForUpdated(updatedFileName: string) {
 export let registerDep = async (absServicePath: string) => {
   if (!started) return;
   debug('collecting from', absServicePath);
-  await collectWhoDependMe(require.cache[absServicePath]!);
+  await collectWhoDependMe(require.cache[normalize(absServicePath)]!);
 }
 
 
