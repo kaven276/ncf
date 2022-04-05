@@ -1,10 +1,9 @@
 import { User } from "src/entity/User";
-import { getDataSource } from '@ncf/baas-typeorm';
+import ds from '.'; // 因此通过目录模块统一指向连接池模块
 
 /** 登记新冠管理的人员信息 */
 export const faas = async (req: undefined) => {
   // const two = new People(); // 使用 EntitySchema 创建的不是 class 无法 new
-  const ds = await getDataSource();
   let ly: User | null;
   await ds.transaction(async (manager) => {
     // 注意：你必须使用给定的管理器实例执行所有数据库操作，

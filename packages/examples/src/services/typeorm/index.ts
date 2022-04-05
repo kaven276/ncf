@@ -1,10 +1,10 @@
-import { IConfig } from '@ncf/microkernel';
-import { setTypeormConnectionConfigs, setTypeormDefaultPoolName } from '@ncf/baas-typeorm';
-import { ormconfig, PoolNames } from '../../baas-config/ormconfig';
+import { getOnlyQueryRunnerForTx } from 'src/bass/typeorm/getOnlyQueryRunnerForTx';
+import { default as ds } from 'src/bass/typeorm/test1';
 
 export { default } from 'src/bass/typeorm/test1';
 
-export const config: IConfig = {
-  ...setTypeormConnectionConfigs(ormconfig),
-  ...setTypeormDefaultPoolName<PoolNames>('test1'),
+export async function getManager() {
+  const queryRunner = await getOnlyQueryRunnerForTx(ds);
+  const manager = queryRunner.manager;
+  return manager;
 }

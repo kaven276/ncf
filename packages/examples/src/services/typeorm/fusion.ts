@@ -1,7 +1,10 @@
 import { Photo, Post, Question } from "src/entity/Fusion";
-import { getManager } from '..';
+import { getManager } from '.';
 
-export const faas = async (req: any) => {
+interface IRequest {
+  action?: 'create',
+}
+export const faas = async (req: IRequest) => {
   const m = await getManager();
   if (req.action === 'create') {
     const photo = new Photo();

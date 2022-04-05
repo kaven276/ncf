@@ -7,7 +7,6 @@ import { randomLatency, setRandomLatencyConfig } from '../middlewares/randomLate
 import { pgPoolConfigs } from '../baas-config/pgPools';
 import { setPgPoolConfigs, setPgDefaultPoolName } from '@ncf/baas-pg';
 import { throwServiceError } from '@ncf/microkernel';
-import { getConnFromThread } from '@ncf/baas-typeorm';
 import { getJWT, getJWTStruct } from '@ncf/mw-jwt';
 
 
@@ -45,12 +44,6 @@ export const config = {
   }),
   ...setPgPoolConfigs(pgPoolConfigs),
   ...setPgDefaultPoolName('test1'),
-}
-
-export async function getManager() {
-  const queryRunner = await getConnFromThread();
-  const manager = queryRunner.manager;
-  return manager;
 }
 
 export const PI = 3.1415926;
