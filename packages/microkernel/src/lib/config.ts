@@ -89,8 +89,8 @@ export async function ensureDirConfig(path: string): Promise<IConfig> {
         subs: {},
       };
       // 随后动态加载配置更新
-      const configPath = `${currentPath}/index.ts`;
-      await import(`${currentPath}${sep}index.ts`).then(async dirModule => {
+      const configPath = join(currentPath, 'index.ts');
+      await import(configPath).then(async dirModule => {
         debug('load', currentPath, dirModule);
         await registerDep(configPath);
         if (dirModule.config) {

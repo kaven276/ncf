@@ -3,7 +3,7 @@ import { getDebug } from './util/debug';
 import { root } from './lib/config';
 import { registerBaas, destroyOldBaas, isBaasModule } from './baasManager';
 import { ProjectDir } from './util/resolve';
-import { extname, sep, dirname, normalize } from 'path';
+import { extname, sep, dirname } from 'path';
 const ServiceDir = ProjectDir + '/src/services';
 
 const prefixLength = ServiceDir.length;
@@ -156,7 +156,7 @@ function deleteCacheForUpdated(updatedFileName: string) {
 export let registerDep = async (absServicePath: string) => {
   if (!started) return;
   debug('collecting from', absServicePath);
-  await collectWhoDependMe(require.cache[normalize(absServicePath)]!);
+  await collectWhoDependMe(require.cache[absServicePath]!);
 }
 
 
