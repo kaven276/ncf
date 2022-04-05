@@ -1,1 +1,1 @@
-export { default, getPoolClient } from 'src/bass/pg/pg1';
+export { default, getPoolClient } from 'src/baas/pg/pg1';

@@ -1,6 +1,6 @@
 import { User, UserRole } from "src/entity/User";
-import { getOnlyQueryRunnerForTx } from 'src/bass/typeorm/getOnlyQueryRunnerForTx';
-import ds from 'src/bass/typeorm/test1';
+import { getOnlyQueryRunnerForTx } from 'src/baas/typeorm/getOnlyQueryRunnerForTx';
+import ds from 'src/baas/typeorm/test1';
 
 interface IRequest {
   id?: User["id"],

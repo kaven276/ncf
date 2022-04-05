@@ -1,5 +1,5 @@
 import { User, UserRole } from "src/entity/User";
-import { getOnlyQueryRunnerForTx } from 'src/bass/typeorm/getOnlyQueryRunnerForTx';
+import { getOnlyQueryRunnerForTx } from 'src/baas/typeorm/getOnlyQueryRunnerForTx';
 import ds from '.';
 
 interface IRequest {

@@ -1,5 +1,5 @@
 import { lifecycle } from './makePgPool';
-import { getOnlyPoolClientForTx } from 'src/bass/pg/getOnlyPoolClientForTx';
+import { getOnlyPoolClientForTx } from 'src/baas/pg/getOnlyPoolClientForTx';
 import { env } from 'src/env';
 
 let pool = lifecycle(module, {
