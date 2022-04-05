@@ -1,9 +1,8 @@
 import { User } from "src/entity/User";
-import { getDataSource } from '@ncf/baas-typeorm';
+import ds from '.';
 
 /** 插入初始演示测试用用户数据 */
 export const faas = async (req: undefined) => {
-  const ds = await getDataSource();
   const userRepo = ds.getRepository(User);
 
   console.log("Loading users from the database...");

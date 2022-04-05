@@ -1,5 +1,5 @@
 import { User, UserRole } from "src/entity/User";
-import { getDataSource } from '@ncf/baas-typeorm';
+import ds from '.';
 import { IsNull, LessThan, MoreThan } from "typeorm";
 
 interface IRequest {
@@ -16,7 +16,6 @@ interface IRequest {
  */
 export async function faas(req: IRequest) {
   // 在 async thread 开始时自动进行
-  const ds = await getDataSource();
   const userRepo = ds.getRepository(User);
   return await userRepo.find({
     comment: 'test typeorm find options',

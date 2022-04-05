@@ -1,9 +1,8 @@
 import { Org } from "src/entity/Org";
-import { getDataSource } from '@ncf/baas-typeorm';
+import ds from '.';
 
 /** 插入初始演示测试用组织数据 */
 export const faas = async (req: undefined) => {
-  const ds = await getDataSource();
   const orgRepo = ds.getRepository(Org);
 
   const orgs = await orgRepo.find();

@@ -1,4 +1,4 @@
-import { getDataSource } from '@ncf/baas-typeorm';
+import ds from '.';
 
 interface IRequest {
   tableName?: string
@@ -12,7 +12,6 @@ interface IRequest {
  */
 export async function faas(req: IRequest) {
   // 在 async thread 开始时自动进行
-  const ds = await getDataSource();
   const qs = ds.createQueryRunner();
   return await qs.getTable(req.tableName ?? 'user2');
 }
