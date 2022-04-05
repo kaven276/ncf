@@ -115,7 +115,7 @@ function deleteCacheForUpdated(updatedFileName: string) {
   delete require.cache[updatedFileName];
 
   // 如果是目录模块更新，则要更新内部的配置链中的节点
-  if (updatedFileName.endsWith('/index.ts')) {
+  if (updatedFileName.endsWith(sep + 'index.ts')) {
     updateConfig(updatedFileName);
   }
 
