@@ -11,6 +11,7 @@ import { getDebug } from './util/debug';
 import assert from 'assert/strict';
 import { registerDep } from './hotUpdate';
 import { normalize } from 'path';
+import { isBaasModule, registerBaas } from './baasManager';
 
 const debug = getDebug(module);
 
@@ -91,12 +92,16 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
   // 如果 config 已经创建，则为同步执行；否则第一次加载配置会是异步执行
   if (!getConfigByFaas(fassModule)) {
     ensureFaasConfig(dirConfig, fassModule);
+    if (!fassModule.fake) {
+      await registerDep(tryPath);
+      const nodeModule = require.cache[tryPath]!
+      if (false && isBaasModule(nodeModule)) {
+        // faas 依赖了一个 baas，确保在依赖 tree 都处理完再处理状态模块的初始化；不推荐了，因为需要通过 exports.default 引用太不直观了
+        await registerBaas(nodeModule);
+        debug(`registerBaas for ${tryPath} done`);
+      }
+    }
   }
-
-  if (!fassModule.fake) {
-    await registerDep(tryPath);
-  }
-
 
   // 反向登记依赖的 children，child 改变时，可以将依赖服务删除
   // console.log(resolvedPath);

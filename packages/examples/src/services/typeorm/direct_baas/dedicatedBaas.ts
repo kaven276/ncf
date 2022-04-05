@@ -6,7 +6,7 @@ interface IRequest {
 
 /** 示范 faas 使用独占专用的数据源对象 */
 export const faas = async (req: IRequest) => {
-  // console.log(module.exports.default);
+  // console.log(exports.faas);
   const userRepo = ds.getRepository(User);
   const result = await userRepo.findOne({});
   return result;
