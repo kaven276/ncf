@@ -11,7 +11,7 @@ interface IRequest {
  */
 export const faas = async (req: IRequest) => {
   const res = getCallState().http.res;
-  const downloadFileName = req.filename.split('/').pop();
+  const downloadFileName = encodeURIComponent(req.filename.split('/').pop()!);
   res.setHeader('Content-Disposition', `inline; filename="${downloadFileName}"`);
   res.setHeader('content-type', 'image/jpeg');
   const filename = join(ProjectDir, 'upload', req.filename);
