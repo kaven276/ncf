@@ -1,4 +1,4 @@
-import { resolve } from 'path';
+import { join } from 'path';
 import { createReadStream } from 'node:fs';
 import { getCallState, ProjectDir } from '@ncf/microkernel';
 
@@ -14,7 +14,7 @@ export const faas = async (req: IRequest) => {
   const downloadFileName = req.filename.split('/').pop();
   res.setHeader('Content-Disposition', `inline; filename="${downloadFileName}"`);
   res.setHeader('content-type', 'image/jpeg');
-  const filename = resolve(ProjectDir, 'upload', req.filename);
+  const filename = join(ProjectDir, 'upload', req.filename);
   const s = createReadStream(filename);
   return s;
 };

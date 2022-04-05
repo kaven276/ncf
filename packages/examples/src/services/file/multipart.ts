@@ -1,5 +1,5 @@
 import { throwServiceError, ProjectDir } from '@ncf/microkernel';
-import { resolve } from 'node:path';
+import { join } from 'node:path';
 import { mkdir, rename } from 'node:fs/promises';
 import { File } from 'formidable';
 
@@ -17,13 +17,14 @@ export const faas = async (req: IRequest) => {
   // const callState = getCallState();
   // console.dir(callState.http.req.headers);
   const now = Date.now();
-  const dirname = resolve(ProjectDir, 'upload', String(now));
+  const dirname = join(ProjectDir, 'upload', String(now));
   await mkdir(dirname);
   if (!req.files) {
     throwServiceError(1, '没有文件上传');
   }
+  console.log('req.files', req.files);
   for (const [fieldname, file] of Object.entries(req.files)) {
-    await rename(file.path, resolve(dirname, file.name ?? fieldname));
+    await rename(file.path, join(dirname, file.name ?? fieldname));
   }
   return { ...req, files: Object.keys(req.files) };
 };
