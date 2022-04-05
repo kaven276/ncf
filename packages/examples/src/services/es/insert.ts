@@ -1,4 +1,5 @@
 import { Client } from 'elasticsearch';
+import { env } from 'src/env';
 
 interface IData {
   name: string,
@@ -13,7 +14,7 @@ const data: IData[] = [{
 }]
 
 const client = new Client({
-  host: '127.0.0.1:9200',
+  host: `${env.BAAS_HOST}:9200`,
   log: 'error',
 });
 

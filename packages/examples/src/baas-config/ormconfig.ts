@@ -1,11 +1,12 @@
 import { OrmPoolConfigMap } from '@ncf/baas-typeorm';
+import { env } from 'src/env';
 
 export type PoolNames = 'postgis' | 'test1' | 'echarts';
 
 export const ormconfig: OrmPoolConfigMap = {
   postgresmac: {
     type: "postgres",
-    host: "127.0.0.1",
+    host: env.BAAS_HOST,
     port: 5432,
     username: "postgres",
     password: "postgre276",
@@ -19,7 +20,7 @@ export const ormconfig: OrmPoolConfigMap = {
   echarts: {
     name: "postgis",
     type: "postgres",
-    host: "127.0.0.1",
+    host: env.BAAS_HOST,
     port: 25432,
     username: "echarts",
     password: "echarts",
@@ -32,7 +33,7 @@ export const ormconfig: OrmPoolConfigMap = {
   },
   test1: {
     type: "postgres",
-    host: "127.0.0.1",
+    host: env.BAAS_HOST,
     port: 25432,
     database: 'pgsqlib',
     schema: 'test1',
@@ -46,7 +47,7 @@ export const ormconfig: OrmPoolConfigMap = {
   },
   postgres208: {
     type: "postgres",
-    host: "127.0.0.1",
+    host: env.BAAS_HOST,
     port: 15432,
     username: "postgres",
     password: "postgis",

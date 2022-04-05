@@ -1,4 +1,5 @@
 import { lifecycle } from './makeTypeOrmDataSource';
+import { env } from 'src/env';
 
 // 如果 export config object，使用的时候还需要解耦，非常的麻烦
 // 直接 export baas，使用的时候只需 import { baas } from 即可，非常的方便
@@ -7,14 +8,14 @@ import { lifecycle } from './makeTypeOrmDataSource';
 /** 创建并初始化好的连接池，使用者直接 ts import 即可，不用关系创建和初始化工作 */
 let baas = lifecycle(module, {
   type: "postgres",
-  host: "10.39.38.53",
-  port: 5432,
-  database: 'fe',
+  host: env.BAAS_HOST,
+  port: 25432,
+  database: 'pgsqlib',
   schema: 'test1',
-  username: "fe",
-  password: "typeorm2022",
-  synchronize: true,
-  logging: true,
+  username: "test1",
+  password: "test1",
+  synchronize: false,
+  logging: false,
   entities: ["src/entity/**/*.ts"],
   migrations: ["src/migration/**/*.ts"],
   subscribers: ["src/subscriber/**/*.ts"],

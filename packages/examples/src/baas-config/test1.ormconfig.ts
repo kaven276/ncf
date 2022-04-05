@@ -1,9 +1,10 @@
 import type { DataSourceOptions } from 'typeorm';
 import { DataSource } from 'typeorm';
+import { env } from 'src/env';
 
 const test1: DataSourceOptions = {
   type: "postgres",
-  host: "127.0.0.1",
+  host: env.BAAS_HOST,
   port: 25432,
   database: 'pgsqlib',
   schema: 'test1',

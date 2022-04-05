@@ -1,5 +1,6 @@
 import { DataSource } from 'typeorm';
 import { useLifecycle } from '@ncf/microkernel';
+import { env } from 'src/env';
 
 // psql -h 10.39.38.53 -p 5432 -U postgres -d postgres
 // create user fe CREATEDB CREATEROLE LOGIN CONNECTION LIMIT 80;
