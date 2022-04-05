@@ -3,18 +3,17 @@ import { getDebug } from './util/debug';
 import { root } from './lib/config';
 import { registerBaas, destroyOldBaas, isBaasModule } from './baasManager';
 import { servicesDir } from './util/resolve';
-import { extname } from 'path';
+import { extname, sep, dirname } from 'path';
 const ServiceDir = servicesDir + '/src/services';
 
-const prefixLenght = ServiceDir.length;
+const prefixLength = ServiceDir.length;
 const debug = getDebug(module);
 let started = false;
 
 function updateConfig(absPath: string) {
   // 目录配置改变的话，更新 config prototype chain
-  debug('config changed for', absPath.substring(prefixLenght));
-  const dirs = absPath.substring(prefixLenght + 1).split('/');
-  dirs.pop();
+  debug('config changed for', absPath.substring(prefixLength));
+  const dirs = dirname(absPath.substring(prefixLength + 1)).split(sep);
   debug('config dirs', dirs);
   let cfgNode = root;
   for (let dir of dirs) {
@@ -74,7 +73,7 @@ async function collectWhoDependMe(parentModule: NodeModule) {
     // inner 依赖了一个 faas，注入自标注路径，来支持内部调用寻址
     if (subModule.exports.faas) {
       const endPos = subPath.length - extname(subPath).length
-      subModule.exports.faas.faasPath = subPath.substring(prefixLenght, endPos);
+      subModule.exports.faas.faasPath = subPath.substring(prefixLength, endPos);
     }
 
     let depSet = depsMap.get(subPath);
