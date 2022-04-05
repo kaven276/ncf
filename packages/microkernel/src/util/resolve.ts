@@ -1,1 +1,1 @@
-export const servicesDir = process.cwd();
+export const ProjectDir = process.cwd();

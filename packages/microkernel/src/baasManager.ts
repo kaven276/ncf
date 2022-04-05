@@ -1,7 +1,7 @@
 import { getDebug } from './util/debug';
-import { servicesDir } from './util/resolve';
+import { ProjectDir } from './util/resolve';
 
-const prefixLength = servicesDir.length;
+const prefixLength = ProjectDir.length;
 const debug = getDebug(module);
 
 interface ILifecycle<T> {

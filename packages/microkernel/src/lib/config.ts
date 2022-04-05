@@ -1,4 +1,4 @@
-import { servicesDir } from '../util/resolve';
+import { ProjectDir } from '../util/resolve';
 import { IFaasModule } from '../lib/faas';
 import { getDebug } from '../util/debug';
 import { getCallState } from '../executor';
@@ -40,7 +40,7 @@ export const root: IConfigContainer = {
 
 /** 配置根配置 */
 async function fillRoot() {
-  const configModule = await import(`${servicesDir}/src/services/index.ts`);
+  const configModule = await import(`${ProjectDir}/src/services/index.ts`);
   const config = configModule.config;
   root.cfg = config;
 }
@@ -77,7 +77,7 @@ export async function ensureDirConfig(path: string): Promise<IConfig> {
   }
   const parentDirs = path.split(sep);
   let upper: IConfigContainer = root;
-  let currentPath = join(servicesDir, 'src/services');
+  let currentPath = join(ProjectDir, 'src/services');
   for (let i = 1; i < parentDirs.length - 1; i++) {
     const thisDirName = parentDirs[i];
     let thisDirConfig = upper.subs[thisDirName];

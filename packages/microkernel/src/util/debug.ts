@@ -1,12 +1,12 @@
 import { debug } from 'debug';
 import Module from 'module';
-import { servicesDir } from './resolve';
+import { ProjectDir } from './resolve';
 
-const len = servicesDir.length;
+const len = ProjectDir.length;
 
 /** 自动根据当前的 faas/middleware */
 export function getDebug(m: Module) {
-  if (m.path.startsWith(servicesDir)) {
+  if (m.path.startsWith(ProjectDir)) {
     const restPath = m.filename.substring(len);
     // console.log('restPath', restPath,  m.filename, m.id);
     const sects = restPath.split('/');

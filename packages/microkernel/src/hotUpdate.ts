@@ -2,9 +2,9 @@ import { watch } from 'chokidar';
 import { getDebug } from './util/debug';
 import { root } from './lib/config';
 import { registerBaas, destroyOldBaas, isBaasModule } from './baasManager';
-import { servicesDir } from './util/resolve';
+import { ProjectDir } from './util/resolve';
 import { extname, sep, dirname } from 'path';
-const ServiceDir = servicesDir + '/src/services';
+const ServiceDir = ProjectDir + '/src/services';
 
 const prefixLength = ServiceDir.length;
 const debug = getDebug(module);
@@ -39,7 +39,7 @@ export function watchHotUpdate() {
 
   started = true;
 
-  const watcher = watch(servicesDir, {
+  const watcher = watch(ProjectDir, {
     depth: 9,
     persistent: true,
     ignoreInitial: true,
@@ -67,7 +67,7 @@ async function collectWhoDependMe(parentModule: NodeModule) {
     const subPath = subModule.filename;
     // 可能会出现两个模块互相引用的情况造成死循环
     // debug('collectWhoDependMe', absFileName.substring(ServiceDir.length), subPath.substring(ServiceDir.length));
-    if (!subPath.startsWith(servicesDir)) return;
+    if (!subPath.startsWith(ProjectDir)) return;
     if (subModule.loaded === false) return; // 此时必定 loaded=true
 
     // inner 依赖了一个 faas，注入自标注路径，来支持内部调用寻址

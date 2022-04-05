@@ -1,9 +1,9 @@
-import { servicesDir } from './util/resolve';
+import { ProjectDir } from './util/resolve';
 import { execute } from './executor';
 import { Service } from './lib/faas';
 import { getDebug } from './util/debug';
 
-const prefixLength = `${servicesDir}/src/services`.length;
+const prefixLength = `${ProjectDir}/src/services`.length;
 const debug = getDebug(module);
 const JWT: string | undefined = process.env.JWT;
 let testSeq: number = 0;
