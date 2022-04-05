@@ -32,7 +32,6 @@ async function innerCall0(faas: Service<any>, req?: any) {
 }
 
 export async function runFaasAsTask(faasPath: string, req?: any) {
-  await registerDep(faasPath);
   return innerCall({ faasPath }, req);
 }
 
