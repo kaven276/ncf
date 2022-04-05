@@ -75,7 +75,7 @@ export async function ensureDirConfig(path: string): Promise<IConfig> {
   if (!root.cfg) {
     await fillRootPromise;
   }
-  const parentDirs = path.split(sep);
+  const parentDirs = path.split('/');
   let upper: IConfigContainer = root;
   let currentPath = join(ProjectDir, 'src/services');
   for (let i = 1; i < parentDirs.length - 1; i++) {
@@ -99,7 +99,7 @@ export async function ensureDirConfig(path: string): Promise<IConfig> {
         // dirModule.faas 配置代表该路径是代理服务
         if (dirModule.faas) {
           debug('have proxy', currentPath);
-          newConfig[proxyTriggerPrefixKey] = parentDirs.slice(0, i + 1).join(sep);
+          newConfig[proxyTriggerPrefixKey] = parentDirs.slice(0, i + 1).join('/');
         }
       }).catch(() => {
         debug('config not exists for dir', currentPath);
