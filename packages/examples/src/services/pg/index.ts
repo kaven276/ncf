@@ -1,6 +1,1 @@
-import { IConfig } from '@ncf/microkernel';
-
-
-export const config: IConfig = {
-
-}
+export { default, getPoolClient } from 'src/bass/pg/pg1';

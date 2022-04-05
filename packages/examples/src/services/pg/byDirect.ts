@@ -1,4 +1,4 @@
-import pool from 'src/bass/pg/pg1';
+import pool from '.';
 
 interface IResult {
   /** 当前数据库时间 */
