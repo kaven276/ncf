@@ -64,25 +64,28 @@ export async function awaitModule(m: NodeModule): Promise<void> {
   await Promise.all(promises);
 }
 
-export function tryDestroyModule(m: NodeModule) {
+/** 一个状态模块销毁时执行之前所有的清理函数，并等待清理完成返回 */
+export async function tryDestroyModule(m: NodeModule): Promise<void> {
   destroyableModuleSet.delete(m);
+  const promises: Promise<any>[] = [];
   if (m?._disposers) {
     for (const [key, disposer] of Object.entries(m._disposers)) {
       debug('destroying', m.filename, key);
-      disposer();
+      promises.push(disposer());
     }
   }
+  await Promise.all(promises);
 }
 
 let destroyableModuleSet = new Set<NodeModule>();
 
 // see https://pm2.keymetrics.io/docs/usage/signals-clean-restart/
-process.on('SIGINT', function () {
+process.once('SIGINT', function () {
+  const promises: Promise<any>[] = [];
   for (const m of destroyableModuleSet) {
-    tryDestroyModule(m);
+    promises.push(tryDestroyModule(m));
   }
-  // Promise.all(promises).then(() => {
-  //   debug('all baas module destroyed');
-  //   process.e.xit(0);
-  // });
+  Promise.all(promises).then(() => {
+    debug('all lifecycled module destroyed');
+  });
 });
