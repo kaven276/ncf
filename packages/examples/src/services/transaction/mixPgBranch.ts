@@ -1,4 +1,4 @@
-import { getPoolClient } from 'src/baas/pg/pg1';
+import { getPoolClient } from 'src/baas/pg/pg1.baas';
 
 export async function faas() {
   const client = await getPoolClient();

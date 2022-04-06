@@ -1,5 +1,5 @@
 import { getDebug } from '@ncf/microkernel';
-import pool from 'src/baas/pg/pg1';
+import pool from 'src/baas/pg/pg1.baas';
 import { getOnlyPoolClientForTx } from 'src/baas/pg/getOnlyPoolClientForTx';
 
 const debug = getDebug(module);

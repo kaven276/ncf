@@ -1,6 +1,6 @@
 import { faas as sub } from './usePgCliendFromThreadSub';
 import { getDebug, throwServiceError } from '@ncf/microkernel';
-import { getPoolClient } from 'src/baas/pg/pg1';
+import { getPoolClient } from 'src/baas/pg/pg1.baas';
 
 const debug = getDebug(module);
 

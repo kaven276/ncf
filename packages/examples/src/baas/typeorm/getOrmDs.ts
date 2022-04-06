@@ -11,7 +11,7 @@
 
 import { waitReady } from '@ncf/microkernel';
 import { DataSource } from 'typeorm';
-import * as baasTest2 from './test2';
+import * as baasTest2 from './test2.baas';
 
 interface BassModule {
   default: DataSource,
@@ -19,10 +19,10 @@ interface BassModule {
 
 const creators = {
   /* 动态引用 BAAS 范例 */
-  test1: () => import(`./test1`).then(() => waitReady(require.resolve('./test1.ts'))),
+  test1: () => import(`./test1.baas`).then(() => waitReady(require.resolve('./test1.baas.ts'))),
   /* 静态引用 BAAS 范例 */
   test2: () => Promise.resolve(baasTest2),
-  test3: () => import(`./test3`).then(() => waitReady(require.resolve('./test3.ts'))),
+  test3: () => import(`./test3.baas`).then(() => waitReady(require.resolve('./test3.baas.ts'))),
 }
 
 export type DsName = keyof typeof creators;
