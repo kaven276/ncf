@@ -1,7 +1,7 @@
-import { lifecycle } from './makeTypeOrmDataSource';
+import { createDataSource } from './makeTypeOrmDataSource';
 import { env } from 'src/env';
 
-let baas = lifecycle(module, {
+let baas = createDataSource({
   type: "postgres",
   host: env.BAAS_HOST,
   port: 25432,

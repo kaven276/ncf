@@ -1,4 +1,4 @@
-import { lifecycle } from './makeTypeOrmDataSource';
+import { createDataSource } from './makeTypeOrmDataSource';
 import { env } from 'src/env';
 
 // 如果 export config object，使用的时候还需要解耦，非常的麻烦
@@ -6,7 +6,7 @@ import { env } from 'src/env';
 // 但是如何复用 initialize/destroy 逻辑呢？
 
 /** 创建并初始化好的连接池，使用者直接 ts import 即可，不用关系创建和初始化工作 */
-let baas = lifecycle(module, {
+let baas = createDataSource({
   type: "postgres",
   host: env.BAAS_HOST,
   port: 25432,
