@@ -1,6 +1,15 @@
 
 ## pm2 集成
 
+普通启动
+
+```shell
+# 开启调式日志
+export DEBUG='*'
+# 开启开发模式，用于开启模块热更新
+export NODE_ENV='development'
+```
+
 开发模式 pm2 启动 
 
 ```shell
