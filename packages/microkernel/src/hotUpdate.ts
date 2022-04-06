@@ -53,7 +53,7 @@ export function watchHotUpdate() {
     deleteCacheForUpdated(absPath);
   });
 
-  process.on('SIGINT', () => {
+  process.once('SIGINT', () => {
     watcher.close();
   });
 }

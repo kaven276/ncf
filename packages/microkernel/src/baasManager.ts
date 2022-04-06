@@ -94,7 +94,7 @@ export function destroyOldBaas(bm: BassNodeModule) {
 
 
 // see https://pm2.keymetrics.io/docs/usage/signals-clean-restart/
-process.on('SIGINT', function () {
+process.once('SIGINT', function () {
   const promises: Promise<void>[] = [];
   baasSet.forEach((bm, path) => {
     if (!bm.default) return; // 还未初始化完成
@@ -110,6 +110,5 @@ process.on('SIGINT', function () {
   });
   Promise.all(promises).then(() => {
     debug('all baas module destroyed');
-    process.exit(0);
   });
 });

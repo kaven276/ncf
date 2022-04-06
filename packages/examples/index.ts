@@ -17,7 +17,7 @@ if (require.main !== module) {
 const server1 = createServer(createKoaApp().callback()).listen(env.PORT);
 const server2 = createServer(createRequestListener()).listen(env.PORT + 1);
 
-process.on('SIGINT', () => {
+process.once('SIGINT', () => {
   server1.close();
   server2.close();
 });
