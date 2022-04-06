@@ -1,8 +1,8 @@
-import { lifecycle } from './makePgPool';
+import { makePgPool } from './makePgPool';
 import { getOnlyPoolClientForTx } from 'src/baas/pg/getOnlyPoolClientForTx';
 import { env } from 'src/env';
 
-let pool = lifecycle(module, {
+let pool = makePgPool({
   host: env.BAAS_HOST,
   port: 25432,
   database: 'pgsqlib',
