@@ -43,7 +43,7 @@ interface StatefulNodeModule extends NodeModule {
 export async function awaitModule(m: NodeModule): Promise<void> {
   const promises: Promise<any>[] = [];
   const disposers: NodeModule["_disposers"] = {};
-  function addDisposer(key: string) {
+  function addDisposerMaker(key: string) {
     return (disposer: Disposer) => {
       disposers![key] = disposer;
     }
@@ -51,34 +51,34 @@ export async function awaitModule(m: NodeModule): Promise<void> {
   for (const [key, val] of Object.entries(m.exports)) {
     if (isPromise(val)) {
       debug('top await', m.filename, key);
-      const promise = val[symbol](addDisposer(key));
+      const promise = val[symbol](addDisposerMaker(key));
       promise.then(v => m.exports[key] = v);
       promise.then(v => debug(`${m.filename} resolved`));
       promises.push(promise);
     }
   }
-  if (promises.length > 0) {
-    stateModuleSet.add(m);
+  if (promises.length > 0 && Object.values(disposers).length > 0) {
+    destroyableModuleSet.add(m);
   }
   m._disposers = disposers;
   await Promise.all(promises);
 }
 
 export function tryDestroyModule(m: NodeModule) {
+  destroyableModuleSet.delete(m);
   if (m?._disposers) {
     for (const [key, disposer] of Object.entries(m._disposers)) {
       debug('destroying', m.filename, key);
       disposer();
     }
   }
-  stateModuleSet.delete(m);
 }
 
-let stateModuleSet = new Set<NodeModule>();
+let destroyableModuleSet = new Set<NodeModule>();
 
 // see https://pm2.keymetrics.io/docs/usage/signals-clean-restart/
 process.on('SIGINT', function () {
-  for (const m of stateModuleSet) {
+  for (const m of destroyableModuleSet) {
     tryDestroyModule(m);
   }
   // Promise.all(promises).then(() => {
