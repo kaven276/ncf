@@ -1,7 +1,7 @@
-import { lifecycle } from './makeRedisClient';
+import { makeRedisClient } from './makeRedisClient';
 import { env } from 'src/env';
 
-let pool = lifecycle(module, {
+let redisClient = makeRedisClient({
   port: 6379, // Redis port
   host: env.BAAS_HOST, // Redis host
   username: "default", // needs Redis >= 6
@@ -9,4 +9,4 @@ let pool = lifecycle(module, {
   db: 0, // Defaults to 0
 });
 
-export default pool;
+export default redisClient;
