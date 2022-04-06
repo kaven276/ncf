@@ -33,6 +33,12 @@ declare global {
   }
 }
 
+interface StatefulNodeModule extends NodeModule {
+  _disposers: {
+    [exportsKey: string]: Disposer,
+  },
+}
+
 /** 从 entrance(faas/index) import 完后，直接依赖分析过程中，对所有模块调用 awaitModule */
 export async function awaitModule(m: NodeModule): Promise<void> {
   const promises: Promise<any>[] = [];
@@ -51,6 +57,9 @@ export async function awaitModule(m: NodeModule): Promise<void> {
       promises.push(promise);
     }
   }
+  if (promises.length > 0) {
+    stateModuleSet.add(m);
+  }
   m._disposers = disposers;
   await Promise.all(promises);
 }
@@ -62,4 +71,18 @@ export function tryDestroyModule(m: NodeModule) {
       disposer();
     }
   }
+  stateModuleSet.delete(m);
 }
+
+let stateModuleSet = new Set<NodeModule>();
+
+// see https://pm2.keymetrics.io/docs/usage/signals-clean-restart/
+process.on('SIGINT', function () {
+  for (const m of stateModuleSet) {
+    tryDestroyModule(m);
+  }
+  // Promise.all(promises).then(() => {
+  //   debug('all baas module destroyed');
+  //   process.e.xit(0);
+  // });
+});
