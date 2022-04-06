@@ -3,7 +3,11 @@ import { getDebug } from './util/debug';
 const debug = getDebug(module);
 const symbol = Symbol('resolved');
 
-type PromiseMaker<T> = () => Promise<T>;
+type Disposer<T = any> = () => Promise<void>;
+
+type AddDisposer<T> = (disposer: Disposer<T>) => void;
+
+type PromiseMaker<T> = (addDisposer: AddDisposer<T>) => Promise<T>;
 
 /** 控制模块生命周期，确保模块先初始化完成后再被使用
  * 效果类似于 esm 的 top await，但是
@@ -20,17 +24,42 @@ const isPromise = <T = any>(val: unknown): val is { [symbol]: PromiseMaker<T> } 
   return (val !== null) && (typeof val === 'object') && (symbol in val);
 }
 
+declare global {
+  interface NodeModule {
+    /** 记录模块由于热更新或者进程退出时，需要执行的清理过程 */
+    _disposers?: {
+      [exportsKey: string]: Disposer,
+    },
+  }
+}
+
 /** 从 entrance(faas/index) import 完后，直接依赖分析过程中，对所有模块调用 awaitModule */
 export async function awaitModule(m: NodeModule): Promise<void> {
   const promises: Promise<any>[] = [];
+  const disposers: NodeModule["_disposers"] = {};
+  function addDisposer(key: string) {
+    return (disposer: Disposer) => {
+      disposers![key] = disposer;
+    }
+  }
   for (const [key, val] of Object.entries(m.exports)) {
     if (isPromise(val)) {
-      debug(key, val);
-      const promise = val[symbol]();
+      debug('top await', m.filename, key);
+      const promise = val[symbol](addDisposer(key));
       promise.then(v => m.exports[key] = v);
-      promise.then(v => debug(`${m.filename} resolved`, v));
+      promise.then(v => debug(`${m.filename} resolved`));
       promises.push(promise);
     }
   }
+  m._disposers = disposers;
   await Promise.all(promises);
+}
+
+export function tryDestroyModule(m: NodeModule) {
+  if (m?._disposers) {
+    for (const [key, disposer] of Object.entries(m._disposers)) {
+      debug('destroying', m.filename, key);
+      disposer();
+    }
+  }
 }

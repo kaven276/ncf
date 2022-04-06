@@ -2,7 +2,7 @@ import { watch } from 'chokidar';
 import { getDebug } from './util/debug';
 import { root } from './lib/config';
 import { registerBaas, destroyOldBaas, isBaasModule } from './baasManager';
-import { awaitModule } from './lifecycle';
+import { awaitModule, tryDestroyModule } from './lifecycle';
 import { ProjectDir } from './util/resolve';
 import { extname, sep, dirname } from 'path';
 const ServiceDir = ProjectDir + '/src/services';
@@ -110,10 +110,11 @@ function deleteCacheForUpdated(updatedFileName: string) {
   debug('delete cache', updatedFileName);
 
   // 如果是 BAAS 模块更新，老的 BAAS 资源需要先清除掉释放资源
-  const m = require.cache[updatedFileName];
+  const m = require.cache[updatedFileName]!;
   if (m && isBaasModule(m)) {
     destroyOldBaas(m);
   }
+  tryDestroyModule(m);
 
   // 从模块缓存是删除，这样再次加载改模块就能看到更新的版本
   delete require.cache[updatedFileName];
