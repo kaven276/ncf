@@ -94,12 +94,6 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
     ensureFaasConfig(dirConfig, fassModule);
     if (!fassModule.fake) {
       await registerDep(tryPath);
-      const nodeModule = require.cache[tryPath]!
-      if (false && isBaasModule(nodeModule)) {
-        // faas 依赖了一个 baas，确保在依赖 tree 都处理完再处理状态模块的初始化；不推荐了，因为需要通过 exports.default 引用太不直观了
-        await registerBaas(nodeModule);
-        debug(`registerBaas for ${tryPath} done`);
-      }
     }
   }
 

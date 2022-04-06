@@ -13,3 +13,4 @@ export { getDebug } from './src/util/debug';
 export { test } from './src/testClient';
 export { innerCall, runFaasAsTask } from './src/innerCall';
 export { registerDynamicBaas, useLifecycle } from './src/baasManager';
+export { resolved } from './src/lifecycle';

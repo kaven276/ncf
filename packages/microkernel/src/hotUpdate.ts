@@ -2,6 +2,7 @@ import { watch } from 'chokidar';
 import { getDebug } from './util/debug';
 import { root } from './lib/config';
 import { registerBaas, destroyOldBaas, isBaasModule } from './baasManager';
+import { awaitModule } from './lifecycle';
 import { ProjectDir } from './util/resolve';
 import { extname, sep, dirname } from 'path';
 const ServiceDir = ProjectDir + '/src/services';
@@ -91,6 +92,9 @@ async function collectWhoDependMe(parentModule: NodeModule) {
 
     if (depsMap.get(parentModule.filename)?.has(subPath)) return; // 防止循环引用造成 stack overflow
     await collectWhoDependMe(subModule);
+    if (isNew) {
+      await awaitModule(subModule);
+    }
     if (isNew && isBaasModule(subModule)) {
       // 依赖了一个 baas，确保在依赖 tree 都处理完再处理状态模块的初始化
       await registerBaas(subModule);
@@ -156,7 +160,9 @@ function deleteCacheForUpdated(updatedFileName: string) {
 export let registerDep = async (absServicePath: string) => {
   if (!started) return;
   debug('collecting from', absServicePath);
-  await collectWhoDependMe(require.cache[absServicePath]!);
+  const m = require.cache[absServicePath]!;
+  await collectWhoDependMe(m);
+  await awaitModule(m);
 }
 
 
