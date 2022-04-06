@@ -24,7 +24,7 @@ export let state2 = resolved<State>(async (addDisposer) => {
         state2: 0,
       }
     } else {
-      debug('interval occurred', state2);
+      // debug('interval occurred', state2);
       // const state = module.exports.default as typeof state2;
       state2.state1.count++;
       state2.state2++;

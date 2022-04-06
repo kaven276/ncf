@@ -2,6 +2,7 @@ import { makeRe } from 'minimatch';
 import { IMiddleWare } from '@ncf/microkernel';
 import { validate } from '@ncf/mw-validator';
 import { logTimeUse } from '../middlewares/logTimeUse';
+import { collectTimes } from '../middlewares/apm';
 import { jwtMiddleware, setJWT } from '@ncf/mw-jwt';
 import { randomLatency, setRandomLatencyConfig } from '../middlewares/randomLatency';
 import { throwServiceError } from '@ncf/microkernel';
@@ -29,6 +30,7 @@ export const middlewares = [
   checkAuth,
   logTimeUse,
   randomLatency,
+  collectTimes,
 ];
 
 
