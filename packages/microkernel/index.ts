@@ -1,5 +1,4 @@
 export type { IApi, IFaasModule, Service } from './src/lib/faas';
-export type { BassModuleExport as BassModule } from './src/baasManager';
 export type { IConfig } from './src/lib/config';
 export type { IMiddleWare } from './src/lib/middleware';
 export type { ICallState, TransactionDealer } from './src/lib/callState';
@@ -12,5 +11,4 @@ export { getConfig } from './src/lib/config';
 export { getDebug } from './src/util/debug';
 export { test } from './src/testClient';
 export { innerCall, runFaasAsTask } from './src/innerCall';
-export { registerDynamicBaas, useLifecycle } from './src/baasManager';
-export { resolved } from './src/lifecycle';
+export { resolved, waitReady } from './src/lifecycle';

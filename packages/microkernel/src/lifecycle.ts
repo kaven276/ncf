@@ -39,6 +39,14 @@ interface StatefulNodeModule extends NodeModule {
   },
 }
 
+/** 对于动态 import 的状态模块，需要补上初始化过程才能使用 */
+export async function waitReady(absPath: string) {
+  const m = require.cache[absPath]!;
+  await awaitModule(m);
+  return m.exports;
+}
+
+
 /** 从 entrance(faas/index) import 完后，直接依赖分析过程中，对所有模块调用 awaitModule */
 export async function awaitModule(m: NodeModule): Promise<void> {
   const promises: Promise<any>[] = [];

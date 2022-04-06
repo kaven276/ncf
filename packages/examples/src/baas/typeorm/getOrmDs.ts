@@ -9,22 +9,26 @@
  * 因此，尽量使用静态方式 import BAAS 模块，写法也更加的简单
  */
 
-import { BassModule, registerDynamicBaas } from '@ncf/microkernel';
+import { waitReady } from '@ncf/microkernel';
 import { DataSource } from 'typeorm';
 import * as baasTest2 from './test2';
 
+interface BassModule {
+  default: DataSource,
+}
+
 const creators = {
   /* 动态引用 BAAS 范例 */
-  test1: () => import(`./test1`).then(() => registerDynamicBaas<DataSource>(require.resolve('./test1.ts'))),
+  test1: () => import(`./test1`).then(() => waitReady(require.resolve('./test1.ts'))),
   /* 静态引用 BAAS 范例 */
-  test2: () => Promise.resolve(baasTest2 as BassModule<DataSource>),
-  test3: () => import(`./test3`).then(() => registerDynamicBaas<DataSource>(require.resolve('./test3.ts'))),
+  test2: () => Promise.resolve(baasTest2),
+  test3: () => import(`./test3`).then(() => waitReady(require.resolve('./test3.ts'))),
 }
 
 export type DsName = keyof typeof creators;
 
 export async function getOrmDs(name: keyof typeof creators = 'test1'): Promise<DataSource> {
-  let bm: BassModule<DataSource> = await creators[name]()
+  let bm: BassModule = await creators[name]()
   // console.log(bm, bm.default);
   return bm.default;
 }

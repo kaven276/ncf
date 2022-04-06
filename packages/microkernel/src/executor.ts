@@ -11,7 +11,6 @@ import { getDebug } from './util/debug';
 import assert from 'assert/strict';
 import { registerDep } from './hotUpdate';
 import { normalize } from 'path';
-import { isBaasModule, registerBaas } from './baasManager';
 
 const debug = getDebug(module);
 

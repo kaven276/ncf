@@ -9,5 +9,5 @@ interface IRequest {
 export async function faas(req: IRequest) {
   const ds = await getOrmDs(req.dsname ?? 'test2');
   const userRepo = ds.getRepository(User);
-  return await userRepo.find({ skip: 2, take: 3 });
+  return await userRepo.find({ skip: 0, take: 3 });
 }

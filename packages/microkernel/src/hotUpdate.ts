@@ -1,7 +1,6 @@
 import { watch } from 'chokidar';
 import { getDebug } from './util/debug';
 import { root } from './lib/config';
-import { registerBaas, destroyOldBaas, isBaasModule } from './baasManager';
 import { awaitModule, tryDestroyModule } from './lifecycle';
 import { ProjectDir } from './util/resolve';
 import { extname, sep, dirname } from 'path';
@@ -95,10 +94,6 @@ async function collectWhoDependMe(parentModule: NodeModule) {
     if (isNew) {
       await awaitModule(subModule);
     }
-    if (isNew && isBaasModule(subModule)) {
-      // 依赖了一个 baas，确保在依赖 tree 都处理完再处理状态模块的初始化
-      await registerBaas(subModule);
-    }
   });
   await Promise.all(promises);
 }
@@ -111,9 +106,6 @@ function deleteCacheForUpdated(updatedFileName: string) {
 
   // 如果是 BAAS 模块更新，老的 BAAS 资源需要先清除掉释放资源
   const m = require.cache[updatedFileName]!;
-  if (m && isBaasModule(m)) {
-    destroyOldBaas(m);
-  }
   tryDestroyModule(m);
 
   // 从模块缓存是删除，这样再次加载改模块就能看到更新的版本
