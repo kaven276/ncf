@@ -4145,11 +4145,6 @@ only@~0.0.2:
   resolved "https://registry.npmmirror.com/only/-/only-0.0.2.tgz#2afde84d03e50b9a8edc444e30610a70295edfb4"
   integrity sha512-Fvw+Jemq5fjjyWz6CpKx6w9s7xxqo3+JCyM0WXWeCSOboZ8ABkyvP8ID4CZuChA/wxSx+XSJmdOm8rGVyJ1hdQ==
 
-oracledb@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.npm.taobao.org/oracledb/download/oracledb-4.0.1.tgz#1580be9d932a394bfe9cb5f913dfb41b21849cb8"
-  integrity sha1-FYC+nZMqOUv+nLX5E9+0GyGEnLg=
-
 os-homedir@^1.0.0:
   version "1.0.2"
   resolved "https://registry.npmmirror.com/os-homedir/-/os-homedir-1.0.2.tgz#ffbc4988336e0e833de0c168c7ef152121aa7fb3"
