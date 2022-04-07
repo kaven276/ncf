@@ -11,11 +11,13 @@ const langMap = new Map<Languages, I18nConfig>();
 langMap.set('chinese', chinese);
 langMap.set('english', english);
 
+const sLang = Symbol('lang');
+const sI18nConfig = Symbol('I18nConfig');
 
 declare module '@ncf/microkernel' {
   interface ICallState {
-    lang?: Languages,
-    i18nConfig?: I18nConfig,
+    [sLang]?: Languages,
+    [sI18nConfig]?: I18nConfig,
   }
 }
 
@@ -39,17 +41,17 @@ export function setLanguage(lang?: Languages) {
     }
   }
 
-  cs.lang = lang;
-  cs.i18nConfig = langMap.get(lang);
+  cs[sLang] = lang;
+  cs[sI18nConfig] = langMap.get(lang);
 }
 
 /** 需要使用 i18n 配置的代码调用 i18n() 获取当前选择语言的配置 */
 export function i18n(): I18nConfig {
   const cs = getCallState();
-  if (!cs.i18nConfig) {
+  if (!cs[sI18nConfig]) {
     setLanguage(); // 这是设置好 i18n 配置了，后面再取就有数据了
   }
-  return cs.i18nConfig!;
+  return cs[sI18nConfig]!;
 }
 
 export const i18nMiddleware: IMiddleWare = async (ctx, next) => {
