@@ -2,13 +2,14 @@ import type { I18nConfig } from './spec';
 import { config as chinese } from './chinese';
 import { config as english } from './english';
 import { getCallState, IMiddleWare } from '@ncf/microkernel';
+import { env } from 'src/env';
 
-type Languages = 'chinese' | 'english';
+export type Languages = 'chinese' | 'english';
+const { DEFAULT_LANG } = env;
 
 const langMap = new Map<Languages, I18nConfig>();
 langMap.set('chinese', chinese);
 langMap.set('english', english);
-
 
 
 declare module '@ncf/microkernel' {
@@ -31,10 +32,10 @@ export function setLanguage(lang?: Languages) {
       } else if (first.startsWith('en-US')) {
         lang = 'english';
       } else {
-        lang = 'chinese'; // 找不到指示，默认中文
+        lang = DEFAULT_LANG; // 找不到指示，使用默认
       }
     } else {
-      lang = 'chinese'; // 找不到指示，默认中文
+      lang = DEFAULT_LANG; // 找不到指示，使用默认
     }
   }
 
@@ -45,9 +46,11 @@ export function setLanguage(lang?: Languages) {
 /** 需要使用 i18n 配置的代码调用 i18n() 获取当前选择语言的配置 */
 export function i18n(): I18nConfig {
   const cs = getCallState();
-  return cs.i18nConfig ?? chinese;
+  if (!cs.i18nConfig) {
+    setLanguage(); // 这是设置好 i18n 配置了，后面再取就有数据了
+  }
+  return cs.i18nConfig!;
 }
-
 
 export const i18nMiddleware: IMiddleWare = async (ctx, next) => {
   setLanguage();

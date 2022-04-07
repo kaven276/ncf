@@ -1,5 +1,6 @@
 import { JSONSchemaType } from 'ajv';
 import Ajv from 'ajv';
+import type { Languages } from 'src/i18n'
 
 /** 本应用需要使用的全部环境变量在此定义，这也是 full typescript coverage 的一部分 */
 interface ENV {
@@ -9,6 +10,8 @@ interface ENV {
   JWT_EFFECT_TIME: number,
   /** 范例用 BAAS 默认所在服务器 */
   BAAS_HOST: string,
+  /** i18n 默认语言选择，不设置默认中文 */
+  DEFAULT_LANG: Languages,
 };
 
 const envSchema: JSONSchemaType<ENV> = {
@@ -17,6 +20,7 @@ const envSchema: JSONSchemaType<ENV> = {
     PORT: { type: "integer", default: 8081, maximum: 65535, minimum: 8000 },
     JWT_EFFECT_TIME: { type: "integer", default: 24 * 60 * 60, maximum: 24 * 60 * 60, minimum: 10 * 60 },
     BAAS_HOST: { type: 'string', default: '127.0.0.1' },
+    DEFAULT_LANG: { type: 'string', enum: ['chinese', 'english'], default: 'chinese' }
   },
   required: ['PORT', 'JWT_EFFECT_TIME'],
   additionalProperties: false,
