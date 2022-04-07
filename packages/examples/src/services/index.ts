@@ -7,7 +7,7 @@ import { jwtMiddleware, setJWT } from '@ncf/mw-jwt';
 import { randomLatency, setRandomLatencyConfig } from '../middlewares/randomLatency';
 import { throwServiceError } from '@ncf/microkernel';
 import { getJWT, getJWTStruct } from '@ncf/mw-jwt';
-
+import { i18nMiddleware } from 'src/i18n';
 
 const faasRegExp = makeRe('/faas2*');
 
@@ -25,6 +25,7 @@ export const checkAuth: IMiddleWare = async (ctx, next) => {
 
 
 export const middlewares = [
+  i18nMiddleware,
   jwtMiddleware,
   validate,
   checkAuth,
