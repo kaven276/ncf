@@ -48,6 +48,7 @@ export function watchHotUpdate() {
   });
 
   watcher.on("change", (absPath) => {
+    if (!require.cache[absPath]) return;
     debug('file change', absPath);
     deleteCacheForUpdated(absPath);
   });
