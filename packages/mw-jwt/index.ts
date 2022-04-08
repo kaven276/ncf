@@ -59,7 +59,7 @@ const prefixLen = prefix.length;
 
 /** jwt 检查校验和解析中间件 */
 export const jwtMiddleware: IMiddleWare = async (ctx, next) => {
-  if (!ctx.gw.http) {
+  if (!(ctx.gw.gwtype === 'http' || ctx.gw.gwtype === 'koa')) {
     return await next();
   }
   const token = ctx.gw.http.req.headers.authorization;
@@ -80,7 +80,6 @@ export const jwtMiddleware: IMiddleWare = async (ctx, next) => {
   }
   await next();
 }
-
 
 /** 返回 ALS 中的 JWT 字符串 */
 export function getJWT(): string | undefined {

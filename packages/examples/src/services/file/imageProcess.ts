@@ -6,7 +6,9 @@ import { getCallState } from '@ncf/microkernel';
 
 /** 将上传图片做转换再下载，标准化尺寸并转成 png 格式，模拟一个在线图片处理服务 */
 export const faas = async (req: any, stream: IncomingMessage) => {
-  const res = getCallState().http.res;
+  const ctx = getCallState();
+  if (ctx.gw.gwtype !== 'http' && ctx.gw.gwtype !== 'koa') return;
+  const res = ctx.gw.http.res;
   const filename = req.filename || String(Date.now());
   console.log('stream', !!stream, filename);
   const transformer = sharp().rotate(10).resize(400, 300).png();

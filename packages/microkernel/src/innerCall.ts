@@ -1,8 +1,6 @@
 import { execute } from './executor';
 import { getDebug } from './util/debug';
 import { Service } from './lib/faas';
-import { GwHttp } from './lib/gateway';
-import { registerDep } from './hotUpdate';
 
 const debug = getDebug(module);
 const JWT: string | undefined = process.env.JWT;
