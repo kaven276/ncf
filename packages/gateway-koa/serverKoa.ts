@@ -1,12 +1,11 @@
 import { IncomingMessage } from 'http';
 import Koa from 'koa';
 import koaBody from 'koa-body';
-import { execute, getDebug, ServiceError } from '@ncf/microkernel';
+import { execute, getDebug, ServiceError, GwKoa } from '@ncf/microkernel';
 import { URL } from 'url';
 import { Readable } from 'node:stream';
 
 const debug = getDebug(module);
-
 
 interface ISuccessResponse {
   status: number,
@@ -98,12 +97,14 @@ function useNCF() {
     let result: any;
     try {
       // 给核心服务环境信息，然后调用
-      result = await execute({
-        faasPath, request, stream, mock, http: {
+      result = await execute({ faasPath, request, stream, mock }, {
+        gwtype: 'koa',
+        http: {
           req: ctx.req,
           res: ctx.res,
-        }
-      });
+        },
+        ctx,
+      } as GwKoa);
     } catch (e) {
       if (e instanceof ServiceError) {
         const status = (e.code >= 100 && e.code <= 999) ? e.code : 500;

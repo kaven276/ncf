@@ -1,6 +1,6 @@
 
-import { IncomingMessage, ServerResponse } from 'http';
 import { IFaasModule } from './faas';
+import type { GwExtras } from './gateway';
 
 export interface TransactionDealer {
   /** 提交 */
@@ -21,13 +21,9 @@ export interface ICallState {
   request: any,
   /** 响应 */
   response: any,
-  /** nodejs 原生 http callback 的 req,res */
-  readonly http: {
-    readonly req: IncomingMessage,
-    readonly res: ServerResponse,
-  },
   /** faas 服务模块 */
   fassModule: IFaasModule,
   /** 跟踪发生的带提交或回滚的事务清单 */
   readonly trans: TransactionDealer[],
-}
+  gw: GwExtras,
+};

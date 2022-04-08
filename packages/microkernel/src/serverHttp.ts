@@ -25,7 +25,7 @@ export function createRequestListener() {
 
     // 给核心服务环境信息，然后调用
     try {
-      const result = await execute({ faasPath, request, stream, mock, http: { req, res } });
+      const result = await execute({ faasPath, request, stream, mock }, { gwtype: 'http', http: { req, res } });
       res.statusCode = result.status || 200;
       res.setHeader('content-type', 'application/json');
       res.end(JSON.stringify(result));

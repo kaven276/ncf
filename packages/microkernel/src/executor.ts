@@ -11,6 +11,7 @@ import { getDebug } from './util/debug';
 import assert from 'assert/strict';
 import { registerDep } from './hotUpdate';
 import { normalize } from 'path';
+import { GwExtras } from './lib/gateway';
 
 const debug = getDebug(module);
 
@@ -21,7 +22,6 @@ interface IEntranceProps {
   request: object,
   stream?: IncomingMessage,
   mock?: boolean,
-  http: ICallState["http"],
 }
 
 const asyncLocalStorage = new AsyncLocalStorage<ICallState>();
@@ -38,7 +38,8 @@ export function getProxiedPath(): string | undefined {
 /** 进入服务执行，提供执行环境，事务管理。
  * 返回 Promise
  */
-export async function execute({ faasPath, request, stream, mock, http }: IEntranceProps): Promise<any> {
+export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promise<any> {
+  const { faasPath, request, stream, mock } = income;
   idSeq += 1;
   debug(`request ${idSeq} ${faasPath} coming...`);
 
@@ -104,14 +105,14 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
   // step 3: 执行服务模块
   const als: ICallState = {
     id: idSeq,
-    http,
     path: faasPath,
     proxiedPath: proxyTriggerPrefix ? faasPath.substring(proxyTriggerPrefix!.length) : undefined,
     request,
     response: null,
     fassModule,
     trans: [],
-  }
+    gw: gwExtras,
+  };
   const resp = asyncLocalStorage.run<Promise<any>, ICallState[]>(als, async () => {
     const store = asyncLocalStorage.getStore()!;
 
@@ -163,3 +164,5 @@ export async function execute({ faasPath, request, stream, mock, http }: IEntran
   });
   return resp;
 }
+
+

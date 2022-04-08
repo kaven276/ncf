@@ -2,6 +2,7 @@ import { ProjectDir } from './util/resolve';
 import { execute } from './executor';
 import { Service } from './lib/faas';
 import { getDebug } from './util/debug';
+import { GwHttp } from './lib/gateway';
 
 const prefixLength = `${ProjectDir}/src/services`.length;
 const debug = getDebug(module);
@@ -16,6 +17,7 @@ export async function test(module: NodeModule, req?: any) {
   const response = await execute({
     faasPath,
     request: req,
+  }, {
     http: {
       //@ts-ignore
       req: {
@@ -24,7 +26,7 @@ export async function test(module: NodeModule, req?: any) {
         },
       }
     }
-  });
+  } as GwHttp);
   const inspected = { testSeq, faasPath, request: req, response: response.data };
   debug('test result', JSON.stringify(inspected, null, 2));
   // console.dir(inspected, { maxArrayLength: 3, breakLength: 20, depth: 7 });

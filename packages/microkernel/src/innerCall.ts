@@ -1,6 +1,7 @@
 import { execute } from './executor';
 import { getDebug } from './util/debug';
 import { Service } from './lib/faas';
+import { GwHttp } from './lib/gateway';
 import { registerDep } from './hotUpdate';
 
 const debug = getDebug(module);
@@ -13,9 +14,8 @@ async function innerCall0(faas: Service<any>, req?: any) {
   //@ts-ignore
   const faasPath = faas.path!;
   debug('inner call', innerCallSeq, faasPath, req);
-  const response = await execute({
-    faasPath,
-    request: req,
+  const response = await execute({ faasPath, request: req, }, {
+    gwtype: 'http',
     http: {
       //@ts-ignore
       req: {
@@ -41,9 +41,8 @@ export async function innerCall(faas: { faasPath: string }, req?: any) {
   const faasPath: string = faas.faasPath;
   innerCallSeq += 1;
   debug('inner call', innerCallSeq, faasPath, req);
-  const response = await execute({
-    faasPath,
-    request: req,
+  const response = await execute({ faasPath, request: req }, {
+    gwtype: 'http',
     http: {
       //@ts-ignore
       req: {

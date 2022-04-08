@@ -26,7 +26,7 @@ export function setLanguage(lang?: Languages) {
   const cs = getCallState();
   if (!lang) {
     // like zh-CN,zh;q=0.9,en;q=0.8
-    const al = cs.http.req.headers['accept-language'];
+    const al = cs.gw.http.req.headers['accept-language'];
     if (al) {
       const first = al.split(';')[0];
       if (first === 'zh-CN,zh') {
