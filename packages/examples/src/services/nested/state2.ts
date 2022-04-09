@@ -8,6 +8,11 @@ interface State {
   state2: number,
 }
 
+/** 该 resoved 值会被后面另外一个 resolved 使用，测试是否能依次执行 resolved 中的异步初始化函数 */
+export let preData = resolved<number>(async () => {
+  return new Promise(r => setTimeout(() => r(100), 1000));
+});
+
 /** 一个状态模块依赖另外一个状态模块 */
 export let state2 = resolved<State>(async (addDisposer) => {
 
@@ -35,7 +40,7 @@ export let state2 = resolved<State>(async (addDisposer) => {
 
   return {
     state1,
-    state2: 2,
+    state2: preData,
   }
 });
 

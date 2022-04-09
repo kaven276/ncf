@@ -49,27 +49,20 @@ export async function waitReady(absPath: string) {
 
 /** 从 entrance(faas/index) import 完后，直接依赖分析过程中，对所有模块调用 awaitModule */
 export async function awaitModule(m: NodeModule): Promise<void> {
-  const promises: Promise<any>[] = [];
   const disposers: NodeModule["_disposers"] = {};
-  function addDisposerMaker(key: string) {
-    return (disposer: Disposer) => {
-      disposers![key] = disposer;
+  for (const [exportKey, resolvedSrc] of Object.entries(m.exports)) {
+    if (isPromise(resolvedSrc)) {
+      debug('top await', m.filename, exportKey);
+      m.exports[exportKey] = await resolvedSrc[symbol]((disposer: Disposer) => {
+        disposers[exportKey] = disposer;
+      });
+      debug(`${m.filename} resolved`);
+      destroyableModuleSet.add(m);
     }
   }
-  for (const [key, val] of Object.entries(m.exports)) {
-    if (isPromise(val)) {
-      debug('top await', m.filename, key);
-      const promise = val[symbol](addDisposerMaker(key));
-      promise.then(v => m.exports[key] = v);
-      promise.then(v => debug(`${m.filename} resolved`));
-      promises.push(promise);
-    }
+  if (destroyableModuleSet.has(m)) {
+    m._disposers = disposers;
   }
-  if (promises.length > 0 && Object.values(disposers).length > 0) {
-    destroyableModuleSet.add(m);
-  }
-  m._disposers = disposers;
-  await Promise.all(promises);
 }
 
 /** 一个状态模块销毁时执行之前所有的清理函数，并等待清理完成返回 */
