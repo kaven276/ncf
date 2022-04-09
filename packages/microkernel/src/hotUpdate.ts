@@ -6,6 +6,9 @@ import { ProjectDir } from './util/resolve';
 import { extname, sep, dirname } from 'path';
 const ServiceDir = ProjectDir + '/src/services';
 
+/** 跟踪一个模块是否被初始化过 */
+const loadedSet = new WeakSet<NodeModule>();
+
 const prefixLength = ServiceDir.length;
 const debug = getDebug(module);
 let started = false;
@@ -61,42 +64,47 @@ export function watchHotUpdate() {
 /** 都是按照解析完的 module.filename 来记录关系的 */
 const depsMap = new Map<string, Set<string>>();
 
-async function collectWhoDependMe(parentModule: NodeModule) {
-  // if (!parentModule) return;
+async function collectWhoDependMe(parentModule: NodeModule, whoImportMeStr?: string) {
+
   const absFileName = parentModule.filename;
+
+  if (whoImportMeStr) {
+    let depSet = depsMap.get(absFileName);
+    if (!depSet) {
+      // submodule 第一次被依赖
+      depSet = new Set<string>();
+      depsMap.set(absFileName, depSet);
+    }
+    depSet.add(whoImportMeStr); // 添加反向依赖关系
+  }
+
+  // 防止被重复依赖而导致重复初始化和重复反向依赖收集
+  if (loadedSet.has(parentModule)) return;
+  loadedSet.add(parentModule);
+
+  // 对子模块递归处理
   const promises = parentModule.children.map(async subModule => {
     const subPath = subModule.filename;
     // 可能会出现两个模块互相引用的情况造成死循环
     // debug('collectWhoDependMe', absFileName.substring(ServiceDir.length), subPath.substring(ServiceDir.length));
     if (!subPath.startsWith(ProjectDir)) return;
     if (subModule.loaded === false) return; // 此时必定 loaded=true
-
-    // inner 依赖了一个 faas，注入自标注路径，来支持内部调用寻址
-    if (subModule.exports.faas) {
-      const endPos = subPath.length - extname(subPath).length
-      subModule.exports.faas.faasPath = subPath.substring(prefixLength, endPos);
-    }
-
-    let depSet = depsMap.get(subPath);
-    let isNew = !depSet;
-    if (isNew) {
-      // submodule 第一次被依赖
-      depSet = new Set<string>();
-      depsMap.set(subPath, depSet);
-    }
-    // 如果判断 subModule 可能会改变，则加入到依赖跟踪中
-    depSet!.add(absFileName);
-    // if (subPath.endsWith('/test1.ts')) {
-    //   debug('track', subPath, [...depsMap.get(subPath)!]);
-    // }
-
     if (depsMap.get(parentModule.filename)?.has(subPath)) return; // 防止循环引用造成 stack overflow
-    await collectWhoDependMe(subModule);
-    if (isNew) {
-      await awaitModule(subModule);
-    }
+    await collectWhoDependMe(subModule, absFileName);
   });
   await Promise.all(promises);
+
+  // inner 依赖了一个 faas，注入自标注路径，来支持内部调用寻址
+  if (parentModule.exports.faas) {
+    const endPos = absFileName.length - extname(absFileName).length
+    parentModule.exports.faas.faasPath = absFileName.substring(prefixLength, endPos);
+  }
+  // 反向依赖收集完后，进行本模块的 lifecycle 初始化，确保只进行一次
+  await awaitModule(parentModule);
+
+  // if (absFileName.endsWith('/test1.ts')) {
+  //   debug('track', subPath, [...depsMap.get(subPath)!]);
+  // }
 }
 
 /** 级联删除依赖自己的模块的缓存，使得再次 import() 他们能加载新版。
