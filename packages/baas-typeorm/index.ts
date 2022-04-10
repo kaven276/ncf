@@ -1,2 +1,2 @@
 export { createDataSource } from './makeTypeOrmDataSource';
-export { getOnlyQueryRunnerForTx } from './getOnlyQueryRunnerForTx';
+export { getQueryRunnerTx } from './getQueryRunnerTx';

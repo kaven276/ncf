@@ -9,7 +9,7 @@ import ds from 'src/baas/typeorm/test1.baas';
 export async function faas() {
 
   // 在 async thread 开始时自动进行
-  const qr = await ds.getConnectionTx();
+  const qr = await ds.getQueryRunnerTx();
   const userRepo = qr.manager.getRepository(User);
   const Timber = await userRepo.findOneBy({ firstName: 'Timber' });
 

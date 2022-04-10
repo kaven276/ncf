@@ -13,7 +13,7 @@ declare module '@ncf/microkernel' {
 }
 
 /** service thread 中需要获取执行名称的链接并开启事务的时候调用，faas thread 中多次引用处于一个事务，faas 结束后自动提交或者回滚。 */
-export async function getOnlyQueryRunnerForTx(ds: DataSource): Promise<QueryRunner> {
+export async function getQueryRunnerTx(ds: DataSource): Promise<QueryRunner> {
   const threadStore = getCallState();
   // TLS 没有配置 typeorm 连接的话，就给初始化一个
   /** 持有当前 service thread 中所有 typeorm DataSource 对应的唯一 QueryRunner */
