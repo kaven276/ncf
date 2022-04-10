@@ -146,9 +146,7 @@ export let registerDep = async (absServicePath: string) => {
 
 // 只有开发环境才会启用自动热更新，生产环境可以节省资源
 if (process.env.NODE_ENV === 'development') {
-  import('./hotUpdate').then(hotUpdateModule => {
-    watchHotUpdate();
-  });
+  watchHotUpdate();
 } else {
   registerDep = async () => { };
 }
