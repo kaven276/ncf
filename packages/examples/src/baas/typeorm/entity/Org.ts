@@ -10,7 +10,7 @@ export class Org {
   @Column({ type: 'int4' })
   rank!: number;
 
-  @Column()
+  @Column({ nullable: false, unique: true})
   orgName!: string;
 
   @Column("simple-array", {
