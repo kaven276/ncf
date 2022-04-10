@@ -28,9 +28,6 @@ export async function getQueryRunnerTx(ds: DataSource): Promise<QueryRunner> {
   }
   // 创建新的链接，并设置事务环境，最后返回 queryRunner
   queryRunner = ds.createQueryRunner();
-  await queryRunner.connect();
-  await queryRunner.startTransaction("READ COMMITTED");
-  debug('typeorm QueryRunner start transaction', threadStore.trans);
   threadStore.trans.push({
     commit: async () => {
       debug('typeorm QueryRunner commit');
@@ -44,5 +41,10 @@ export async function getQueryRunnerTx(ds: DataSource): Promise<QueryRunner> {
     },
   });
   txMap.set(ds, queryRunner);
+
+  // 最后才执行 await 部分可以防止并发同时取创建重复的连接池，同时确保出现异常的时候能够释放数据是连接资源
+  await queryRunner.connect();
+  await queryRunner.startTransaction("READ COMMITTED");
+  debug('typeorm QueryRunner start transaction', threadStore.trans);
   return queryRunner;
 }
