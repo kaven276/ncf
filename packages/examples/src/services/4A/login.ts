@@ -1,5 +1,5 @@
 import { throwServiceError, getDebug } from '@ncf/microkernel';
-import { setRandomLatencyConfig } from 'src/middlewares/randomLatency';
+import { setRandomLatencyConfig } from 'src/middleware/randomLatency';
 import { signToken } from '@ncf/mw-jwt';
 import { env } from 'src/env';
 

@@ -1,4 +1,4 @@
-import { getTop10 } from 'src/middlewares/apm';
+import { getTop10 } from 'src/middleware/apm';
 
 export async function faas() {
   console.dir(getTop10());
