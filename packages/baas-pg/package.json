@@ -1,5 +1,5 @@
 {
-  "name": "@ncf/baas-pg",
+  "name": "@ncf/pg",
   "version": "1.0.0",
   "description": "nodejs pg 的连接池 baas 供应",
   "main": "index.ts",

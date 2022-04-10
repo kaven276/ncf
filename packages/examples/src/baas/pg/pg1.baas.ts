@@ -1,5 +1,4 @@
-import { makePgPool } from './makePgPool';
-import { getOnlyPoolClientForTx } from 'src/baas/pg/getOnlyPoolClientForTx';
+import { makePgPool, getOnlyPoolClientForTx } from '@ncf/pg';
 import { env } from 'src/env';
 
 let pool = makePgPool({
