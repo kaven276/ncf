@@ -1,0 +1,12 @@
+{
+  "name": "@ncf/ioredis",
+  "version": "0.0.0",
+  "description": "nodejs redis 连接 baas 供应",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

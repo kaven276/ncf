@@ -1,4 +1,4 @@
-import { makeRedisClient } from './makeRedisClient';
+import { makeRedisClient } from '@ncf/ioredis';
 import { env } from 'src/env';
 
 let redisClient = makeRedisClient({
