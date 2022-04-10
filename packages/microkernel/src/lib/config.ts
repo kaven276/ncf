@@ -6,7 +6,7 @@ import { ICallState } from './callState';
 import { registerDep } from '../hotUpdate';
 import { join, dirname } from 'path';
 
-const ServiceDir = ProjectDir + '/src/services';
+const ServiceDir = ProjectDir + '/src/faas';
 const prefixLength = ServiceDir.length;
 const debug = getDebug(module);
 

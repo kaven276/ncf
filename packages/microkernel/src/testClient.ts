@@ -4,7 +4,7 @@ import { Service } from './lib/faas';
 import { getDebug } from './util/debug';
 import { GwHttp } from './lib/gateway';
 
-const prefixLength = `${ProjectDir}/src/services`.length;
+const prefixLength = `${ProjectDir}/src/faas`.length;
 const debug = getDebug(module);
 const JWT: string | undefined = process.env.JWT;
 let testSeq: number = 0;

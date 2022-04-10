@@ -4,7 +4,7 @@ import { updateConfig } from './lib/config';
 import { awaitModule, tryDestroyModule } from './lifecycle';
 import { ProjectDir } from './util/resolve';
 import { extname, sep } from 'path';
-const ServiceDir = ProjectDir + '/src/services';
+const ServiceDir = ProjectDir + '/src/faas';
 
 /** 跟踪一个模块是否被初始化过 */
 const loadedSet = new WeakSet<NodeModule>();

@@ -14,7 +14,7 @@ export function getDebug(m: Module) {
     const sects = restPath.split(sep);
     sects[sects.length - 1] = basename(sects[sects.length - 1], '.ts');
     if (sects[1] === 'src') {
-      if (sects[2] === 'services') {
+      if (sects[2] === 'faas') {
         // svc: / 后面带空格，方便 vscode 直接 option click 调转到输出日志的源码文件
         return debug(`svc: ${sects.slice(3).join('/')}`);
       } else if (sects[2] === 'middlewares') {
