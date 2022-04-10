@@ -10,3 +10,5 @@ temp/
 # /packages/expr/
 yarn.lock
 *.log
+.DS_Store
+/packages/examples/src/baas/typeorm/demousers.sql
