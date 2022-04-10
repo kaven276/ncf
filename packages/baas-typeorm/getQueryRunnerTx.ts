@@ -28,16 +28,19 @@ export async function getQueryRunnerTx(ds: DataSource): Promise<QueryRunner> {
   }
   // 创建新的链接，并设置事务环境，最后返回 queryRunner
   queryRunner = ds.createQueryRunner();
+  await queryRunner.connect();
   await queryRunner.startTransaction("READ COMMITTED");
   debug('typeorm QueryRunner start transaction', threadStore.trans);
   threadStore.trans.push({
-    commit: () => {
+    commit: async () => {
       debug('typeorm QueryRunner commit');
-      queryRunner!.commitTransaction();
+      await queryRunner!.commitTransaction();
+      await queryRunner!.release();
     },
-    rollback: () => {
+    rollback: async () => {
       debug('typeorm QueryRunner rollback');
-      queryRunner!.rollbackTransaction();
+      await queryRunner!.rollbackTransaction();
+      await queryRunner!.release();
     },
   });
   txMap.set(ds, queryRunner);
