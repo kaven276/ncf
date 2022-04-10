@@ -1,5 +1,4 @@
 import { User, UserRole } from "src/entity/User";
-import { getOnlyQueryRunnerForTx } from 'src/baas/typeorm/getOnlyQueryRunnerForTx';
 import ds from 'src/baas/typeorm/test1.baas';
 
 /**
@@ -10,7 +9,7 @@ import ds from 'src/baas/typeorm/test1.baas';
 export async function faas() {
 
   // 在 async thread 开始时自动进行
-  const qr = await getOnlyQueryRunnerForTx(ds);
+  const qr = await ds.getConnectionTx();
   const userRepo = qr.manager.getRepository(User);
   const Timber = await userRepo.findOneBy({ firstName: 'Timber' });
 

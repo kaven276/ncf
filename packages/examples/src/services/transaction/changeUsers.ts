@@ -1,5 +1,4 @@
 import { User, UserRole } from "src/entity/User";
-import { getOnlyQueryRunnerForTx } from 'src/baas/typeorm/getOnlyQueryRunnerForTx';
 import ds from 'src/baas/typeorm/test1.baas';
 
 interface IRequest {
@@ -13,7 +12,7 @@ interface IRequest {
 export async function faas(req: IRequest) {
   const id = req.id || 1;
   // 在 async thread 开始时自动进行
-  const qr = await getOnlyQueryRunnerForTx(ds);
+  const qr = await ds.getConnectionTx();
   const userRepo = qr.manager.getRepository(User);
   const ly = await userRepo.findOneBy({ firstName: 'LiYong' });
 
