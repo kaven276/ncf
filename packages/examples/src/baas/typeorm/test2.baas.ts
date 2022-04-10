@@ -1,4 +1,4 @@
-import { createDataSource } from './makeTypeOrmDataSource';
+import { createDataSource } from '@ncf/typeorm';
 import { env } from 'src/env';
 
 let baas = createDataSource({

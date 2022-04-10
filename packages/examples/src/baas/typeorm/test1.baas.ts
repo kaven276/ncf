@@ -1,4 +1,4 @@
-import { createDataSource } from './makeTypeOrmDataSource';
+import { createDataSource } from '@ncf/typeorm';
 import { env } from 'src/env';
 
 // 如果 export config object，使用的时候还需要解耦，非常的麻烦

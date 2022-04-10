@@ -1,4 +1,4 @@
-import { getOnlyQueryRunnerForTx } from 'src/baas/typeorm/getOnlyQueryRunnerForTx';
+import { getOnlyQueryRunnerForTx } from '@ncf/typeorm';
 import { default as ds } from 'src/baas/typeorm/test1.baas';
 
 export { default } from 'src/baas/typeorm/test1.baas';
