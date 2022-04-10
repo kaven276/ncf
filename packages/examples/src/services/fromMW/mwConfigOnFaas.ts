@@ -1,4 +1,4 @@
-import { setRandomLatencyConfig } from 'src/middleware/randomLatency';
+import { setRandomLatencyConfig } from 'src/mw/randomLatency';
 
 export const config = {
   ...setRandomLatencyConfig({

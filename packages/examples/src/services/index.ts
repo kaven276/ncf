@@ -1,10 +1,10 @@
 import { makeRe } from 'minimatch';
 import { IMiddleWare } from '@ncf/microkernel';
 import { validate } from '@ncf/mw-validator';
-import { logTimeUse } from 'src/middleware/logTimeUse';
-import { collectTimes } from 'src/middleware/apm';
+import { logTimeUse } from 'src/mw/logTimeUse';
+import { collectTimes } from 'src/mw/apm';
 import { jwtMiddleware, setJWT } from '@ncf/mw-jwt';
-import { randomLatency, setRandomLatencyConfig } from 'src/middleware/randomLatency';
+import { randomLatency, setRandomLatencyConfig } from 'src/mw/randomLatency';
 import { throwServiceError } from '@ncf/microkernel';
 import { getJWT, getJWTStruct } from '@ncf/mw-jwt';
 import { i18nMiddleware } from 'src/i18n';

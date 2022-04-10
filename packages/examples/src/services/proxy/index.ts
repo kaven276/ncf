@@ -1,5 +1,5 @@
 import { getProxiedPath } from '@ncf/microkernel';
-import { setRandomLatencyConfig } from 'src/middleware/randomLatency';
+import { setRandomLatencyConfig } from 'src/mw/randomLatency';
 
 /** 目录模块导出 faas 代表该目录路径使用反向代理 */
 export async function faas(req: any) {
