@@ -26,10 +26,7 @@ export async function getOnlyPoolClientForTx(pool: Pool): Promise<PoolClient> {
     debug('pg pool client use existing in thread');
     return poolClient;
   }
-  // 创建新的链接，并设置事务环境，最后返回 queryRunner
-  poolClient = await pool.connect();
-  await poolClient.query('BEGIN');
-  debug('pg PoolClient start transaction');
+
   threadStore.trans.push({
     commit: async () => {
       debug('pg PoolClient commit');
@@ -42,6 +39,11 @@ export async function getOnlyPoolClientForTx(pool: Pool): Promise<PoolClient> {
       poolClient!.release();
     },
   });
+
+  // 创建新的链接，并设置事务环境，最后返回 queryRunner
+  poolClient = await pool.connect();
+  await poolClient.query('BEGIN');
+  debug('pg PoolClient start transaction');
   txMap.set(pool, poolClient);
   return poolClient;
 }
