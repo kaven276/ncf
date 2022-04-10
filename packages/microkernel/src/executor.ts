@@ -4,7 +4,7 @@ import { AsyncLocalStorage } from 'async_hooks';
 import { ICallState } from './lib/callState';
 import { ServiceError, throwServiceError } from './lib/ServiceError';
 import { IFaasModule } from './lib/faas';
-import { getConfigByFaas, proxyTriggerPrefixKey, ensureDirConfig, ensureFaasConfig } from './lib/config';
+import { getConfigByFaas, proxyTriggerPrefixKey, getDirConfig, ensureFaasConfig } from './lib/config';
 import { IMiddleWare } from './lib/middleware';
 import { ProjectDir } from './util/resolve';
 import { getDebug } from './util/debug';
@@ -43,7 +43,7 @@ export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promi
   idSeq += 1;
   debug(`request ${idSeq} ${faasPath} coming...`);
 
-  const dirConfig = await ensureDirConfig(faasPath);
+  const dirConfig = await getDirConfig(faasPath);
   /** 即便是代理，依然尝试加载 faas 模块，因为里面可能有请求响应校验和其他配置，虽然没有 export faas */
   const proxyTriggerPrefix: string | undefined = dirConfig[proxyTriggerPrefixKey];
 

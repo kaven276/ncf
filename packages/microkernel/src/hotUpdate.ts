@@ -1,9 +1,9 @@
 import { watch } from 'chokidar';
 import { getDebug } from './util/debug';
-import { root } from './lib/config';
+import { updateConfig } from './lib/config';
 import { awaitModule, tryDestroyModule } from './lifecycle';
 import { ProjectDir } from './util/resolve';
-import { extname, sep, dirname } from 'path';
+import { extname, sep } from 'path';
 const ServiceDir = ProjectDir + '/src/services';
 
 /** 跟踪一个模块是否被初始化过 */
@@ -12,30 +12,6 @@ const loadedSet = new WeakSet<NodeModule>();
 const prefixLength = ServiceDir.length;
 const debug = getDebug(module);
 let started = false;
-
-function updateConfig(absPath: string) {
-  // 目录配置改变的话，更新 config prototype chain
-  debug('config changed for', absPath.substring(prefixLength));
-  const dirs = dirname(absPath.substring(prefixLength + 1)).split(sep);
-  debug('config dirs', dirs);
-  let cfgNode = root;
-  for (let dir of dirs) {
-    cfgNode = cfgNode.subs[dir];
-    if (!cfgNode) return; // 还没有被使用过，等待 faas 模块加载时再加载
-  }
-  // 先删除之前 prototype chain node 上的配置；因为只有开发时热更新用，无需考虑处理性能
-  Object.getOwnPropertySymbols(cfgNode.cfg).forEach(symbolKey => {
-    delete cfgNode.cfg[symbolKey];
-  })
-  // 随后动态加载配置更新
-  import(absPath).then(dirModule => {
-    if (dirModule.config) {
-      // debug('update config by', dirModule.config, root);
-      Object.assign(cfgNode.cfg, dirModule.config);
-      // debug(cfgNode.cfg)
-    }
-  }).catch();
-}
 
 /** 启动服务热更新，只针对服务入口模块，级联模块暂时不支持 */
 export function watchHotUpdate() {
