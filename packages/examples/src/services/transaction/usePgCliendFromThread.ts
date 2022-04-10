@@ -1,6 +1,6 @@
 import { faas as sub } from './usePgCliendFromThreadSub';
 import { getDebug, throwServiceError } from '@ncf/microkernel';
-import { getPoolClient } from 'src/baas/pg/pg1.baas';
+import pool from 'src/baas/pg/pg1.baas';
 
 const debug = getDebug(module);
 
@@ -11,7 +11,7 @@ interface IResult {
 
 /** 测试直接使用 pg 单个连接提供服务 */
 export async function faas() {
-  const client = await getPoolClient();
+  const client = await pool.getClientTx();
   const res = await client.query<IResult>('SELECT  NOW()');
   const resSub = await sub();
   if (Math.random() < 0.5) {

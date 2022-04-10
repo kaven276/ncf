@@ -1,4 +1,4 @@
-import { makePgPool, getOnlyPoolClientForTx } from '@ncf/pg';
+import { makePgPool } from '@ncf/pg';
 import { env } from 'src/env';
 
 let pool = makePgPool({
@@ -10,5 +10,3 @@ let pool = makePgPool({
 });
 
 export default pool;
-
-export const getPoolClient = () => getOnlyPoolClientForTx(module.exports.default);
