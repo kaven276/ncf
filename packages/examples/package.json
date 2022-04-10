@@ -7,18 +7,19 @@
     "start": "ts-node index.ts"
   },
   "dependencies": {
-    "@ncf/microkernel": "*",
-    "@ncf/typeorm": "*",
-    "@ncf/pg": "*",
+    "@elastic/elasticsearch": "^8.1.0",
     "@ncf/ioredis": "*",
-    "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.3.3",
-    "pg": "^8.7.3",
-    "ioredis": "^5.0.3",
+    "@ncf/microkernel": "*",
+    "@ncf/pg": "*",
+    "@ncf/typeorm": "*",
     "elasticsearch": "^16.7.3",
+    "ioredis": "^5.0.3",
+    "pg": "^8.7.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "sharp": "^0.30.3"
+    "reflect-metadata": "^0.1.13",
+    "sharp": "^0.30.3",
+    "typeorm": "^0.3.3"
   },
   "devDependencies": {
     "@types/elasticsearch": "^5.0.40",
