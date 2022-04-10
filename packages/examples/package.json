@@ -1,5 +1,5 @@
 {
-  "name": "examples",
+  "name": "@ncf/examples",
   "version": "0.1.0",
   "description": "",
   "main": "index.ts",
@@ -8,23 +8,24 @@
   },
   "dependencies": {
     "@ncf/microkernel": "*",
-    "elasticsearch": "^16.7.3",
-    "ioredis": "^5.0.3",
+    "@ncf/typeorm": "*",
+    "@ncf/pg": "*",
+    "@ncf/ioredis": "*",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.3.3",
     "pg": "^8.7.3",
+    "ioredis": "^5.0.3",
+    "elasticsearch": "^16.7.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "sharp": "^0.30.3",
-    "tsconfig-paths": "^3.13.0",
-    "ts-node": "^10.7.0",
-    "typeorm": "^0.3.3"
+    "sharp": "^0.30.3"
   },
   "devDependencies": {
     "@types/elasticsearch": "^5.0.40",
     "@types/pg": "^8.6.4",
     "@types/react": "^17.0.43",
     "@types/react-dom": "^17.0.14",
-    "@types/sharp": "^0.30.0",
-    "tslib": "^2.3.1"
+    "@types/sharp": "^0.30.0"
   },
   "keywords": [],
   "author": "",
