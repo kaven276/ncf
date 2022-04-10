@@ -31,14 +31,14 @@ export async function getOnlyPoolClientForTx(pool: Pool): Promise<PoolClient> {
   await poolClient.query('BEGIN');
   debug('pg PoolClient start transaction');
   threadStore.trans.push({
-    commit: () => {
+    commit: async () => {
       debug('pg PoolClient commit');
-      poolClient!.query('COMMIT');
+      await poolClient!.query('COMMIT');
       poolClient!.release();
     },
-    rollback: () => {
+    rollback: async () => {
       debug('pg PoolClient rollback');
-      poolClient!.query('ROLLBACK');
+      await poolClient!.query('ROLLBACK');
       poolClient!.release();
     },
   });
