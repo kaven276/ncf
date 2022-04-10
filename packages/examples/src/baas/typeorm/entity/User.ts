@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, ManyToOne, Index } from "typeorm";
-import { IUser } from 'src/interface/user';
+import { IUser } from 'src/intf/user';
 import { Org } from "./Org";
 
 export enum UserRole {
