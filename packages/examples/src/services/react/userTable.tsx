@@ -1,5 +1,5 @@
 import React from 'react';
-import { User } from "src/entity/User";
+import { User } from "entity/User";
 import { faas as findUsers } from '../typeorm/hr/findUsers';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { innerCall } from '@ncf/microkernel';

@@ -1,4 +1,4 @@
-import { Photo, Post, Question } from "src/entity/Fusion";
+import { Photo, Post, Question } from "entity/Fusion";
 import { getManager } from '.';
 
 interface IRequest {

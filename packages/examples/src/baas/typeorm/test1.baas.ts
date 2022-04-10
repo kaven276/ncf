@@ -16,9 +16,9 @@ let baas = createDataSource({
   password: "test1",
   synchronize: false,
   logging: false,
-  entities: ["src/entity/**/*.ts"],
-  migrations: ["src/migration/**/*.ts"],
-  subscribers: ["src/subscriber/**/*.ts"],
+  entities: ["src/baas/typeorm/entity/**/*.ts"],
+  migrations: ["src/baas/typeorm/migration/**/*.ts"],
+  subscribers: ["src/baas/typeorm/subscriber/**/*.ts"],
 });
 
 export default baas;

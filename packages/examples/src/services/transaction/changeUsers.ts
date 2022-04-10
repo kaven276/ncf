@@ -1,4 +1,4 @@
-import { User, UserRole } from "src/entity/User";
+import { User, UserRole } from "entity/User";
 import ds from 'src/baas/typeorm/test1.baas';
 
 interface IRequest {

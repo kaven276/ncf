@@ -1,5 +1,5 @@
 import ds from '.';
-import { User } from "src/entity/User";
+import { User } from "entity/User";
 
 interface IRequest {
   id?: User["id"],

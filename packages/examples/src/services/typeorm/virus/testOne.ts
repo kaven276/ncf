@@ -1,6 +1,6 @@
-import { People } from "src/entity/virus/People";
-import { TestDose } from "src/entity/virus/TestDose";
-import type { Person, ITestDose } from 'src/entity/virus/types';
+import { People } from "entity/virus/People";
+import { TestDose } from "entity/virus/TestDose";
+import type { Person, ITestDose } from 'src/baas/typeorm/entity/virus/types';
 import { getDataSource } from '@ncf/baas-typeorm';
 import { throwServiceError } from '@ncf/microkernel';
 

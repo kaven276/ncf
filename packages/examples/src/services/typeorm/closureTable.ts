@@ -1,4 +1,4 @@
-import { Category } from "src/entity/Category";
+import { Category } from "entity/Category";
 import { ServiceError } from '@ncf/microkernel';
 import { getManager } from '.';
 

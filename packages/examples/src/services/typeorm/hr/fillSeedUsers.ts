@@ -1,4 +1,4 @@
-import { User } from "src/entity/User";
+import { User } from "entity/User";
 import ds from '.';
 
 /** 插入初始演示测试用用户数据 */

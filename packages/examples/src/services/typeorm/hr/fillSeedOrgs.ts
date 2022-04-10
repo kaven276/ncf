@@ -1,4 +1,4 @@
-import { Org } from "src/entity/Org";
+import { Org } from "entity/Org";
 import ds from '.';
 
 /** 插入初始演示测试用组织数据 */

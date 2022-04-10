@@ -1,4 +1,4 @@
-import { User } from "src/entity/User";
+import { User } from "entity/User";
 import { getOrmDs, DsName } from 'src/baas/typeorm/getOrmDs';
 
 interface IRequest {

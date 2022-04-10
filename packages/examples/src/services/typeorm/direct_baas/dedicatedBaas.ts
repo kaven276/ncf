@@ -1,4 +1,4 @@
-import { User } from 'src/entity/User';
+import { User } from 'entity/User';
 import { resolved } from '@ncf/microkernel';
 import { env } from 'src/env';
 import { EXAMPLE_PG_DB_PASSWORD } from 'src/secrets';
@@ -16,9 +16,9 @@ export let _ds = resolved<DataSource>(async () => {
     password: EXAMPLE_PG_DB_PASSWORD,
     synchronize: false,
     logging: false,
-    entities: ["src/entity/**/*.ts"],
-    migrations: ["src/migration/**/*.ts"],
-    subscribers: ["src/subscriber/**/*.ts"],
+    entities: ["src/baas/typeorm/entity/**/*.ts"],
+    migrations: ["src/baas/typeorm/migration/**/*.ts"],
+    subscribers: ["src/baas/typeorm/subscriber/**/*.ts"],
   });
   await baas.initialize();
   return baas;

@@ -22,9 +22,9 @@ let ds = resolved<DataSource>(async () => {
     password: "typeorm2022",
     synchronize: true,
     logging: true,
-    entities: ["src/entity/**/*.ts"],
-    migrations: ["src/migration/**/*.ts"],
-    subscribers: ["src/subscriber/**/*.ts"],
+    entities: ["src/baas/typeorm/entity/**/*.ts"],
+    migrations: ["src/baas/typeorm/migration/**/*.ts"],
+    subscribers: ["src/baas/typeorm/subscriber/**/*.ts"],
   });
   await baas.initialize();
   return baas;

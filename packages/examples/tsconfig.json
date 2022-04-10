@@ -24,6 +24,9 @@
     "paths": {
       "src/*": [
         "*"
+      ],
+      "entity/*": [
+        "./baas/typeorm/entity/*"
       ]
     }
   },

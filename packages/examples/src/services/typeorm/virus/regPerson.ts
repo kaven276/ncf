@@ -1,5 +1,5 @@
-import { People } from "src/entity/virus/People";
-import type { Person } from 'src/entity/virus/types';
+import { People } from "entity/virus/People";
+import type { Person } from 'entity/virus/types';
 import { getDataSource } from '@ncf/baas-typeorm';
 
 /** 登记新冠管理的人员信息 */

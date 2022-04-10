@@ -1,4 +1,4 @@
-import { User } from "src/entity/User";
+import { User } from "entity/User";
 import ds from '.'; // 因此通过目录模块统一指向连接池模块
 
 /** 登记新冠管理的人员信息 */
