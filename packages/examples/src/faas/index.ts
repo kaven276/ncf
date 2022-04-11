@@ -26,7 +26,7 @@ export const checkAuth: IMiddleWare = async (ctx, next) => {
 
 export const middlewares = [
   i18nMiddleware,
-  jwtMiddleware,
+  // jwtMiddleware,
   validate,
   checkAuth,
   logTimeUse,

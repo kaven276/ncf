@@ -64,7 +64,7 @@ export const jwtMiddleware: IMiddleWare = async (ctx, next) => {
   }
   const token = ctx.gw.http.req.headers.authorization;
   if (token) {
-    const jwt = token.substring(prefixLen);
+    const jwt = token.startsWith(prefix) ? token.substring(prefixLen) : token;
     ctx[JWT] = jwt;
     try {
       const secret: string = getConfig(secretKey, ctx) || defaultSecret;
