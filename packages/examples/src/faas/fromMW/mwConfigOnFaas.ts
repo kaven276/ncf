@@ -2,7 +2,7 @@ import { setRandomLatencyConfig } from 'src/mw/randomLatency';
 
 export const config = {
   ...setRandomLatencyConfig({
-    maxLatencyMs: 1000,
+    maxLatencyMs: 20 * 1000,
   }),
 }
 

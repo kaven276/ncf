@@ -30,8 +30,8 @@ export const middlewares = [
   validate,
   checkAuth,
   logTimeUse,
-  randomLatency,
   collectTimes,
+  randomLatency,
 ];
 
 
