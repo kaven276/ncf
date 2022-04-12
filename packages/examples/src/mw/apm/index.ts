@@ -1,4 +1,5 @@
-import { getDebug, IMiddleWare } from '@ncf/microkernel';
+import { getDebug, IMiddleWare, throwServiceError } from '@ncf/microkernel';
+import { getMaxConcurrencyConfig } from 'src/cfg/cfg-max-concurrency';
 
 const debug = getDebug(module);
 
@@ -32,6 +33,10 @@ export const collectTimes: IMiddleWare = async (ctx, next) => {
     stat = new Stat(ctx.path, startTime);
     statMap.set(stat.path, stat);
   }
+  const { maxConcurrency } = getMaxConcurrencyConfig();
+  if (stat.concurrency >= maxConcurrency) {
+    throwServiceError(400, `在途并行量超过设定的 ${maxConcurrency} 个！禁止继续执行`);
+  }
   stat.concurrency += 1;
   if (stat.concurrency > stat.hwConcurrency) {
     stat.hwConcurrency = stat.concurrency;
@@ -50,3 +55,4 @@ export const collectTimes: IMiddleWare = async (ctx, next) => {
 export function getTop10(): Stat[] {
   return [...statMap.values()].sort((a, b) => (b.totalExecTime - a.totalExecTime)).slice(0, 10);
 }
+

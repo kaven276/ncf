@@ -1,8 +1,12 @@
 import { setRandomLatencyConfig } from 'src/mw/randomLatency';
+import { setMaxConcurrencyConfig } from 'src/cfg/cfg-max-concurrency';
 
 export const config = {
   ...setRandomLatencyConfig({
     maxLatencyMs: 20 * 1000,
+  }),
+  ...setMaxConcurrencyConfig({
+    maxConcurrency: 3,
   }),
 }
 
