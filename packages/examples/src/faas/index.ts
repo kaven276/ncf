@@ -5,6 +5,7 @@ import { logTimeUse } from 'src/mw/logTimeUse';
 import { collectTimes } from 'src/mw/apm';
 import { jwtMiddleware, setJWT } from '@ncf/mw-jwt';
 import { randomLatency, setRandomLatencyConfig } from 'src/mw/randomLatency';
+import { verionTagMiddleware } from 'src/mw/versions';
 import { throwServiceError } from '@ncf/microkernel';
 import { getJWT, getJWTStruct } from '@ncf/mw-jwt';
 import { i18nMiddleware } from 'src/i18n';
@@ -32,6 +33,7 @@ export const middlewares = [
   logTimeUse,
   collectTimes,
   randomLatency,
+  verionTagMiddleware,
 ];
 
 
