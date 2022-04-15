@@ -19,12 +19,12 @@ interface Api {
 export const faas: Service<Api> = async () => {
   const vt = getVerionTag();
   let res: IResponse;
-  if (vt === 'dark-theme') {
+  if (vt === Tag.DarkTheme) {
     res = {
       layout: 'normal',
       color: 'black',
     }
-  } else if (vt === 'new-layout') {
+  } else if (vt === Tag.NewLayout) {
     res = {
       layout: 'new',
       color: 'light',
@@ -35,7 +35,7 @@ export const faas: Service<Api> = async () => {
       color: 'light',
     }
   }
-  if (vt === 'order-push') {
+  if (vt === Tag.OrderPush) {
     res.pushed = true;
   }
   res.vt = vt;

@@ -1,6 +1,6 @@
 import { getDebug, getCallState, IMiddleWare } from '@ncf/microkernel';
 import type { Tag } from './tags';
-export type { Tag } from './tags';
+export { Tag } from './tags';
 
 const debug = getDebug(module);
 
