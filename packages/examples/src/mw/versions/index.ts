@@ -7,14 +7,14 @@ const debug = getDebug(module);
 /** 其他中间件可以根据具体的策略，比如原IP区域，用户归属等决定来设置灰度标签，使用本 Symbol 向 ctx 中设置 */
 export const VersionTag = Symbol.for('VersionTag');
 
-/** 服务调用期间的全部内容 */
+/** 服务调用 ctx 增加灰度标签，可由特定的中间件来为每一个会话或调用分配 */
 declare module '@ncf/microkernel' {
   interface ICallState {
     [VersionTag]?: Tag,
   }
 }
 
-/** 返回 ALS 中的 JWT 字符串 */
+/** 返回给当前调用配置的灰度标签 */
 export function getVerionTag(): Tag | undefined {
   const als = getCallState();
   debug('als[VersionTag]', als[VersionTag]);
