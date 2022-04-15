@@ -135,8 +135,7 @@ function deleteCacheForUpdated(updatedFileName: string) {
 /** 从 faas/config 出发，查看依赖树，登记反向依赖树。
  * 因为中间遇到 baas 需要等待其完成异步初始化，所以是 async 函数
  */
-export let registerDep = async (absServicePath: string) => {
-  if (!started) return;
+export const registerDep = async (absServicePath: string) => {
   debug('collecting from', absServicePath);
   const m = require.cache[absServicePath]!;
   await collectWhoDependMe(m);
@@ -147,6 +146,4 @@ export let registerDep = async (absServicePath: string) => {
 // 只有开发环境才会启用自动热更新，生产环境可以节省资源
 if (process.env.NODE_ENV === 'development') {
   watchHotUpdate();
-} else {
-  registerDep = async () => { };
 }
