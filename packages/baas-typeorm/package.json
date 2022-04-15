@@ -1,6 +1,6 @@
 {
   "name": "@ncf/typeorm",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "export api to get typeorm connection with transaction context",
   "main": "index.ts",
   "scripts": {

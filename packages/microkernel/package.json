@@ -1,6 +1,6 @@
 {
   "name": "@ncf/microkernel",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "typescript based nodejs concise framework egine",
   "main": "index.ts",
   "scripts": {

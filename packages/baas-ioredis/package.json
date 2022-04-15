@@ -1,6 +1,6 @@
 {
   "name": "@ncf/ioredis",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "nodejs redis 连接 baas 供应",
   "main": "index.ts",
   "scripts": {
