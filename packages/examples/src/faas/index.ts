@@ -6,6 +6,7 @@ import { collectTimes } from 'src/mw/apm';
 import { jwtMiddleware, setJWT } from '@ncf/mw-jwt';
 import { randomLatency, setRandomLatencyConfig } from 'src/mw/randomLatency';
 import { verionTagMiddleware } from 'src/mw/versions';
+import { mwCache } from 'src/mw/cache';
 import { throwServiceError } from '@ncf/microkernel';
 import { getJWT, getJWTStruct } from '@ncf/mw-jwt';
 import { i18nMiddleware } from 'src/i18n';
@@ -28,6 +29,7 @@ export const checkAuth: IMiddleWare = async (ctx, next) => {
 export const middlewares = [
   i18nMiddleware,
   // jwtMiddleware,
+  mwCache,
   validate,
   checkAuth,
   logTimeUse,
