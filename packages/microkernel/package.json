@@ -1,11 +1,17 @@
 {
   "name": "@ncf/microkernel",
   "version": "0.3.0",
-  "description": "typescript based nodejs concise framework egine",
-  "main": "index.ts",
+  "description": "typescript based nodejs concise framework micro-kernel",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "build": "tsc",
+    "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "chokidar": "^3.5.3",
     "debug": "^4.3.3",
