@@ -19,8 +19,6 @@ export interface IConfig {
   // [proxySettingKey]?: string | boolean,
   /** 在该前缀下，使用代理来处理，没有 faas module .faas 时，使用 dir/index.ts 中的 .faas 替换 */
   [proxyTriggerPrefixKey]?: string,
-  //@ts-ignore
-  [key: symbol]: any,
 }
 
 const defaultConfig: IConfig = {};
