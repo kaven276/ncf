@@ -1,4 +1,4 @@
-import { ProjectDir, jsExt } from '../util/resolve';
+import { ProjectDir, jsExt, MoundDir} from '../util/resolve';
 import { IFaasModule } from '../lib/faas';
 import { getDebug } from '../util/debug';
 import { getCallState } from '../executor';
@@ -6,7 +6,7 @@ import { ICallState } from './callState';
 import { registerDep } from '../hotUpdate';
 import { join, dirname } from 'path';
 
-const ServiceDir = ProjectDir + '/src/faas';
+const ServiceDir = `${ProjectDir}/${MoundDir}/faas`;
 const prefixLength = ServiceDir.length;
 const debug = getDebug(module);
 

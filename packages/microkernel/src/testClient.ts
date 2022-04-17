@@ -1,10 +1,10 @@
-import { ProjectDir, jsExt } from './util/resolve';
+import { ProjectDir, jsExt, MoundDir } from './util/resolve';
 import { execute } from './executor';
 import { Service } from './lib/faas';
 import { getDebug } from './util/debug';
 import { GwHttp } from './lib/gateway';
 
-const prefixLength = `${ProjectDir}/src/faas`.length;
+const prefixLength = `${ProjectDir}/${MoundDir}/faas`.length;
 const debug = getDebug(module);
 const JWT: string | undefined = process.env.JWT;
 let testSeq: number = 0;

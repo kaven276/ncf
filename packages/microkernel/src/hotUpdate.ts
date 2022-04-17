@@ -2,9 +2,9 @@ import { watch } from 'chokidar';
 import { getDebug } from './util/debug';
 import { updateConfig } from './lib/config';
 import { awaitModule, tryDestroyModule } from './lifecycle';
-import { ProjectDir, jsExt } from './util/resolve';
+import { ProjectDir, jsExt, MoundDir } from './util/resolve';
 import { extname, sep } from 'path';
-const ServiceDir = ProjectDir + '/src/faas';
+const ServiceDir = `${ProjectDir}/${MoundDir}/faas`;
 
 /** 跟踪一个模块是否被初始化过 */
 const loadedSet = new WeakSet<NodeModule>();

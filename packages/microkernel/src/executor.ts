@@ -6,7 +6,7 @@ import { ServiceError, throwServiceError } from './lib/ServiceError';
 import { IFaasModule } from './lib/faas';
 import { getConfigByFaas, proxyTriggerPrefixKey, getDirConfig, ensureFaasConfig } from './lib/config';
 import { IMiddleWare } from './lib/middleware';
-import { ProjectDir, jsExt } from './util/resolve';
+import { ProjectDir, jsExt, MoundDir } from './util/resolve';
 import { getDebug } from './util/debug';
 import assert from 'assert/strict';
 import { registerDep } from './hotUpdate';
@@ -56,7 +56,7 @@ export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promi
   // 输出为 faas 地址，到具体文件名和后缀，可能来自 dir config (proxy faasPath) 或 faas module
   const ext = dirConfig.ext || jsExt;
   // debug(ext, faasPath, extname(faasPath));
-  const tryPath = normalize(`${ProjectDir}/src/faas${faasPath}${mock ? '.mock' : ''}${ext}`);
+  const tryPath = normalize(`${ProjectDir}/${MoundDir}/faas${faasPath}${mock ? '.mock' : ''}${ext}`);
 
   debug('tryPath', tryPath);
 
@@ -74,7 +74,7 @@ export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promi
   });
 
   if (proxyTriggerPrefix && !fassModule.faas) {
-    const dirPath = `${ProjectDir}/src/faas${proxyTriggerPrefix}/index${jsExt}`;
+    const dirPath = `${ProjectDir}/${MoundDir}/faas${proxyTriggerPrefix}/index${jsExt}`;
     const dirModule = await import(dirPath);
     fassModule.faas = dirModule.faas;
   }
@@ -120,7 +120,7 @@ export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promi
 
     // 最终做成像 koa 式的包洋葱中间件
 
-    const middlewares: IMiddleWare[] = await import(`${ProjectDir}/src/faas/index${jsExt}`).then((m) => (m.middlewares)).catch(() => []);
+    const middlewares: IMiddleWare[] = await import(`${ProjectDir}/${MoundDir}/faas/index${jsExt}`).then((m) => (m.middlewares)).catch(() => []);
 
     function runMiddware(n: number): Promise<void> {
       debug(`executing middleware ${n}`);
