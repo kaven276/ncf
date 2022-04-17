@@ -1,4 +1,4 @@
-import { ProjectDir } from '../util/resolve';
+import { ProjectDir, jsExt } from '../util/resolve';
 import { IFaasModule } from '../lib/faas';
 import { getDebug } from '../util/debug';
 import { getCallState } from '../executor';
@@ -30,7 +30,7 @@ export async function getDirConfig(path: string): Promise<IConfig> {
   }
   const parent = (path === '/') ? defaultConfig : (await getDirConfig(dirname(path)));
   // 随后动态加载配置更新
-  const configPath = join(ServiceDir, path, 'index.ts');
+  const configPath = join(ServiceDir, path, 'index' + jsExt);
   const dirModule = await import(configPath).then(async (m: any) => {
     await registerDep(configPath);
     debug('load', path, m);

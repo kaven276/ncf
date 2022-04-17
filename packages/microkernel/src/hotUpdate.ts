@@ -2,7 +2,7 @@ import { watch } from 'chokidar';
 import { getDebug } from './util/debug';
 import { updateConfig } from './lib/config';
 import { awaitModule, tryDestroyModule } from './lifecycle';
-import { ProjectDir } from './util/resolve';
+import { ProjectDir, jsExt } from './util/resolve';
 import { extname, sep } from 'path';
 const ServiceDir = ProjectDir + '/src/faas';
 
@@ -78,7 +78,7 @@ async function collectWhoDependMe(parentModule: NodeModule, whoImportMeStr?: str
   // 反向依赖收集完后，进行本模块的 lifecycle 初始化，确保只进行一次
   await awaitModule(parentModule);
 
-  // if (absFileName.endsWith('/test1.ts')) {
+  // if (absFileName.endsWith('/test1' + jsExt)) {
   //   debug('track', subPath, [...depsMap.get(subPath)!]);
   // }
 }
@@ -97,22 +97,22 @@ function deleteCacheForUpdated(updatedFileName: string) {
   delete require.cache[updatedFileName];
 
   // 如果是目录模块更新，则要更新内部的配置链中的节点
-  if (updatedFileName.endsWith(sep + 'index.ts')) {
+  if (updatedFileName.endsWith(sep + 'index' + jsExt)) {
     updateConfig(updatedFileName);
   }
 
   // 回溯再无引用者，则退出
   const importers = depsMap.get(updatedFileName);
-  // if (updatedFileName.endsWith('/test1.ts')) {
+  // if (updatedFileName.endsWith('/test1' + jsExt)) {
   //   debug('on delete importers', updatedFileName, importers);
   // }
 
   depsMap.delete(updatedFileName); // 依赖自己的部分全完成
 
   if (!importers) {
-    if (!updatedFileName.endsWith('./test.ts')) {
+    if (!updatedFileName.endsWith('./test' + jsExt)) {
       debug('top depender modified', updatedFileName);
-      const testPath = updatedFileName.replace(/\.ts/, '.test.ts');
+      const testPath = updatedFileName.replace(jsExt, '.test' + jsExt);
       import(testPath).catch(e => {
         if (e.code === 'MODULE_NOT_FOUND') {
           return;

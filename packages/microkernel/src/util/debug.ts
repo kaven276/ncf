@@ -1,6 +1,6 @@
 import { debug } from 'debug';
 import Module from 'module';
-import { ProjectDir } from './resolve';
+import { ProjectDir, jsExt } from './resolve';
 import { sep, basename } from 'path';
 
 const len = ProjectDir.length;
@@ -12,7 +12,7 @@ export function getDebug(m: Module) {
     const restPath = m.filename.substring(len);
     // console.log('restPath', restPath,  m.filename, m.id);
     const sects = restPath.split(sep);
-    sects[sects.length - 1] = basename(sects[sects.length - 1], '.ts');
+    sects[sects.length - 1] = basename(sects[sects.length - 1], jsExt);
     if (sects[1] === 'src') {
       if (sects[2] === 'faas') {
         // svc: / 后面带空格，方便 vscode 直接 option click 调转到输出日志的源码文件

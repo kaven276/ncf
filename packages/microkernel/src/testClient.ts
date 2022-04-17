@@ -1,4 +1,4 @@
-import { ProjectDir } from './util/resolve';
+import { ProjectDir, jsExt } from './util/resolve';
 import { execute } from './executor';
 import { Service } from './lib/faas';
 import { getDebug } from './util/debug';
@@ -12,7 +12,7 @@ let testSeq: number = 0;
 /** 各个 faas unit 测试模块使用 */
 export async function test(module: NodeModule, req?: any) {
   testSeq += 1;
-  const faasPath = module.filename.substring(prefixLength).replace('.test.ts', '');
+  const faasPath = module.filename.substring(prefixLength).replace('.test' + jsExt, '');
   debug('testing', testSeq, faasPath, req);
   const response = await execute({
     faasPath,
