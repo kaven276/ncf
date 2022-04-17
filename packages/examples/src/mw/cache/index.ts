@@ -11,18 +11,20 @@ declare module '@ncf/microkernel' {
 }
 
 export interface CacheConfig {
-  /** 缓存最大有效的毫秒数 */  maxAge: number,
+  /** 缓存最大有效的毫秒数 */
+  maxAge: number,
 }
 
 const configKey = Symbol('Cache');
 
 const defaultConfig: CacheConfig = {
-  maxAge: 3000,
+  /** 默认1分钟缓存有效期 */
+  maxAge: 60 * 1000,
 }
 
 interface CachedItem {
   content: any,
-  createdAt: Date,
+  createdAt: number,
   hitCount: number,
 }
 type OneFaasCache = Map<string, CachedItem>;
@@ -43,19 +45,25 @@ export const mwCache: IMiddleWare = async (ctx, next) => {
       }
       let cached = faasCache.get(cacheKey);
       if (cached) {
-        cached.hitCount += 1;
-        ctx.response = cached.content;
-        debug(`${ctx.path}, ${cacheKey} cache hit ${cached.hitCount} times`);
-        return;
+        if (Date.now() - cached.createdAt < config.maxAge) {
+          cached.hitCount += 1;
+          ctx.response = cached.content;
+          debug(`${ctx.path}, ${cacheKey} cache hit ${cached.hitCount} times`);
+          return;
+        } else {
+          debug(`${ctx.path}, ${cacheKey} cache over maxAge`);
+        }
       } else {
-        await next();
-        cached = {
-          content: ctx.response,
-          createdAt: new Date(),
-          hitCount: 0,
-        };
-        faasCache.set(cacheKey, cached);
+        debug(`${ctx.path}, ${cacheKey} cache miss`);
       }
+      await next();
+      cached = {
+        content: ctx.response,
+        createdAt: Date.now(),
+        hitCount: cached ? cached.hitCount : 0,
+      };
+      debug(`${ctx.path}, ${cacheKey} cache save`);
+      faasCache.set(cacheKey, JSON.parse(JSON.stringify(cached)));
     }
   } else {
     await next();
