@@ -1,6 +1,6 @@
 import { People } from "entity/virus/People";
 import type { Person } from 'entity/virus/types';
-import { getDataSource } from '@ncf/baas-typeorm';
+import ds from '.';
 import { throwServiceError } from '@ncf/microkernel';
 
 interface IRequest {
@@ -10,7 +10,6 @@ interface IRequest {
 
 /** 登记新冠管理的人员信息 */
 export const faas = async (req: IRequest) => {
-  const ds = await getDataSource();
 
   const testeeRepo = ds.getRepository(People);
   let testee = await testeeRepo.find({
