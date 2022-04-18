@@ -6,8 +6,9 @@
   "main": "index.ts",
   "scripts": {
     "build": "tsc",
-    "dev": "ts-node index.ts",
-    "start": "ts-node --transpile-only index.ts"
+    "dev": "ts-node src/index.ts",
+    "start": "ts-node --transpile-only src/index.ts",
+    "start2": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register dist"
   },
   "peerDependencies": {
     "@elastic/elasticsearch": "^8.1.0",
