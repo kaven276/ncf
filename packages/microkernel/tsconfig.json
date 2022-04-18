@@ -11,11 +11,15 @@
       "experimentalDecorators": true,
       "isolatedModules": true,
       "sourceMap": true,
+      "rootDir": "src",
       "baseUrl": "./src",
       "paths": {
         "src/*": ["*"]
       }
    },
+   "include": [
+     "src"
+   ],
    "ts-node": {
      "compilerOptions": {
        "strictNullChecks": false
