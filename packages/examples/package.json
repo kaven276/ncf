@@ -5,7 +5,9 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start": "ts-node index.ts"
+    "build": "tsc",
+    "dev": "ts-node index.ts",
+    "start": "ts-node --transpile-only index.ts"
   },
   "peerDependencies": {
     "@elastic/elasticsearch": "^8.1.0",
