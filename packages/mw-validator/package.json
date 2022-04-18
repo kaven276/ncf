@@ -1,9 +1,15 @@
 {
   "name": "@ncf/mw-validator",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "request/response validator for NCF by ajv or manually",
-  "main": "index.ts",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
+    "build": "tsc",
+    "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -9,12 +9,14 @@
       "declaration": true,
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
+      "isolatedModules": true,
       "sourceMap": true,
-      "baseUrl": "./src",
-      "paths": {
-        "src/*": ["*"]
-      }
+      "rootDir": "src",
+      "baseUrl": "./src"
    },
+   "include": [
+     "src"
+   ],
    "ts-node": {
      "compilerOptions": {
        "strictNullChecks": false
