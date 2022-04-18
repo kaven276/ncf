@@ -1,12 +1,12 @@
 import { createRequestListener } from '@ncf/microkernel';
 import { createKoaApp } from '@ncf/gateway-koa';
 import { createServer } from 'http';
-import '@ncf/loader-cfg-json5';
-import '@ncf/loader-cfg-yaml';
-import '@ncf/loader-cfg-xml';
-import '@ncf/loader-cfg-markdown';
-import '@ncf/loader-sql-pg';
-import { env } from './src/env';
+// import '@ncf/loader-cfg-json5';
+// import '@ncf/loader-cfg-yaml';
+// import '@ncf/loader-cfg-xml';
+// import '@ncf/loader-cfg-markdown';
+// import '@ncf/loader-sql-pg';
+import { env } from './env';
 
 // 作为应用模块使用，不被 import/require，否则退出
 if (require.main !== module) {
