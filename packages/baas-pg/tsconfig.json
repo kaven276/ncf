@@ -1,0 +1,26 @@
+{
+   "compilerOptions": {
+      "target": "es2018",
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "esModuleInterop": true,
+      "strictNullChecks": true,
+      "outDir": "./dist",
+      "declaration": true,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "isolatedModules": true,
+      "sourceMap": true,
+      "rootDir": "src",
+      "baseUrl": "./src"
+   },
+   "include": [
+     "src"
+   ],
+   "ts-node": {
+     "compilerOptions": {
+       "strictNullChecks": false
+     },
+    "require": ["tsconfig-paths/register"]
+  }
+}

@@ -1,12 +1,17 @@
 {
   "name": "@ncf/pg",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "nodejs pg 的连接池 baas 供应",
-  "main": "index.ts",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "peerDependencies": {
     "pg": "^8.7.3"
   },
   "scripts": {
+    "build": "tsc",
+    "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
