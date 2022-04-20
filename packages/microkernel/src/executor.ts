@@ -12,6 +12,7 @@ import assert from 'assert/strict';
 import { registerDep } from './hotUpdate';
 import { normalize } from 'path';
 import { GwExtras } from './lib/gateway';
+import { processLaterFaasCalls } from './laterCall';
 
 const debug = getDebug(module);
 
@@ -111,6 +112,7 @@ export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promi
     response: null,
     fassModule,
     trans: [],
+    laterFaasCalls: [],
     gw: gwExtras,
   };
   const resp = asyncLocalStorage.run<Promise<any>, ICallState[]>(als, async () => {
@@ -138,6 +140,10 @@ export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promi
 
     try {
       await runMiddware(0);
+
+      // 处理 later faas calls，前提是主体事务成功了，放到主体事务提交前完成，确保如果写任务队列失败了，主体事务可以得到回滚
+      await processLaterFaasCalls(store);
+
       // 一切执行成功无异常后，自动提交事务
       store.trans.length && debug('trans committing');
       await Promise.all(store.trans.map(tran => tran.commit()));

@@ -17,4 +17,5 @@ export { getConfig } from './lib/config';
 export { getDebug } from './util/debug';
 export { test } from './testClient';
 export { innerCall, runFaasAsTask } from './innerCall';
+export { laterCall, setEnqueue } from './laterCall';
 export { resolved, waitReady } from './lifecycle';

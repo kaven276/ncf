@@ -1,5 +1,5 @@
 
-import { IFaasModule } from './faas';
+import { IFaasModule, Service, IApi } from './faas';
 import type { GwExtras } from './gateway';
 
 export interface TransactionDealer {
@@ -7,6 +7,12 @@ export interface TransactionDealer {
   commit: () => void;
   /** 回滚 */
   rollback: () => void;
+}
+
+interface LaterFaasCall<T extends IApi = IApi> {
+  faas: Service<T>
+  request: any,
+  delay?: number,
 }
 
 /** 服务调用期间的全部内容 */
@@ -25,5 +31,7 @@ export interface ICallState {
   fassModule: IFaasModule,
   /** 跟踪发生的带提交或回滚的事务清单 */
   readonly trans: TransactionDealer[],
+  /** 跟踪参与事务的弱 faas call */
+  laterFaasCalls: LaterFaasCall[],
   gw: GwExtras,
 };

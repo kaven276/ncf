@@ -11,6 +11,7 @@
     "packages/baas-typeorm",
     "packages/baas-pg",
     "packages/baas-ioredis",
+    "packages/scheduler-redis",
     "packages/examples",
     "packages/loader-cfg-json5",
     "packages/loader-cfg-yaml",
