@@ -21,7 +21,7 @@ class Task {
 }
 
 /** 给应用代码调用其他 faas 服务使用，对不需要立即同步执行的 faas 调用暂存，等主体事务成功后再处理 */
-export function laterCall<T extends IApi>(faas: Service<T>, request: T["request"], delay?: number) {
+export function laterCall<T extends Service<IApi>>(faas: T, request: Parameters<T>[0], delay?: number) {
   const ctx = getCallState();
   ctx.laterFaasCalls.push({
     faas,
