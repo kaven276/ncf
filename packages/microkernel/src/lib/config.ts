@@ -1,4 +1,4 @@
-import { ProjectDir, jsExt, MoundDir} from '../util/resolve';
+import { ProjectDir, jsExt, MoundDir } from '../util/resolve';
 import { IFaasModule } from '../lib/faas';
 import { getDebug } from '../util/debug';
 import { getCallState } from '../executor';
@@ -36,7 +36,10 @@ export async function getDirConfig(path: string): Promise<IConfig> {
     debug('load', path, m);
     return m;
   }).catch((e) => {
-    debug('config not exists for dir', path, configPath, e);
+    // debug('config not exists for dir', path, configPath);
+    if (e.code !== 'MODULE_NOT_FOUND') {
+      console.dir(e);
+    }
     return {};
   });
 
