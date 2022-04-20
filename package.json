@@ -26,5 +26,9 @@
   },
   "dependencies": {
   },
-  "scripts": {}
+  "scripts": {
+    "clean": "lerna run clean --stream",
+    "build": "lerna run build --stream",
+    "postinstall": "yarn build"
+  }
 }

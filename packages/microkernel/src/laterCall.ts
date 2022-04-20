@@ -56,7 +56,7 @@ export async function processLaterFaasCalls(ctx: ICallState): Promise<void> {
       }
     }
     // 需要确保写队列，写队列成功后，则认为任务最重将完成
-    await selectedEnqueue(task.faas.faasPath, task.request, task.delay);
+    await selectedEnqueue(task.faas.faasPath!, task.request, task.delay);
   }));
   await tasks;
 }
