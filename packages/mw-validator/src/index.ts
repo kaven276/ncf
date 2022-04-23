@@ -16,6 +16,15 @@ declare module '@ncf/microkernel' {
   }
 }
 
+export const showApiJsonSchema: IMiddleWare = async (ctx, next) => {
+  const isShow = '$schema' in ctx.request;
+  if (isShow) {
+    ctx.response = ctx.fassModule.schema;
+  } else {
+    await next();
+  }
+}
+
 /** 校验请求响应规格，内置 ajv 校验 json schema 配置 */
 export const validate: IMiddleWare = async (ctx, next) => {
   const fassModule = ctx.fassModule;

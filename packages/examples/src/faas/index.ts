@@ -1,6 +1,6 @@
 import { makeRe } from 'minimatch';
 import { IMiddleWare } from '@ncf/microkernel';
-import { validate } from '@ncf/mw-validator';
+import { validate, showApiJsonSchema } from '@ncf/mw-validator';
 import { logTimeUse } from 'src/mw/logTimeUse';
 import { collectTimes } from 'src/mw/apm';
 import { jwtMiddleware, setJWT, getJWT, getJWTStruct } from '@ncf/mw-jwt';
@@ -27,6 +27,7 @@ export const checkAuth: IMiddleWare = async (ctx, next) => {
 
 
 export const middlewares = [
+  showApiJsonSchema,
   i18nMiddleware,
   // jwtMiddleware,
   mwLoggerWinston,
