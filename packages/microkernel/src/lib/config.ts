@@ -21,6 +21,13 @@ export interface IConfig {
   [proxyTriggerPrefixKey]?: string,
 }
 
+declare module './faas' {
+  interface IFaasModule {
+    /** faas 服务模块可能带有配置 */
+    config?: IConfig,
+  }
+}
+
 const defaultConfig: IConfig = {};
 const dirMap = new Map<string, IConfig>();
 export async function getDirConfig(path: string): Promise<IConfig> {

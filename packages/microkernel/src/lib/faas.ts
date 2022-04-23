@@ -1,7 +1,5 @@
 import { IncomingMessage } from 'http';
 
-import { IConfig } from './config';
-
 export interface IApi {
   path: string,
   request?: any,
@@ -17,6 +15,4 @@ export type Service<T extends { path: string, request?: any, response?: any }> =
 export interface IFaasModule {
   fake: boolean,
   faas: Service<any>,
-  /** faas 服务模块可能带有配置 */
-  config?: IConfig,
 }
