@@ -73,6 +73,7 @@ export function updateConfig(absPath: string) {
 
     // 先删除之前 prototype chain node 上的配置；因为只有开发时热更新用，无需考虑处理性能
     Object.getOwnPropertySymbols(config).forEach(symbolKey => {
+      //@ts-ignore
       delete config[symbolKey];
     });
     if (dirModule.config) {
@@ -109,5 +110,6 @@ export function getConfigByFaas(fassModule: IFaasModule): IConfig | undefined {
 /** 获取当前 faas 的指定项的配置 */
 export function getConfig(s: symbol, ctx?: ICallState): any {
   const { fassModule } = ctx || getCallState();
+  //@ts-ignore
   return getConfigByFaas(fassModule)?.[s];
 }
