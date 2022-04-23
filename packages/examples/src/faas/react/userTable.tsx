@@ -2,7 +2,6 @@ import React from 'react';
 import { User } from "entity/User";
 import { faas as findUsers } from '../typeorm/hr/findUsers';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { innerCall } from '@ncf/microkernel';
 
 const header = (
   <thead>
@@ -30,7 +29,7 @@ interface IRequest {
 export async function faas(req: IRequest) {
   // return innerCall(findUsers, req);
   //@ts-ignore
-  const users: User[] = await innerCall(findUsers, req);
+  const users: User[] = await findUsers(req);
   const rows = users.map(user => (
     <tr key={user.id}>
       <td>{user.firstName}</td>
