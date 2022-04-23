@@ -1,6 +1,6 @@
 {
   "name": "@ncf/mw-validator",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "request/response validator for NCF by ajv or manually",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
