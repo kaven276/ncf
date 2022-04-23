@@ -13,6 +13,7 @@ import { registerDep } from './hotUpdate';
 import { normalize } from 'path';
 import { GwExtras } from './lib/gateway';
 import { processLaterFaasCalls } from './laterCall';
+import { getFaasTsSpec } from './lib/getFaasTsSpec';
 
 const debug = getDebug(module);
 
@@ -43,6 +44,10 @@ export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promi
   const { faasPath, request, stream, mock } = income;
   idSeq += 1;
   debug(`request ${idSeq} ${faasPath} coming...`);
+
+  if ('$tspec' in request) {
+    return getFaasTsSpec(faasPath, gwExtras);
+  }
 
   const dirConfig = await getDirConfig(dirname(faasPath));
   /** 即便是代理，依然尝试加载 faas 模块，因为里面可能有请求响应校验和其他配置，虽然没有 export faas */
