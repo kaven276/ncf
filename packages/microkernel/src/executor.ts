@@ -1,6 +1,6 @@
-import { IncomingMessage } from 'http';
-import { dirname } from 'path';
-import { AsyncLocalStorage } from 'async_hooks';
+import { IncomingMessage } from 'node:http';
+import { dirname } from 'node:path';
+import { AsyncLocalStorage } from 'node:async_hooks';
 import { ICallState } from './lib/callState';
 import { ServiceError, throwServiceError } from './lib/ServiceError';
 import { IFaasModule } from './lib/faas';
@@ -14,6 +14,7 @@ import { normalize } from 'path';
 import { GwExtras } from './lib/gateway';
 import { processLaterFaasCalls } from './laterCall';
 import { getFaasTsSpec } from './lib/getFaasTsSpec';
+import { notifyWaiter } from './flow';
 
 const debug = getDebug(module);
 
@@ -153,6 +154,9 @@ export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promi
       store.trans.length && debug('trans committing');
       await Promise.all(store.trans.map(tran => tran.commit()));
       store.trans.length && debug('trans committed');
+
+      // 正常执行完 faas，可以通知 flow step waiter
+      notifyWaiter(als);
 
       // 正常返回响应
       return als.response;
