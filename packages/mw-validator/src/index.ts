@@ -1,34 +1,42 @@
 import { IMiddleWare } from '@ncf/microkernel';
-import { throwServiceError } from '@ncf/microkernel';
+import { throwServiceError, IApi } from '@ncf/microkernel';
 import Ajv from 'ajv';
 import { JSONSchemaType, ValidateFunction } from 'ajv';
 
-declare module '@ncf/microkernel' {
-  export interface IFaasModule {
-    checkRequest?: ValidateFunction,
-    checkResponse?: ValidateFunction,
-    requestSchema?: JSONSchemaType<any>,
-    responseSchema?: JSONSchemaType<any>,
-  }
+export interface Schema<T extends IApi> {
+  checkRequest?: ValidateFunction<T["request"]>,
+  checkResponse?: ValidateFunction<T["response"]>,
+  requestSchema?: JSONSchemaType<T["request"]>,
+  responseSchema?: JSONSchemaType<T["response"]>,
 }
 
+declare module '@ncf/microkernel' {
+  export interface IFaasModule<T> {
+    schema?: Schema<T>,
+  }
+}
 
 /** 校验请求响应规格，内置 ajv 校验 json schema 配置 */
 export const validate: IMiddleWare = async (ctx, next) => {
   const fassModule = ctx.fassModule;
+  const schema = fassModule.schema;
+  if (!schema) {
+    await next();
+    return;
+  }
 
   // // 校验请求规格
-  if (fassModule.requestSchema && !fassModule.checkRequest) {
+  if (schema.requestSchema && !schema.checkRequest) {
     const ajv = new Ajv({ useDefaults: true, coerceTypes: true });
-    fassModule.checkRequest = ajv.compile(fassModule.requestSchema);
+    schema.checkRequest = ajv.compile(schema.requestSchema);
     // console.log('fassAsync.checkRequest', fassAsync.requestSchema, request);
   }
 
-  if (fassModule.checkRequest) {
+  if (schema.checkRequest) {
     try {
-      if (fassModule.checkRequest(ctx.request) === false) {
+      if (schema.checkRequest(ctx.request) === false) {
         throwServiceError(400, 'request invalid', {
-          errors: fassModule.checkRequest.errors
+          errors: schema.checkRequest.errors
         })
       }
     } catch (e: any) {
@@ -40,15 +48,15 @@ export const validate: IMiddleWare = async (ctx, next) => {
   await next();
 
   // 校验结果规格
-  if (fassModule.responseSchema && !fassModule.checkResponse) {
+  if (schema.responseSchema && !schema.checkResponse) {
     const ajv = new Ajv();
-    fassModule.checkResponse = ajv.compile(fassModule.responseSchema);
+    schema.checkResponse = ajv.compile(schema.responseSchema);
   }
-  if (fassModule.checkResponse) {
+  if (schema.checkResponse) {
     try {
-      if (fassModule.checkResponse(ctx.response) === false) {
+      if (schema.checkResponse(ctx.response) === false) {
         throwServiceError(500, 'response invalid', {
-          errors: fassModule.checkResponse.errors,
+          errors: schema.checkResponse.errors,
         });
       }
     } catch (e: any) {

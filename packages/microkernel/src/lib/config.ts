@@ -22,7 +22,7 @@ export interface IConfig {
 }
 
 declare module './faas' {
-  interface IFaasModule {
+  interface IFaasModule<T> {
     /** faas 服务模块可能带有配置 */
     config?: IConfig,
   }
