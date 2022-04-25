@@ -1,4 +1,4 @@
-import redis from 'src/baas/ioredis/redisdb1.baas';
+import redis from '.';
 
 interface IRequest {
   key: string,
