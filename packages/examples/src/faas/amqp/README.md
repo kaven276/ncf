@@ -6,4 +6,8 @@
 * 客户端推送。send(userId, msgType, msgContent) 到队列，队列在找到对应的 websocket nodejs cluster 中指定节点将消息推送到用户客户端。
 * 工作流节点完成消息进入队列，然后路由到指定 nodejs 上改 work flow 异步函数执行实例中，驱动流程继续处理。
 
-参考 https://github.com/coolliyong/node_rabbitMQ_mqtutorial
+参考 
+* https://github.com/coolliyong/node_rabbitMQ_mqtutorial
+* https://github.com/amqp-node/amqplib/tree/main/examples/tutorials
+* https://www.rabbitmq.com/getstarted.html
+* https://amqp-node.github.io/amqplib/
