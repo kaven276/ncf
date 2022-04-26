@@ -9,6 +9,9 @@
   "peerDependencies": {
     "pg": "^8.7.3"
   },
+  "dependencies": {
+    "@ncf/microkernel": "*"
+  },
   "scripts": {
     "build": "tsc",
     "prepublish": "npm run build",

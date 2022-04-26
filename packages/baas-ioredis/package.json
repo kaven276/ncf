@@ -9,6 +9,9 @@
   "peer-dependencies": {
     "ioredis": "^5.0.3"
   },
+  "dependencies": {
+    "@ncf/microkernel": "*"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC"

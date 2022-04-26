@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ncf/microkernel": "*",
     "ajv": "^8.10.0"
   }
 }

@@ -14,6 +14,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "@ncf/microkernel": "*"
+  },
   "peerDependencies": {
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.3"
