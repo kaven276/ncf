@@ -15,18 +15,13 @@
     "@ncf/ioredis": "*",
     "@ncf/microkernel": "*",
     "@ncf/pg": "*",
-    "@ncf/typeorm": "*"
-  },
-  "dependencies": {
-    "@ncf/microkernel": "*",
-    "@ncf/baas-ioredis": "*",
-    "@ncf/baas-pg": "*",
-    "@ncf/baas-typeorm": "*",
-    "@ncf/mw-validator": "*",
+    "@ncf/typeorm": "*",
     "@ncf/loader-cfg-json5": "*",
     "@ncf/loader-cfg-markdown": "*",
     "@ncf/loader-cfg-xml": "*",
-    "@ncf/loader-cfg-yaml": "*",
+    "@ncf/loader-cfg-yaml": "*"
+  },
+  "dependencies": {
     "@elastic/elasticsearch": "^8.1.0",
     "amqplib": "^0.8.0",
     "elasticsearch": "^16.7.3",
