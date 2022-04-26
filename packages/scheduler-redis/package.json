@@ -6,7 +6,7 @@
   "directories": {},
   "scripts": {
     "dev": "ts-node --transpile-only src/index.ts",
-    "build": "tsc",
+    "build": "echo tsc",
     "start": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register dist",
     "test": "ts-node test"
   },
