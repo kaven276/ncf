@@ -13,7 +13,7 @@ const data: IData[] = [{
   age: 4,
 }]
 
-/** 测试从 asyncLocalStorage 中拿到 jwt 信息，用户标识等等 */
+/** 批量项指定的 index 上插入数据 */
 export async function faas() {
   try {
     return await client.bulk({

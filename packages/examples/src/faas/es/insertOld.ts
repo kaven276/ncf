@@ -13,7 +13,7 @@ const data: IData[] = [{
 }]
 
 
-/** 测试从 asyncLocalStorage 中拿到 jwt 信息，用户标识等等 */
+/** 使用老 es client 测试到老 5x es 的联通性和批量插入*/
 export async function faas() {
   await client.ping({ requestTimeout: 1000 }).catch((err) => {
     console.log('ping elastic server err', err);
