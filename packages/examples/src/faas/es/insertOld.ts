@@ -1,4 +1,4 @@
-import client from 'src/baas/elasticsearch/es2.baas';
+import client from 'src/baas/elasticsearch/es1.baas';
 
 interface IData {
   name: string,
@@ -12,9 +12,10 @@ const data: IData[] = [{
   age: 4,
 }]
 
+
 /** 测试从 asyncLocalStorage 中拿到 jwt 信息，用户标识等等 */
 export async function faas() {
-  await client.ping({}).catch((err) => {
+  await client.ping({ requestTimeout: 1000 }).catch((err) => {
     console.log('ping elastic server err', err);
   });
   await client.bulk({ body: data }).then(resp => {

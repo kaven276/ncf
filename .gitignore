@@ -14,3 +14,4 @@ yarn.lock
 .DS_Store
 /packages/examples/src/baas/typeorm/demousers.sql
 log/
+memo.md

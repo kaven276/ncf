@@ -1,4 +1,5 @@
-import client from 'src/baas/elasticsearch/es1.baas';
+import client from 'src/baas/elasticsearch/elk.baas';
+import { indexName } from './constant';
 
 interface IData {
   name: string,
@@ -12,16 +13,14 @@ const data: IData[] = [{
   age: 4,
 }]
 
-
 /** 测试从 asyncLocalStorage 中拿到 jwt 信息，用户标识等等 */
 export async function faas() {
-  await client.ping({ requestTimeout: 1000 }).catch((err) => {
-    console.log('ping elastic server err', err);
-  });
-  await client.bulk({ body: data }).then(resp => {
-    console.log('insert buld resp', resp);
-  }).catch(console.error);
-  return {
-    'test': 'elastic',
+  try {
+    return await client.bulk({
+      refresh: 'true',
+      body: data.flatMap(doc => [{ index: { _index: indexName } }, doc])
+    });
+  } catch (e) {
+    return e;
   }
 }
