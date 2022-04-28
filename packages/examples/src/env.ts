@@ -1,9 +1,6 @@
-import { config } from 'dotenv';
 import { JSONSchemaType } from 'ajv';
 import Ajv from 'ajv';
 import type { Languages } from 'src/i18n'
-
-config();
 
 /** 本应用需要使用的全部环境变量在此定义，这也是 full typescript coverage 的一部分 */
 interface ENV {

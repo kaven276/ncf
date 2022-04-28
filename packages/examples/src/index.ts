@@ -1,4 +1,4 @@
-import './env'; // 必须在最开始引用，为了让 .env 先生效
+import 'dotenv/config';
 import { createRequestListener } from '@ncf/microkernel';
 import { createKoaApp } from '@ncf/gateway-koa';
 import { createServer } from 'http';
