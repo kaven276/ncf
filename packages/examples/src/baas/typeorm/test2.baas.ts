@@ -3,12 +3,8 @@ import { env } from 'src/env';
 
 let baas = createDataSource({
   type: "postgres",
-  host: env.BAAS_HOST,
-  port: 25432,
-  database: 'pgsqlib',
-  schema: 'test1',
-  username: "test1",
-  password: "test1",
+  url: env.TYPEORM_URL,
+  schema: env.ORM_PG_SCHEMA,
   synchronize: true,
   logging: true,
   entities: ["src/baas/typeorm/entity/**/*.ts"],

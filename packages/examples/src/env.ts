@@ -18,6 +18,9 @@ interface ENV {
   TYPEORM_URL: string,
   /** ORM postgres schema */
   ORM_PG_SCHEMA: string,
+  /** 按照每人一个 schema 创建的试验环境 */
+  TYPEORM_URL3: string,
+  ORM_PG_SCHEMA3: string,
   /** postgres 使用 pg 链接的 url */
   PG_URL: string,
   /** redis url */
@@ -39,6 +42,8 @@ const envSchema: JSONSchemaType<ENV> = {
 
     TYPEORM_URL: { type: 'string', default: 'postgresql://test1:test1@localhost:25432/pgsqlib' },
     ORM_PG_SCHEMA: { type: 'string' },
+    TYPEORM_URL3: { type: 'string' },
+    ORM_PG_SCHEMA3: { type: 'string' },
     PG_URL: { type: 'string', default: 'postgresql://test1:test1@localhost:25432/pgsqlib' },
     REDIS_URL: { type: 'string', default: 'redis://localhost:6379/0' },
     AMQP_URL: { type: 'string', default: 'amqp://admin:admin@localhost:5672' },
