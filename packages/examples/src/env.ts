@@ -12,17 +12,43 @@ interface ENV {
   BAAS_HOST: string,
   /** i18n 默认语言选择，不设置默认中文 */
   DEFAULT_LANG: Languages,
+
+  // - 从下面开始都是 baas 连接定位信息
+  /** typeorm 链接串 */
+  TYPEORM_URL: string,
+  /** ORM postgres schema */
+  ORM_PG_SCHEMA: string,
+  /** postgres 使用 pg 链接的 url */
+  PG_URL: string,
+  /** redis url */
+  REDIS_URL: string,
+  /** AMQP 也即是 rabbitmq url */
+  AMQP_URL: string,
+  /** elastic search url */
+  ES_URL: string,
 };
 
+/** 所有 baas 链接串默认值都是本机默认端口，无用户名密码的或者范例用户名密码的 */
 const envSchema: JSONSchemaType<ENV> = {
   type: "object",
   properties: {
     PORT: { type: "integer", default: 8081, maximum: 65535, minimum: 8000 },
     JWT_EFFECT_TIME: { type: "integer", default: 24 * 60 * 60, maximum: 24 * 60 * 60, minimum: 10 * 60 },
     BAAS_HOST: { type: 'string', default: '127.0.0.1' },
-    DEFAULT_LANG: { type: 'string', enum: ['chinese', 'english'], default: 'chinese' }
+    DEFAULT_LANG: { type: 'string', enum: ['chinese', 'english'], default: 'chinese' },
+
+    TYPEORM_URL: { type: 'string', default: 'postgresql://test1:test1@localhost:25432/pgsqlib' },
+    ORM_PG_SCHEMA: { type: 'string' },
+    PG_URL: { type: 'string', default: 'postgresql://test1:test1@localhost:25432/pgsqlib' },
+    REDIS_URL: { type: 'string', default: 'redis://localhost:6379/0' },
+    AMQP_URL: { type: 'string', default: 'amqp://admin:admin@localhost:5672' },
+    ES_URL: { type: 'string', default: 'http://localhost:9200' },
   },
-  required: ['PORT', 'JWT_EFFECT_TIME'],
+  required: [
+    'PORT',
+    'JWT_EFFECT_TIME',
+    'DEFAULT_LANG',
+  ],
   additionalProperties: false,
 }
 
@@ -42,3 +68,5 @@ try {
 }
 
 export { env };
+
+console.dir(env);

@@ -7,13 +7,9 @@ import { env } from 'src/env';
 
 /** 创建并初始化好的连接池，使用者直接 ts import 即可，不用关系创建和初始化工作 */
 let baas = createDataSource({
+  url: env.TYPEORM_URL,
   type: "postgres",
-  host: env.BAAS_HOST,
-  port: 25432,
-  database: 'pgsqlib',
-  schema: 'test1',
-  username: "test1",
-  password: "test1",
+  schema: env.ORM_PG_SCHEMA,
   synchronize: false,
   logging: false,
   entities: ["src/baas/typeorm/entity/**/*.ts"],

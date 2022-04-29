@@ -15,3 +15,4 @@ yarn.lock
 /packages/examples/src/baas/typeorm/demousers.sql
 log/
 memo.md
+/.env

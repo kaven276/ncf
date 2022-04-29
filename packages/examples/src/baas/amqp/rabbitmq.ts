@@ -1,5 +1,6 @@
 import { createAMQPConnection } from './createAMQPConnection';
+import { env } from 'src/env';
 
-let connection = createAMQPConnection('amqp://admin:admin@localhost:5672');
+let connection = createAMQPConnection(env.AMQP_URL);
 
 export default connection;

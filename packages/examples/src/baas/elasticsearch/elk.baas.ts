@@ -1,9 +1,8 @@
 import { Client } from 'es7';
-
-const IP = '192.168.120.252';
+import { env } from 'src/env';
 
 const client = new Client({
-  node: `http://${IP}:9200`,
+  node: env.ES_URL,
 });
 
 export default client;
