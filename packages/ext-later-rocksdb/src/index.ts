@@ -7,7 +7,7 @@ start();
 process.once('SIGHUP', stop);
 
 const app = createKoaApp().callback();
-export const port = Number(process.env.PORT || 7779);
+export const port = Number(process.env.PORT || 7999);
 
 /** 监听启用成功后 promise resolve 到监听端口数字 */
 export const serverPromise = new Promise<number>(resolve => {
