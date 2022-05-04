@@ -9,6 +9,10 @@ let db = levelup(encode<string, LaterTaskTuple>(rocksdb('./db/myRocksDb'), {
   valueEncoding: 'json'
 }));
 
+process.once('SIGHUP', () => {
+  db.close();
+});
+
 //@ts-ignore
 if (!db.supports.permanence) {
   throw new Error('Persistent storage is required')
