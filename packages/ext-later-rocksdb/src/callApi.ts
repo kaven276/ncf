@@ -32,6 +32,7 @@ export async function callApi(path: string, req: any): Promise<unknown> {
       if (statusCode >= 200 && statusCode < 300) {
         resolve(resp.statusCode);
       } else {
+        console.error('call error', path, req);
         reject(resp.statusCode);
       }
     });

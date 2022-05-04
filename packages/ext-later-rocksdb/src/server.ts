@@ -1,7 +1,7 @@
 import Koa from 'koa';
 import koaBody from 'koa-body';
 import { LaterTaskTuple } from './spec';
-import db from './db';
+import db, { random } from './db';
 import { lastTick } from './executor';
 
 /** 接受来自 NCF 的延迟调用请求信息 */
@@ -41,7 +41,7 @@ function useLater() {
       // 1651633465955 origin r[2]
       // 1651633460216 modified lastTick
       r[2] = r[2] ?? dueTime;
-      return { type: 'put' as 'put', key: String(dueTime), value: r };
+      return { type: 'put' as 'put', key: String(dueTime) + random(), value: r };
     });
     // console.log('tasks');
     // console.dir(tasks);

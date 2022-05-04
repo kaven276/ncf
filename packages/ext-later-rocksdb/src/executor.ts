@@ -1,5 +1,5 @@
 // 延时任务执行器
-import db from './db';
+import db, { random } from './db';
 import { LaterTaskTuple } from './spec';
 import { callApi } from './callApi';
 
@@ -19,8 +19,7 @@ const tick = async () => {
   // todo: 如果当前tick任务过多，可能需要控制并发量，不能同时发出过多的请求
   const tasks: any[] = [];
   //@ts-ignore
-  for await (const [key, value] of db.iterator({ lt: String(now) })) {
-    // gte: String(last),
+  for await (const [key, value] of db.iterator({ gte: String(last), lt: String(now) })) {
     tasks.push([key, value]);
   }
   if (tasks.length === 0) return;
@@ -42,7 +41,7 @@ const tick = async () => {
       } else {
         const nextDueTime = dueTime! + lag * 1000;
         // 重新调度，再晚点重新尝试
-        db.put(String(nextDueTime), [path, request, nextDueTime, nextRetry]);
+        db.put(String(nextDueTime) + random(), [path, request, nextDueTime, nextRetry]);
       }
     });
   });
