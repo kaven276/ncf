@@ -1,0 +1,27 @@
+{
+  "name": "@ncf/ext-later-rocksdb",
+  "version": "0.0.0",
+  "description": "延迟服务",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "ts-node --transpile-only src/index.ts",
+    "test": "ts-node --transpile-only test/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "encoding-down": "^7.1.0",
+    "koa": "^2.13.4",
+    "koa-body": "^5.0.0",
+    "levelup": "^5.1.1",
+    "rocksdb": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/encoding-down": "^5.0.0",
+    "@types/koa": "^2.13.4",
+    "@types/levelup": "^5.1.1",
+    "@types/rocksdb": "^3.0.1"
+  }
+}

@@ -6,6 +6,7 @@
   "workspaces": [
     "packages/microkernel",
     "packages/gateway-koa",
+    "packages/ext-later-rocksdb",
     "packages/mw-validator",
     "packages/mw-jwt",
     "packages/baas-typeorm",

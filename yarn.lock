@@ -1034,6 +1034,14 @@
   resolved "https://registry.npmmirror.com/@types/elasticsearch/-/elasticsearch-5.0.40.tgz#811f6954088c264173e0a9876b97933250a4da10"
   integrity sha512-lhnbkC0XorAD7Dt7X+94cXUSHEdDNnEVk/DgFLHgIZQNhixV631Lj4+KpXunTT5rCHyj9RqK3TfO7QrOiwEeUQ==
 
+"@types/encoding-down@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.npmmirror.com/@types/encoding-down/-/encoding-down-5.0.0.tgz#0b5b90b93ac3aa75148f19508044e7bd36463557"
+  integrity sha512-G0MlS/+/U2RIQLcSEhhAcoMrXw3hXUCFSKbhbeEljoKMra2kq+NPX6tfOveSWQLX2hJXBo+YrvKgAGe+tFL1Aw==
+  dependencies:
+    "@types/abstract-leveldown" "*"
+    "@types/level-codec" "*"
+
 "@types/express-serve-static-core@^4.17.18":
   version "4.17.28"
   resolved "https://registry.npmmirror.com/@types/express-serve-static-core/-/express-serve-static-core-4.17.28.tgz"
@@ -1057,6 +1065,13 @@
   version "1.2.5"
   resolved "https://registry.npmmirror.com/@types/formidable/-/formidable-1.2.5.tgz"
   integrity sha512-zu3mQJa4hDNubEMViSj937602XdDGzK7Q5pJ5QmLUbNxclbo9tZGt5jtwM352ssZ+pqo5V4H14TBvT/ALqQQcA==
+  dependencies:
+    "@types/node" "*"
+
+"@types/formidable@^2.0.4":
+  version "2.0.4"
+  resolved "https://registry.npmmirror.com/@types/formidable/-/formidable-2.0.4.tgz#fdda9c4952ac7c7866485fea8e15e2cbcebfcc44"
+  integrity sha512-6HYcnmBCeby/nNGgX9kq1DxUpK2UcB3yoHCr3GzFjjqkpivOdcBSbsXP9NbxLcPEi11Fl/L41rbFCIsteF9sbg==
   dependencies:
     "@types/node" "*"
 
@@ -1112,6 +1127,11 @@
     "@types/keygrip" "*"
     "@types/koa-compose" "*"
     "@types/node" "*"
+
+"@types/level-codec@*":
+  version "9.0.1"
+  resolved "https://registry.npmmirror.com/@types/level-codec/-/level-codec-9.0.1.tgz#b135e0b3da81185b6f27655334c5f1da89b2b0af"
+  integrity sha512-6z7DSlBsmbax3I/bV1Q6jT1nKquDjFl95LURVThdKtwILkRawLYtXdINW19xM95N5kqN2detWb2iGrbUlPwNyw==
 
 "@types/level-errors@*":
   version "3.0.0"
@@ -2314,7 +2334,7 @@ detect-libc@^2.0.0, detect-libc@^2.0.1:
   resolved "https://registry.npmmirror.com/detect-libc/-/detect-libc-2.0.1.tgz#e1897aa88fa6ad197862937fbc0441ef352ee0cd"
   integrity sha512-463v3ZeIrcWtdgIg6vI6XUncguvr2TnGl4SzDXinkt9mSLpBJKXT3mW6xT3VQdDN11+WVs29pgvivTc4Lp8v+w==
 
-dezalgo@^1.0.0:
+dezalgo@1.0.3, dezalgo@^1.0.0:
   version "1.0.3"
   resolved "https://registry.npmmirror.com/dezalgo/-/dezalgo-1.0.3.tgz"
   integrity sha512-K7i4zNfT2kgQz3GylDw40ot9GAE47sFZ9EXHFSPP6zONLgH6kWXE0KWJchkbQJLBkRazq4APwZ4OwiFFlT95OQ==
@@ -2401,6 +2421,16 @@ encodeurl@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmmirror.com/encodeurl/-/encodeurl-1.0.2.tgz"
   integrity sha512-TPJXq8JqFaVYm2CWmPvnP2Iyo4ZSM7/QKcSmuMLDObfpH5fi7RUGmd/rTDf+rut/saiDiQEeVTNgAmJEdAOx0w==
+
+encoding-down@^7.1.0:
+  version "7.1.0"
+  resolved "https://registry.npmmirror.com/encoding-down/-/encoding-down-7.1.0.tgz#8d55b5a20d50eb6f0edaf7233f6aee0ff562386a"
+  integrity sha512-ky47X5jP84ryk5EQmvedQzELwVJPjCgXDQZGeb9F6r4PdChByCGHTBrVcF3h8ynKVJ1wVbkxTsDC8zBROPypgQ==
+  dependencies:
+    abstract-leveldown "^7.2.0"
+    inherits "^2.0.3"
+    level-codec "^10.0.0"
+    level-errors "^3.0.0"
 
 encoding@^0.1.12:
   version "0.1.13"
@@ -2661,6 +2691,16 @@ formidable@^1.1.1:
   version "1.2.6"
   resolved "https://registry.npmmirror.com/formidable/-/formidable-1.2.6.tgz"
   integrity sha512-KcpbcpuLNOwrEjnbpMC0gS+X8ciDoZE1kkqzat4a8vrprf+s9pKNQ/QIwWfbfs4ltgmFl3MD177SNTkve3BwGQ==
+
+formidable@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.npmmirror.com/formidable/-/formidable-2.0.1.tgz#4310bc7965d185536f9565184dee74fbb75557ff"
+  integrity sha512-rjTMNbp2BpfQShhFbR3Ruk3qk2y9jKpvMW78nJgx8QKtxjDVrwbZG+wvDOmVbifHyOUOQJXxqEy6r0faRrPzTQ==
+  dependencies:
+    dezalgo "1.0.3"
+    hexoid "1.0.0"
+    once "1.4.0"
+    qs "6.9.3"
 
 fresh@~0.5.2:
   version "0.5.2"
@@ -2947,6 +2987,11 @@ has@^1.0.3:
   integrity sha512-f2dvO0VU6Oej7RkWJGrehjbzMAjFp5/VKPp5tTpWIV4JHHZK1/BxbFRtf/siA2SWTe09caDmVtYYzWEIbBS4zw==
   dependencies:
     function-bind "^1.1.1"
+
+hexoid@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmmirror.com/hexoid/-/hexoid-1.0.0.tgz#ad10c6573fb907de23d9ec63a711267d9dc9bc18"
+  integrity sha512-QFLV0taWQOZtvIRIAdBChesmogZrtuXvVWsFHZTk2SU+anspqZ2vMnoLg7IE1+Uk16N19APic1BuF8bC8c2m5g==
 
 highlight.js@^10.7.1:
   version "10.7.3"
@@ -3562,6 +3607,15 @@ koa-body@^4.2.0:
     co-body "^5.1.1"
     formidable "^1.1.1"
 
+koa-body@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.npmmirror.com/koa-body/-/koa-body-5.0.0.tgz#d310372bea09a24ccc450c76ca142ee55395dda6"
+  integrity sha512-nHwEODrQGiyKBILCWO8QSS40C87cKr2cp3y/Cw8u9Z8w5t0CdSkGm3+y9WK5BIAlPpo9tTw5RtSbxpVyG79vmw==
+  dependencies:
+    "@types/formidable" "^2.0.4"
+    co-body "^5.1.1"
+    formidable "^2.0.1"
+
 koa-compose@^4.1.0:
   version "4.1.0"
   resolved "https://registry.npmmirror.com/koa-compose/-/koa-compose-4.1.0.tgz"
@@ -3577,7 +3631,7 @@ koa-convert@^2.0.0:
 
 koa@^2.13.4:
   version "2.13.4"
-  resolved "https://registry.npmmirror.com/koa/-/koa-2.13.4.tgz"
+  resolved "https://registry.npmmirror.com/koa/-/koa-2.13.4.tgz#ee5b0cb39e0b8069c38d115139c774833d32462e"
   integrity sha512-43zkIKubNbnrULWlHdN5h1g3SEKXOEzoAlRsHOTFpnlDu8JlAOZSMJBLULusuXRequboiwJcj5vtYXKB3k7+2g==
   dependencies:
     accepts "^1.3.5"
@@ -3633,6 +3687,13 @@ lerna@^4.0.0:
     import-local "^3.0.2"
     npmlog "^4.1.2"
 
+level-codec@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.npmmirror.com/level-codec/-/level-codec-10.0.0.tgz#f9e892770532c6cdcc83529546730791b0c62c12"
+  integrity sha512-QW3VteVNAp6c/LuV6nDjg7XDXx9XHK4abmQarxZmlRSDyXYk20UdaJTSX6yzVvQ4i0JyWSB7jert0DsyD/kk6g==
+  dependencies:
+    buffer "^6.0.3"
+
 level-concat-iterator@^3.0.0:
   version "3.1.0"
   resolved "https://registry.npmmirror.com/level-concat-iterator/-/level-concat-iterator-3.1.0.tgz#5235b1f744bc34847ed65a50548aa88d22e881cf"
@@ -3640,7 +3701,7 @@ level-concat-iterator@^3.0.0:
   dependencies:
     catering "^2.1.0"
 
-level-errors@^3.0.1:
+level-errors@^3.0.0, level-errors@^3.0.1:
   version "3.0.1"
   resolved "https://registry.npmmirror.com/level-errors/-/level-errors-3.0.1.tgz#4bed48a33108cd83b0e39fdf9bbd84e96fbbef9f"
   integrity sha512-tqTL2DxzPDzpwl0iV5+rBCv65HWbHp6eutluHNcVIftKZlQN//b6GEnZDM2CvGZvzGYMwyPtYppYnydBQd2SMQ==
@@ -4477,7 +4538,7 @@ on-finished@^2.3.0:
   dependencies:
     ee-first "1.1.1"
 
-once@^1.3.0, once@^1.3.1, once@^1.4.0:
+once@1.4.0, once@^1.3.0, once@^1.3.1, once@^1.4.0:
   version "1.4.0"
   resolved "https://registry.npm.taobao.org/once/download/once-1.4.0.tgz"
   integrity sha1-WDsap3WWHUsROsF9nFC6753Xa9E=
@@ -4933,6 +4994,11 @@ q@^1.5.1:
   version "1.5.1"
   resolved "https://registry.npmmirror.com/q/-/q-1.5.1.tgz"
   integrity sha512-kV/CThkXo6xyFEZUugw/+pIOywXcDbFYgSct5cT3gqlbkBE1SJdwy6UQoZvodiWF/ckQLZyDE/Bu1M6gVu5lVw==
+
+qs@6.9.3:
+  version "6.9.3"
+  resolved "https://registry.npmmirror.com/qs/-/qs-6.9.3.tgz#bfadcd296c2d549f1dffa560619132c977f5008e"
+  integrity sha512-EbZYNarm6138UKKq46tdx08Yo/q9ZhFoAXAI1meAFd2GtbRDhbZY2WQSICskT0c5q99aFzLG1D4nvTk9tqfXIw==
 
 qs@^6.4.0, qs@^6.9.4:
   version "6.10.3"

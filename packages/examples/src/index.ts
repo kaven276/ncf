@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { createRequestListener } from '@ncf/microkernel';
+import { createRequestListener, setHttpEnqueue } from '@ncf/microkernel';
 import { createKoaApp } from '@ncf/gateway-koa';
 import { createServer } from 'http';
 import './createAndSetEnqueue';
@@ -17,10 +17,17 @@ if (require.main !== module) {
 }
 
 // 使用多个 NCF app 接入层，分别监听不同的端口
-const server1 = createServer(createKoaApp().callback()).listen(env.PORT);
+const server1 = createServer(createKoaApp().callback()).listen(env.PORT, () => {
+  console.log(`listening at ${env.PORT}`);
+});
 const server2 = createServer(createRequestListener()).listen(env.PORT + 1);
 
 process.once('SIGINT', () => {
   server1.close();
   server2.close();
+});
+
+setHttpEnqueue({
+  host: '127.0.0.1',
+  port: process.env.LATER_PORT || 7999,
 });

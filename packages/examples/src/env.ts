@@ -35,7 +35,7 @@ interface ENV {
 const envSchema: JSONSchemaType<ENV> = {
   type: "object",
   properties: {
-    PORT: { type: "integer", default: 8081, maximum: 65535, minimum: 8000 },
+    PORT: { type: "integer", default: 8000, maximum: 65535, minimum: 8000 },
     JWT_EFFECT_TIME: { type: "integer", default: 24 * 60 * 60, maximum: 24 * 60 * 60, minimum: 10 * 60 },
     BAAS_HOST: { type: 'string', default: '127.0.0.1' },
     DEFAULT_LANG: { type: 'string', enum: ['chinese', 'english'], default: 'chinese' },
