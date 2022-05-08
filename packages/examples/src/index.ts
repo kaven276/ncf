@@ -2,7 +2,6 @@ import 'dotenv/config';
 import { createRequestListener, setHttpEnqueue } from '@ncf/microkernel';
 import { createKoaApp } from '@ncf/gateway-koa';
 import { createServer } from 'http';
-import './createAndSetEnqueue';
 // import '@ncf/loader-cfg-json5';
 // import '@ncf/loader-cfg-yaml';
 // import '@ncf/loader-cfg-xml';
