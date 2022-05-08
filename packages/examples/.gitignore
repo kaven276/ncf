@@ -3,3 +3,6 @@
 /db/
 /log/
 /upload/
+/.nyc_output/
+/coverage/
+/src/faas/lang/
