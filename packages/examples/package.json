@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@elastic/elasticsearch": "^7.5.1",
+    "@types/ink-select-input": "^3.0.1",
     "amqplib": "^0.8.0",
     "classic-level": "^1.2.0",
     "dotenv": "^16.0.0",
@@ -33,6 +34,8 @@
     "es7": "npm:@elastic/elasticsearch@~7.5",
     "ink": "^3.2.0",
     "ink-markdown": "^1.0.1",
+    "ink-multi-select": "^2.0.0",
+    "ink-select-input": "^4.2.1",
     "ink-table": "^3.0.0",
     "ink-text-input": "^4.0.3",
     "ioredis": "^5.0.3",
