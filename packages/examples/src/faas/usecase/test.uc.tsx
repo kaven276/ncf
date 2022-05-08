@@ -1,13 +1,15 @@
 // #!/usr/bin/env ts-node --transpile-only
 // yarn unit src/faas/usecase/test.uc.tsx
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { render, Text, Box, useInput, useApp, useFocus } from 'ink';
 import { outerCall } from '@ncf/microkernel';
 import { IUser } from 'src/intf/user';
 import Table from 'ink-table';
 import { UncontrolledTextInput } from 'ink-text-input';
 import Markdown from 'ink-markdown';
+import MultiSelect from 'ink-multi-select';
+import SelectInput from 'ink-select-input';
 import { ISpec as FindUserSpec } from 'src/faas/typeorm/hr/findUsers.spec';
 
 const WELCOME_TEXT = `
@@ -37,7 +39,12 @@ const Counter = () => {
 
   const { isFocused } = useFocus();
   const bgc = isFocused ? 'rgb(232, 131, 136)' : '';
-
+  const nameList = useMemo(() => {
+    return userList.map(u => ({
+      label: `${u.firstName} ${u.lastName ?? ''}`,
+      value: u.firstName,
+    }))
+  }, [userList]);
 
   return (
     <Box width={120} flexDirection="column">
@@ -45,10 +52,11 @@ const Counter = () => {
       <Box borderStyle="classic" display='none'>
         <Text color="blue" backgroundColor={bgc}>{JSON.stringify(userList, null, 2)}</Text>
       </Box>
-      <Box flexDirection="row">
+      <Box flexDirection="row" display='none'>
         <Text>Enter your query:</Text>
         <UncontrolledTextInput onSubmit={(t) => setQuery(t)} placeholder="input username" />
       </Box>
+      <SelectInput items={nameList} onSelect={(item => setQuery(item.value))} />
       <Table data={userList as any[]} />
     </Box>
   )
