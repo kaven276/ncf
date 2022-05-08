@@ -1,12 +1,9 @@
 import { User, UserRole } from "entity/User";
 import ds from '.';
-import { IsNull, LessThan, MoreThan } from "typeorm";
+import { IsNull, LessThan, MoreThan, Like, ILike } from "typeorm";
+import { Service } from '@ncf/microkernel';
+import { ISpec } from './findUsers.spec';
 
-interface IRequest {
-  sex?: User["sex"],
-  showNames?: boolean;
-  onlyFirstName?: string,
-}
 /**
  * 完整测测试 ORM find 参数，包括
  * 1) select/where/order
@@ -14,7 +11,7 @@ interface IRequest {
  * 3) take, skip
  * 4) dynamic query/sql
  */
-export async function faas(req: IRequest) {
+export const faas: Service<ISpec> = async (req) => {
   // 在 async thread 开始时自动进行
   const userRepo = ds.getRepository(User);
   return await userRepo.find({
@@ -37,15 +34,17 @@ export async function faas(req: IRequest) {
       },
       sex: req.sex === 'male', // 动态 sql 在 select 字段上的范例
     },
-    where: [{
-      age: LessThan(30),
-    }, {
-      age: MoreThan(50),
-    }, {
-      lastName: IsNull(),
-      sex: req.sex,
-      firstName: req.onlyFirstName,
-    }],
+    where: req.onlyFirstName ? {
+      firstName: req.onlyFirstName ? ILike('%' + req.onlyFirstName + '%') : undefined,
+    } :
+      [{
+        age: LessThan(30),
+      }, {
+        age: MoreThan(50),
+      }, {
+        lastName: IsNull(),
+        sex: req.sex,
+      }],
     order: {
       age: 'desc',
     },
