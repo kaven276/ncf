@@ -28,6 +28,6 @@ export class ServiceError extends Error {
 
 }
 
-export function throwServiceError(code: number, message: string, data?: any) {
+export function throwServiceError(code: number, message: string, data?: any): never {
   throw new ServiceError(code, message, data);
 }
