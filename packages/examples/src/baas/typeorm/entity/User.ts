@@ -25,12 +25,10 @@ export class User implements IUser {
   @Column()
   firstName!: string;
 
+
   @Index('user_last_name', { unique: false })
   @Column({ nullable: true })
   lastName!: string;
-
-  /** 年龄 */
-  /** 年龄 */
 
   @Column()
   age!: number;
@@ -53,15 +51,20 @@ export class User implements IUser {
   fetech!: FeTechType;
 
   /** 喜好 */
-  /** 喜好 */
-
   @Column("simple-array", { nullable: true })
   likes!: string[];
 
+  /** 用户档案 */
   // @Index('user_nickname', { unique: false })
   @Column("simple-json", { nullable: true })
-  profile!: { name: string; nickname: string; };
+  profile!: {
+    /** 用户真名 */
+    name: string;
+    /** 用户昵称 */
+    nickname: string;
+  };
 
+  /** 用户所属组织(单个或者没有) */
   @ManyToOne(user => Org, {
     nullable: true,
     onDelete: 'SET NULL',

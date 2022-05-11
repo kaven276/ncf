@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryColumn, OneToMany } from "typeorm";
 import { User } from './User';
 
+/** 组织机构 */
 @Entity({ name: 'org' })
 export class Org {
 
@@ -10,6 +11,7 @@ export class Org {
   @Column({ type: 'int4' })
   rank!: number;
 
+  /** 组织名称 */
   @Column({ nullable: false, unique: true})
   orgName!: string;
 
