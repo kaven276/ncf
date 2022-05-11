@@ -1,4 +1,5 @@
-import { test } from '@ncf/microkernel';
+import { innerCall } from '@ncf/microkernel';
 
-test(module, { multi: 10}).then(console.dir);
-// test(module, { multi: 5}).then(console.dir);
+export const faas = async () => {
+  return innerCall('/nested/start', { multi: 10 });
+}

@@ -1,6 +1,6 @@
 import { execute } from './executor';
 import { getDebug } from './util/debug';
-import { Service } from './lib/faas';
+import { Service, IApi } from './lib/faas';
 
 const debug = getDebug(module);
 const JWT: string | undefined = process.env.JWT;
@@ -29,17 +29,12 @@ async function innerCall0(faas: Service<any>, req?: any) {
   return response;
 }
 
-export async function runFaasAsTask(faasPath: string, req?: any) {
-  return innerCall({ faasPath }, req);
-}
-
-
 /** 各个 faas unit 测试模块使用 */
-export async function innerCall(faas: { faasPath: string }, req?: any) {
-  const faasPath: string = faas.faasPath;
+export async function innerCall<T extends IApi>(faas: Service<T> | T["path"], req?: T["request"]): Promise<T["response"]> {
+  const faasPath: string = (typeof faas === 'string') ? faas : faas.faasPath!;
   innerCallSeq += 1;
   debug('inner call', innerCallSeq, faasPath, req);
-  const response = await execute({ faasPath, request: req }, {
+  const response = await execute({ faasPath, request: req || {} }, {
     gwtype: 'http',
     http: {
       //@ts-ignore

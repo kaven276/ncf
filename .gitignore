@@ -18,3 +18,4 @@ memo.md
 /packages/examples/.env
 /packages/expr/
 /packages/autoflow/
+*.resp.json
