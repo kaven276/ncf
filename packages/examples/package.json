@@ -6,6 +6,7 @@
   "main": "index.ts",
   "scripts": {
     "build": "echo tsc",
+    "core": "ts-node src/core.ts",
     "dev": "ts-node src/index.ts",
     "unit": "ts-node --transpile-only",
     "cron": "ts-node --transpile-only src/cron/index.ts",
