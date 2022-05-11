@@ -1,11 +1,10 @@
 import { innerCall } from '@ncf/microkernel';
 import { ISpec } from './findUsers.spec';
-import { faas as findUsers } from './findUsers';
 import tap from 'tap';
 
 const tests = [
-  () => innerCall<ISpec>('/typeorm/hr/findUsers', { onlyFirstName: 'T' }),
-  () => innerCall(findUsers, { onlyFirstName: 'Timber', showNames: true }),
+  () => innerCall<ISpec>('/typeorm/hr/findUsers', { onlyFirstName: 'Li' }),
+  () => innerCall<ISpec>('/typeorm/hr/findUsers', { onlyFirstName: 'Timber', showNames: false }),
   () => innerCall<ISpec>('/typeorm/hr/findUsers', {
     sex: 'male',
     showNames: true,
