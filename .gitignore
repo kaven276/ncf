@@ -16,3 +16,5 @@ yarn.lock
 log/
 memo.md
 /packages/examples/.env
+/packages/expr/
+/packages/autoflow/
