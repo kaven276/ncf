@@ -1,5 +1,5 @@
-import 'dotenv/config';
-import { createRequestListener, setHttpEnqueue } from '@ncf/microkernel';
+import './core';
+import { createRequestListener } from '@ncf/microkernel';
 import { createKoaApp } from '@ncf/gateway-koa';
 import { createServer } from 'http';
 // import '@ncf/loader-cfg-json5';
@@ -26,7 +26,3 @@ process.once('SIGINT', () => {
   server2.close();
 });
 
-setHttpEnqueue({
-  host: '127.0.0.1',
-  port: process.env.LATER_PORT || 7999,
-});
