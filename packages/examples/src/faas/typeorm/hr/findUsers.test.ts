@@ -1,4 +1,4 @@
-import { innerCall } from '@ncf/microkernel';
+import { innerCall, mapCall } from '@ncf/microkernel';
 import { ISpec } from './findUsers.spec';
 import tap from 'tap';
 
@@ -12,8 +12,27 @@ const tests = [
   }),
 ];
 
-export const faas = async () => {
+/** 自己处理多个测试调用范例 */
+export const faas1 = async () => {
   return Promise.all(tests.map(fn => fn()));
+}
+
+/** 直接使用 mapCall 执行多个命名调用测试，使用各自的请求参数 */
+export const faas = async () => {
+  return mapCall<ISpec>('/typeorm/hr/findUsers', {
+    test1: {
+      onlyFirstName: 'Li'
+    },
+    _test2: {
+      onlyFirstName: 'Timber',
+      showNames: false
+    },
+    test3: {
+      sex: 'male',
+      showNames: true,
+      onlyFirstName: 'LiYong',
+    }
+  })
 }
 
 // below is tap test

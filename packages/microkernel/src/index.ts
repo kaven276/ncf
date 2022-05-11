@@ -17,6 +17,7 @@ export { getConfig } from './lib/config';
 export { getDebug } from './util/debug';
 export { addDisposer } from './util/addDisposer';
 export { innerCall } from './innerCall';
+export { mapCall } from './mapCall';
 export { outerCall, setOuterCallAddr } from './outerCall';
 export { laterCall, setEnqueue, setHttpEnqueue } from './laterCall';
 export { resolved, waitReady } from './lifecycle';
