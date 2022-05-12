@@ -15,6 +15,7 @@
     "strictNullChecks": true,
     "strictPropertyInitialization": false,
     "forceConsistentCasingInFileNames": true,
+    "declaration": true,
     "importHelpers": true,
     "rootDir": "src",
     "outDir": "./dist",
