@@ -32,6 +32,9 @@
       ]
     }
   },
+  "exclude": [
+    "src/faas/lang/**"
+  ],
   "ts-node": {
     "compilerOptions": {
       "strictPropertyInitialization": false
