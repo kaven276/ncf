@@ -2,6 +2,20 @@ import { innerCall, mapCall } from '@ncf/microkernel';
 import { ISpec } from './findUsers.spec';
 import tap from 'tap';
 
+/** 如果是顶层模块，认为是要测试任务 */
+export const task = (require.main === module) && tap.test('finedUsers', async (t) => {
+  await Promise.all([
+    innerCall<ISpec>('/typeorm/hr/findUsers', { onlyFirstName: 'Li' }).then(resp => {
+      t.ok(resp.filter(user => !user.firstName.includes('Li')).length === 0, 'onlyFirstName 确保不返回不匹配的记录');
+    }),
+    innerCall<ISpec>('/typeorm/hr/findUsers', { showNames: true }).then(resp => {
+      t.ok(resp.some(user => user.names), 'req.showNames 可以查到带 names 的 user 记录');
+    }),
+    t.resolves(innerCall<ISpec>('/typeorm/hr/findUsers', {}), '无参数调用能正常返回响应不抛异常'),
+    // t.resolveMatchSnapshot(innerCall<ISpec>('/typeorm/hr/findUsers', {}), '无参数调用能正常返回相同内容');
+  ]);
+});
+
 const tests = [
   () => innerCall<ISpec>('/typeorm/hr/findUsers', { onlyFirstName: 'Li' }),
   () => innerCall<ISpec>('/typeorm/hr/findUsers', { onlyFirstName: 'Timber', showNames: false }),
@@ -33,19 +47,4 @@ export const faas = async () => {
       onlyFirstName: 'LiYong',
     }
   })
-}
-
-// below is tap test
-if (require.main === module) {
-  tap.test('finedUsers', async (t) => {
-    const result = await innerCall<ISpec>('/typeorm/hr/findUsers', { onlyFirstName: 'Li' });
-    t.equal(result.length, 1);
-    // return target({ showNames: true });
-  });
-
-  tap.test('finedUsers2', async (t) => {
-    const result = await innerCall<ISpec>('/typeorm/hr/findUsers', { onlyFirstName: 'Li' });
-    t.equal(result[0].age, 46);
-    // return target({ showNames: true });
-  });
 }
