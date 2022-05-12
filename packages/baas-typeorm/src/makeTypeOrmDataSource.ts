@@ -1,4 +1,5 @@
-import { DataSource, type DataSourceOptions, QueryRunner } from 'typeorm';
+import type { DataSourceOptions } from 'typeorm';
+import { DataSource, QueryRunner } from 'typeorm';
 import { getDebug, resolved } from '@ncf/microkernel';
 import { getQueryRunnerTx } from './getQueryRunnerTx';
 
