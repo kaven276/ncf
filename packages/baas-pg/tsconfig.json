@@ -18,6 +18,10 @@
    "include": [
      "src"
    ],
+   "exclude": [
+    "dist/*",
+    "test/*"
+  ],
    "ts-node": {
      "compilerOptions": {
        "strictNullChecks": false

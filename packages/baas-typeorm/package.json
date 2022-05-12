@@ -15,7 +15,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@ncf/microkernel": "*"
+    "@ncf/microkernel": "*",
+    "typescript": "^4.6.4"
   },
   "peerDependencies": {
     "reflect-metadata": "^0.1.13",
