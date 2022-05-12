@@ -16,7 +16,8 @@
     "koa": "^2.13.4",
     "koa-body": "^5.0.0",
     "levelup": "^5.1.1",
-    "rocksdb": "^5.2.1"
+    "rocksdb": "^5.2.1",
+    "typescript": "^4.6.4"
   },
   "devDependencies": {
     "@types/encoding-down": "^5.0.0",

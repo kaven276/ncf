@@ -1,29 +1,43 @@
 {
-   "compilerOptions": {
-      "target": "es2018",
-      "module": "commonjs",
-      "moduleResolution": "node",
-      "esModuleInterop": true,
-      "strictNullChecks": true,
-      "outDir": "./dist",
-      "declaration": true,
-      "emitDecoratorMetadata": true,
-      "experimentalDecorators": true,
-      "isolatedModules": true,
-      "sourceMap": true,
-      "rootDir": "src",
-      "baseUrl": "./src",
-      "paths": {
-        "src/*": ["*"]
-      }
-   },
-   "include": [
-     "src"
-   ],
-   "ts-node": {
-     "compilerOptions": {
-       "strictNullChecks": false
-     },
-    "require": ["tsconfig-paths/register"]
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Node 16",
+  "compilerOptions": {
+    "lib": [
+      "es2021"
+    ],
+    "target": "es2021",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "jsx": "react",
+    "strict": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": false,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "rootDir": "src",
+    "outDir": "./dist",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "isolatedModules": true,
+    "sourceMap": true,
+    "baseUrl": "./src",
+    "paths": {
+      "src/*": [
+        "*"
+      ]
+    }
+  },
+  "exclude": [
+    "test/*"
+  ],
+  "ts-node": {
+    "compilerOptions": {
+      "strictPropertyInitialization": false
+    },
+    "require": [
+      "tsconfig-paths/register"
+    ]
   }
 }

@@ -18,9 +18,11 @@
   "license": "ISC",
   "dependencies": {
     "@ncf/microkernel": "*",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "typescript": "^4.6.4"
   },
   "devDependencies": {
+    "@ncf/microkernel": "*",
     "@types/jsonwebtoken": "^8.5.8"
   }
 }

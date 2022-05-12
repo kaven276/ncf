@@ -10,7 +10,8 @@
     "ioredis": "^5.0.3"
   },
   "dependencies": {
-    "@ncf/microkernel": "*"
+    "@ncf/microkernel": "*",
+    "typescript": "^4.6.4"
   },
   "keywords": [],
   "author": "",
