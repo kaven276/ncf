@@ -4,7 +4,8 @@ import { updateConfig } from './lib/config';
 import { awaitModule, tryDestroyModule } from './lifecycle';
 import { ProjectDir, jsExt, MoundDir } from './util/resolve';
 import { extname, sep } from 'path';
-import { onFaasModuleChange } from './repl';
+import { addDisposer } from './util/addDisposer';
+// import { onFaasModuleChange } from './repl';
 const ServiceDir = `${ProjectDir}/${MoundDir}/faas`;
 
 /** 跟踪一个模块是否被初始化过 */
@@ -15,7 +16,7 @@ const debug = getDebug(module);
 let started = false;
 
 /** 启动服务热更新，只针对服务入口模块，级联模块暂时不支持 */
-export function watchHotUpdate() {
+function watchHotUpdate() {
 
   started = true;
 
@@ -28,15 +29,13 @@ export function watchHotUpdate() {
   });
 
   watcher.on("change", (absPath) => {
-    onFaasModuleChange(absPath);
+    // onFaasModuleChange(absPath);
     if (!require.cache[absPath]) return;
     debug('file change', absPath);
     deleteCacheForUpdated(absPath);
   });
 
-  process.once('SIGINT', () => {
-    watcher.close();
-  });
+  addDisposer(() => watcher.close());
 }
 
 /** 都是按照解析完的 module.filename 来记录关系的 */

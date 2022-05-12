@@ -1,4 +1,5 @@
 import { getDebug } from './util/debug';
+import { addDisposer } from './util/addDisposer';
 
 const debug = getDebug(module);
 const symbol = Symbol('resolved');
@@ -80,8 +81,8 @@ export async function tryDestroyModule(m: NodeModule): Promise<void> {
 
 let destroyableModuleSet = new Set<NodeModule>();
 
-// see https://pm2.keymetrics.io/docs/usage/signals-clean-restart/
-process.once('SIGINT', function () {
+
+addDisposer(function destroyAllLiftcycles(): void {
   const promises: Promise<any>[] = [];
   for (const m of destroyableModuleSet) {
     promises.push(tryDestroyModule(m));

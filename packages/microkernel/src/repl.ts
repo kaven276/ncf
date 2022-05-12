@@ -2,12 +2,13 @@ import repl from 'node:repl';
 import { getDebug } from './util/debug';
 import { jsExt } from './util/resolve';
 import { writeFile } from 'node:fs';
+import { addDisposer } from './util/addDisposer';
 
 const debug = getDebug(module);
 let lastModifiedFaasModulePath: string;
 
 const iv = repl.start({ prompt: '>>> ' });
-// iv.close();
+addDisposer(() => iv.close());
 
 let autoTest = false;
 

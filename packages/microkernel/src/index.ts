@@ -15,7 +15,7 @@ export type { GatewayType, GwExtras, GwHttp, GwKoa } from './lib/gateway';
 export { execute, getCallState, getProxiedPath } from './executor';
 export { getConfig } from './lib/config';
 export { getDebug } from './util/debug';
-export { addDisposer } from './util/addDisposer';
+export { addDisposer, shutdown } from './util/addDisposer';
 export { innerCall } from './innerCall';
 export { mapCall } from './mapCall';
 export { outerCall, setOuterCallAddr } from './outerCall';
