@@ -103,7 +103,7 @@ type WaitFaas = typeof waitFaas;
 /** 在流程执行过程中，用来调用其他 faas */
 export function callFaas<T extends IApi = IApi>(faas: Service<T>, request: T["request"]): Promise<T["response"]> {
   debug(`call ${faas.faasPath}`, request);
-  return innerCall({ faasPath: faas.faasPath! }, request);
+  return innerCall(faas.faasPath!, request);
 }
 
 type CallFaas = typeof callFaas;
