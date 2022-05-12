@@ -3,8 +3,8 @@ import { getJWTStruct } from '@ncf/mw-jwt';
 // 对于调用期间的 async local state，可以扩展其类型定义的内容
 declare module '@ncf/microkernel' {
   interface ICallState {
-    extra1: string,
-    extra2: string,
+    extra1?: string,
+    extra2?: string,
   }
 }
 
