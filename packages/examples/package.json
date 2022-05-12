@@ -9,6 +9,7 @@
     "core": "ts-node src/core.ts",
     "dev": "ts-node src/index.ts",
     "unit": "ts-node --transpile-only",
+    "test": "tap --ts --before dotenv/config",
     "cron": "ts-node --transpile-only src/cron/index.ts",
     "start": "ts-node --transpile-only src/index.ts",
     "start2": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register dist"
@@ -68,7 +69,9 @@
     "@types/react": "^17.0.43",
     "@types/react-dom": "^17.0.14",
     "@types/rocksdb": "^3.0.1",
-    "@types/sharp": "^0.30.0"
+    "@types/sharp": "^0.30.0",
+    "@types/tap": "^15.0.7",
+    "tap": "^16.2.0"
   },
   "keywords": [],
   "author": "",
