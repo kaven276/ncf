@@ -116,13 +116,13 @@ export async function waitFlowStart<T extends IApi>(
 ) {
   await registerDep(flowModule.filename);
   debug('waitFlowStart', faas.faasPath);
+  const flowPath = flowModule.filename.substring(ProjectDir.length);
   registerWaitForFaas(faas.faasPath!, undefined, async (ctx: WithFlow<T>) => {
     const { flowInstId } = ctx.flowStepInfo;
     const flowState: FlowState = {
       flowInstId,
     }
     const resp = asyncLocalStorage.run(flowState, async () => {
-      const flowPath = flowModule.filename.substring(ProjectDir.length);
       flow(ctx, flowInstId, waitFaas, callFaas)
         .then(() => {
           debug(`${flowPath}:${flowInstId} finished`);
