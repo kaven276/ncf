@@ -46,8 +46,8 @@ lines: 50
 # test-ignore: $.
 # test-regex: ((\/|^)(tests?|__tests?__)\/.*|\.(tests?|spec)|^\/?tests?)\.([mc]js|[jt]sx?)$
 # test-regex: hr.*\.test\.([mc]js|[jt]sx?)$
-test-regex: findUsers\.test\.tsx?$
-# test-regex: try\.test\.tsx?$
+# test-regex: findUsers\.test\.tsx?$
+test-regex: .test\.tsx?$
 timeout: 20
 ts: true
 # version: false
