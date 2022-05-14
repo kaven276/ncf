@@ -5,7 +5,7 @@ import { awaitModule, tryDestroyModule } from './lifecycle';
 import { ProjectDir, jsExt, MoundDir } from './util/resolve';
 import { extname, sep } from 'path';
 import { addDisposer } from './util/addDisposer';
-// import { onFaasModuleChange } from './repl';
+import { onFaasModuleChange } from './repl';
 const ServiceDir = `${ProjectDir}/${MoundDir}/faas`;
 
 /** 跟踪一个模块是否被初始化过 */
@@ -29,7 +29,7 @@ function watchHotUpdate() {
   });
 
   watcher.on("change", (absPath) => {
-    // onFaasModuleChange(absPath);
+    onFaasModuleChange(absPath);
     if (!require.cache[absPath]) return;
     debug('file change', absPath);
     deleteCacheForUpdated(absPath);
