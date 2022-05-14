@@ -7,3 +7,5 @@
 /coverage/
 /src/faas/lang/
 *.resp.json
+*.resp.html
+*.resp.*
