@@ -1,8 +1,9 @@
 import repl from 'node:repl';
 import { getDebug } from './util/debug';
 import { jsExt } from './util/resolve';
-import { writeFile } from 'node:fs';
+import { writeFile, createWriteStream } from 'node:fs';
 import { addDisposer } from './util/addDisposer';
+import { Readable } from 'node:stream';
 
 const debug = getDebug(module);
 let lastModifiedFaasModulePath: string;
@@ -21,9 +22,19 @@ async function doTest() {
     if (!testModule.faas) return;
     const resp = await testModule.faas();
     const isHTML = (typeof resp === 'string' && resp.startsWith('<'));
+    const isBuffer = resp instanceof Buffer;
+    const isStream = resp instanceof Readable;
     if (isHTML) {
       const respPath = lastModifiedFaasModulePath.replace(jsExt, '.resp.html');
       writeFile(respPath, resp, { encoding: 'utf8' }, () => { });
+    } else if (isBuffer) {
+      //@ts-ignore
+      const respPath = lastModifiedFaasModulePath.replace(jsExt, `.resp.${resp.ext ?? 'bin'}`);
+      writeFile(respPath, resp,() => { });
+    } else if (isStream) {
+      const respPath = lastModifiedFaasModulePath.replace(jsExt, '.resp.jpg');
+      const f = createWriteStream(respPath);
+      resp.pipe(f);
     } else {
       const respPath = lastModifiedFaasModulePath.replace(jsExt, '.resp.json');
       writeFile(respPath, JSON.stringify(resp, null, 2), { encoding: 'utf8' }, () => { });

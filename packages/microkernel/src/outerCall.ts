@@ -3,6 +3,7 @@ import { IApi } from './lib/faas';
 import { request as httpRequest, RequestOptions, Agent } from 'node:http';
 import { getDebug } from './util/debug';
 import { consumeBody } from './util/comsumeBody';
+import { Readable } from 'node:stream';
 
 const debug = getDebug(module);
 const agent = new Agent({ keepAlive: true });
@@ -34,9 +35,18 @@ export function outerCall<T extends IApi>(path: T["path"], request: T["request"]
       // console.log(resp.statusCode, resp.headers);
       if (resp.statusCode === 200) {
         consumeBody(resp).then(buf => {
-          const json = JSON.parse(buf.toString('utf8'));
-          // console.log(json);
-          resolve(json.data);
+          try {
+            const json = JSON.parse(buf.toString('utf8')); // console.log(json);
+            resolve(json.data);
+          } catch(e) {
+
+            const contentType = resp.headers['content-type'] as string | undefined;
+            if (contentType?.startsWith('image/')) {
+              //@ts-ignore
+              buf.ext = contentType.substring(6);
+            }
+            resolve(buf);
+          }
         });
       } else {
         consumeBody(resp).then(buf => {
