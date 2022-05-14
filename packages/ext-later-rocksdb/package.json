@@ -1,9 +1,14 @@
 {
   "name": "@ncf/ext-later-rocksdb",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "延迟服务",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "scripts": {
+    "build": "tsc",
     "dev": "ts-node --transpile-only src/index.ts",
     "test": "ts-node --transpile-only test/index.ts"
   },
