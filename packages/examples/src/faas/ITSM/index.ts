@@ -1,5 +1,5 @@
 import { getProxiedPath, getCallState } from '@ncf/microkernel';
-import fetch from 'node-fetch';
+import { fetch } from 'src/baas/fetch';
 
 const ITEM_URL = 'http://10.36.134.58:8008';
 
