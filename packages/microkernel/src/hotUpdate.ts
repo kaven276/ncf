@@ -64,7 +64,13 @@ async function collectWhoDependMe(parentModule: NodeModule, whoImportMeStr?: str
     const subPath = subModule.filename;
     // 可能会出现两个模块互相引用的情况造成死循环
     // debug('collectWhoDependMe', absFileName.substring(ServiceDir.length), subPath.substring(ServiceDir.length));
-    if (!subPath.startsWith(ProjectDir)) return;
+    if (!subPath.startsWith(ProjectDir)) {
+      if (subModule.exports.awaitModule === true) {
+        // 反向依赖收集完后，进行本模块的 lifecycle 初始化，确保只进行一次
+        await awaitModule(subModule);
+      }
+      return;
+    };
     if (subModule.loaded === false) return; // 此时必定 loaded=true
     if (depsMap.get(parentModule.filename)?.has(subPath)) return; // 防止循环引用造成 stack overflow
     await collectWhoDependMe(subModule, absFileName);

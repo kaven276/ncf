@@ -4,3 +4,4 @@ type Fetch = (url: RequestInfo, init?: RequestInit | undefined) => Promise<Respo
 import { fetch_ } from './fetch';
 
 export const fetch: Fetch = fetch_;
+export const awaitModule = true;
