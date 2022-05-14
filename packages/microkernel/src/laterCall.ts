@@ -72,6 +72,11 @@ export function setHttpEnqueue(opt: RequestOptions) {
   });
 }
 
+setHttpEnqueue({
+  host: '127.0.0.1',
+  port: process.env.LATER_PORT || 7999,
+});
+
 /** 处理 later faas calls */
 export async function processLaterFaasCalls(ctx: ICallState): Promise<void> {
   const tasks: LaterTask[] = [];
