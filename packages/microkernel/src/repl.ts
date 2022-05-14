@@ -9,7 +9,6 @@ let lastModifiedFaasModulePath: string;
 
 const iv = repl.start({ prompt: '>>> ' });
 addDisposer(() => iv.close());
-
 let autoTest = false;
 
 async function doTest() {
@@ -18,12 +17,17 @@ async function doTest() {
   } else {
     console.log(`about to test ${lastModifiedFaasModulePath}`);
     const testPath = lastModifiedFaasModulePath.replace(jsExt, '.test' + jsExt);
-    const respPath = lastModifiedFaasModulePath.replace(jsExt, '.resp.json');
     const testModule = await import(testPath).catch(() => ({}));
     if (!testModule.faas) return;
     const resp = await testModule.faas();
-    writeFile(respPath, JSON.stringify(resp, null, 2), { encoding: 'utf8' }, () => { });
-    // console.dir(resp);
+    const isHTML = (typeof resp === 'string' && resp.startsWith('<'));
+    if (isHTML) {
+      const respPath = lastModifiedFaasModulePath.replace(jsExt, '.resp.html');
+      writeFile(respPath, resp, { encoding: 'utf8' }, () => { });
+    } else {
+      const respPath = lastModifiedFaasModulePath.replace(jsExt, '.resp.json');
+      writeFile(respPath, JSON.stringify(resp, null, 2), { encoding: 'utf8' }, () => { });
+    }
   }
 }
 iv.defineCommand('test', doTest);
