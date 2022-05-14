@@ -12,6 +12,7 @@
     "packages/baas-typeorm",
     "packages/baas-pg",
     "packages/baas-ioredis",
+    "packages/baas-node-fetch",
     "packages/examples",
     "packages/loader-cfg-json5",
     "packages/loader-cfg-yaml",
