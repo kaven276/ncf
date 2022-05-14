@@ -34,6 +34,7 @@
     "elasticsearch": "^16.7.3",
     "es6": "npm:@elastic/elasticsearch@^6.8",
     "es7": "npm:@elastic/elasticsearch@~7.5",
+    "fetch3": "npm:node-fetch@^3",
     "ink": "^3.2.0",
     "ink-markdown": "^1.0.1",
     "ink-multi-select": "^2.0.0",
