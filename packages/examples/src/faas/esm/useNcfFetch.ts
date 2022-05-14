@@ -1,6 +1,5 @@
 // 测试 esm only 的 fetch 是否可以被集成
 
-// import { fetch } from '.'
 import { fetch } from '@ncf/node-fetch';
 
 export const faas = async () => {

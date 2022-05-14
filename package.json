@@ -20,6 +20,9 @@
     "packages/loader-cfg-markdown",
     "packages/loader-sql-pg"
   ],
+  "resolutions": {
+    "typescript": "^4.6.2"
+  },
   "devDependencies": {
     "lerna": "^4.0.0",
     "ts-node": "^10.7.0",
