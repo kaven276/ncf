@@ -27,8 +27,10 @@ const logger = winston.createLogger({
 export const mwLoggerWinston: IMiddleWare = async (ctx, next) => {
   const { path, request } = ctx;
   // logger.info(`${ctx.path} ${JSON.stringify(ctx.request)}`);
-  logger.info({ path, request });
-  await next().catch(e => {
+  // logger.info({ path, request });
+  await next().then(response => {
+    logger.info({ path, request, response });
+  }).catch(e => {
     logger.error({ path, request, error: e });
     throw e;
   });
