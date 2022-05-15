@@ -1,6 +1,6 @@
 {
   "name": "@ncf/pg",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "nodejs pg 的连接池 baas 供应",
   "main": "dist/index.js",
   "files": [
