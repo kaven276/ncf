@@ -12,6 +12,10 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "dependencies": {
     "@types/debug": "^4.1.7",
     "@types/minimatch": "^3.0.5",
