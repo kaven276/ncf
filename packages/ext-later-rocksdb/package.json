@@ -7,8 +7,12 @@
   "exports": {
     ".": "./dist/index.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
+    "prepublishOnly": "tsc",
     "dev": "ts-node --transpile-only src/index.ts",
     "test": "ts-node --transpile-only test/index.ts"
   },
