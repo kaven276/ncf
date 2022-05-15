@@ -1,9 +1,10 @@
 import repl from 'node:repl';
 import { getDebug } from './util/debug';
-import { jsExt } from './util/resolve';
+import { jsExt, prefixLength } from './util/resolve';
 import { writeFile, createWriteStream } from 'node:fs';
 import { addDisposer } from './util/addDisposer';
 import { Readable } from 'node:stream';
+import { innerCall } from './innerCall';
 
 const debug = getDebug(module);
 let lastModifiedFaasModulePath: string;
@@ -18,8 +19,13 @@ async function doTest() {
   } else {
     console.log(`about to test ${lastModifiedFaasModulePath}`);
     const testPath = lastModifiedFaasModulePath.replace(jsExt, '.test' + jsExt);
-    const testModule = await import(testPath).catch(() => ({}));
-    if (!testModule.faas) return;
+    let testModule = await import(testPath).catch(() => ({}));
+    if (!testModule.faas) {
+      // 没有定义单元测试，自动默认为无参数执行对应的模块
+      testModule = {
+        faas: async () => innerCall(lastModifiedFaasModulePath.substring(prefixLength).replace(jsExt, ''))
+      };
+    }
     const resp = await testModule.faas();
     const isHTML = (typeof resp === 'string' && resp.startsWith('<'));
     const isBuffer = resp instanceof Buffer;
@@ -30,12 +36,12 @@ async function doTest() {
     } else if (isBuffer) {
       //@ts-ignore
       const respPath = lastModifiedFaasModulePath.replace(jsExt, `.resp.${resp.ext ?? 'bin'}`);
-      writeFile(respPath, resp,() => { });
+      writeFile(respPath, resp, () => { });
     } else if (isStream) {
       const respPath = lastModifiedFaasModulePath.replace(jsExt, '.resp.jpg');
       const f = createWriteStream(respPath);
       resp.pipe(f);
-    } else if(!!resp) {
+    } else if (!!resp) {
       const respPath = lastModifiedFaasModulePath.replace(jsExt, '.resp.json');
       writeFile(respPath, JSON.stringify(resp, null, 2), { encoding: 'utf8' }, () => { });
     }
