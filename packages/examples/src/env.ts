@@ -29,6 +29,8 @@ interface ENV {
   AMQP_URL: string,
   /** elastic search url */
   ES_URL: string,
+  /** ITSM 系统地址，用于代理 */
+  ITSM_URL: string,
 };
 
 /** 所有 baas 链接串默认值都是本机默认端口，无用户名密码的或者范例用户名密码的 */
@@ -48,6 +50,7 @@ const envSchema: JSONSchemaType<ENV> = {
     REDIS_URL: { type: 'string', default: 'redis://localhost:6379/0' },
     AMQP_URL: { type: 'string', default: 'amqp://admin:admin@localhost:5672' },
     ES_URL: { type: 'string', default: 'http://localhost:9200' },
+    ITSM_URL: { type: 'string' },
   },
   required: [
     'PORT',
