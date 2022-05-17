@@ -1,4 +1,5 @@
-// #!/usr/bin/env ts-node --transpile-only
+#!/usr/bin/env ts-node --transpile-only
+
 // yarn unit src/faas/usecase/test.uc.tsx
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -49,14 +50,14 @@ const Counter = () => {
   return (
     <Box width={120} flexDirection="column">
       <Markdown>{WELCOME_TEXT}</Markdown>
-      <Box borderStyle="classic" display='none'>
+      <Box borderStyle="classic" display='flex'>
         <Text color="blue" backgroundColor={bgc}>{JSON.stringify(userList, null, 2)}</Text>
       </Box>
-      <Box flexDirection="row" display='none'>
+      <Box flexDirection="row" display='flex'>
         <Text>Enter your query:</Text>
         <UncontrolledTextInput onSubmit={(t) => setQuery(t)} placeholder="input username" />
       </Box>
-      <SelectInput items={nameList} onSelect={(item => setQuery(item.value))} />
+      {/* <SelectInput items={nameList} onSelect={(item => setQuery(item.value))} /> */}
       <Table data={userList as any[]} />
     </Box>
   )
