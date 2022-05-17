@@ -110,3 +110,10 @@ npx typeorm-ts-node-commonjs migration:revert -d src/baas-config/test1.ormconfig
 * /fromMW 基于中间件的服务，展示通过 faas 展示和控制中间件
 * /versions 展示基于特性的灰度控制方案
 * /usecase 无需前端开发，直接运行后台模块，目前是通过 react 标准前端开发方式 react-ink 字符终端交互
+
+## 范例数据准备
+
+vscode 搜 seed
+
+* /src/faas/typeorm/hr/fillSeedUsers.ts 填充初始用户数据
+* /src/faas/typeorm/hr/fillSeedOrgs.ts 填充初始组织数据
