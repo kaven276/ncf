@@ -34,6 +34,11 @@ npx typeorm-ts-node-commonjs migration:run -d src/baas-config/test1.ormconfig.ts
 npx typeorm-ts-node-commonjs migration:revert -d src/baas-config/test1.ormconfig.ts
 ```
 
+数据库等基础环境
+================
+
+目前仅配置 postgres db，docker-compose.yml 为安装配置 pg 容器的声明文件。
+
 范例展示核心部分说明
 =================
 
