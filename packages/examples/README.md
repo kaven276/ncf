@@ -111,6 +111,18 @@ npx typeorm-ts-node-commonjs migration:revert -d src/baas-config/test1.ormconfig
 * /versions 展示基于特性的灰度控制方案
 * /usecase 无需前端开发，直接运行后台模块，目前是通过 react 标准前端开发方式 react-ink 字符终端交互
 
+## typescript 贯穿
+
+* /src/intf/user.ts 抽象的用户数据规范
+* /src/baas/typeorm/entity/User.ts 具体到ORM数据库表
+* /src/faas/typeorm/hr/findUsers.ts 使用到 User entity 的 faas
+* /src/faas/typeorm/hr/findUsers.spec.ts  findUsers 服务的纯 ts 接口规范
+* /src/faas/typeorm/hr/findUsers.test.ts findUsers 的 unit test 和 tap test 
+
+* xxx.check.ts 从接口规范到请求响应校验的定义
+* env.ts 环境变量的 ts 模块化
+
+
 ## 范例数据准备
 
 vscode 搜 seed
