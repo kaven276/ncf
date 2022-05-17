@@ -1,0 +1,30 @@
+<style type="text/css">
+  #initLoading {
+    text-align: center;
+    padding-top: 35vh;
+  }
+  #initLoading > span {
+    font-size: 36px;
+    font-family: "arial rounded mt bold";
+    animation:initloading 3s infinite;
+    -webkit-animation:initloading 3s infinite;
+  }
+  @keyframes initloading
+  {
+    0% {color:#ddd;}
+    30% {color:#000;}
+    70% {color:#000;}
+    100% {color:#ddd}
+  }
+
+  @-webkit-keyframes initloading /*Safari and Chrome*/
+  {
+    0% {color:#ddd;}
+    30% {color:#000;}
+    70% {color:#000;}
+    100% {color:#ddd}
+  }
+</style>
+<div id="initLoading">
+  <span>Loading...</span>
+</div>

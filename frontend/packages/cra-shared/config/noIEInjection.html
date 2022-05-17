@@ -1,0 +1,28 @@
+<style type="text/css">
+  #iewarning {
+    border: 3px solid #999;
+    padding: 15px;
+    width: 520px;
+    margin: 50px auto;
+    color: #333;
+    background-color:#fefefe;
+  }
+  #iewarning div {
+    font-size: 14px;
+    margin-bottom: 10px
+  }
+</style>
+<div id="iewarning" style="display: none;">
+  <div>系统检测您当前所使用浏览器为IE内核！</div>
+  <div>为了更好的使用体验，请使用谷歌/火狐/safari，等其他现代浏览器。双核浏览器如360请切换至极速模式！</div>
+</div>
+<script type="text/javascript">
+  var ua = navigator.userAgent.toLowerCase();
+  var isIeBrowser = ua.match(/trident/) ? true : false;
+  if (isIeBrowser) {
+    var rootBox = document.getElementById("root");
+    rootBox.parentNode.removeChild(rootBox);
+    var iewarningcontent = document.getElementById("iewarning");
+    iewarningcontent.style.display = "block"
+  }
+</script>

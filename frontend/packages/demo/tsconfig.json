@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "allowJs": false,
+    "checkJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "baseUrl": "./",
+    "paths": {
+      "api/*": ["../../../packages/examples/src/faas/*"],
+      "src/*": ["src/*"],
+      "^*": ["../*"],
+      "^/*": ["../*"]
+    }
+  },
+  "include": [
+    "src",
+    "../clib/react-app-env.d.ts"
+  ]
+}
+

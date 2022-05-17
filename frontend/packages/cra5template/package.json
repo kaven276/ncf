@@ -1,0 +1,20 @@
+{
+  "name": "cra5template",
+  "private": true,
+  "description": "cra5template",
+  "scripts": {
+    "start": "node ../cra-shared/scripts/start.js",
+    "build": "node  ../cra-shared/scripts/build.js",
+    "test": "node  ../cra-shared/scripts/test.js"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version"
+    ]
+  }
+}
