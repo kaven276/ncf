@@ -26,7 +26,15 @@ async function doTest() {
         faas: async () => innerCall(lastModifiedFaasModulePath.substring(prefixLength).replace(jsExt, ''))
       };
     }
-    const resp = await testModule.faas();
+    let resp: any;
+    try {
+      resp = await testModule.faas();
+    } catch (e: unknown) {
+      const respPath = lastModifiedFaasModulePath.replace(jsExt, '.resp.json');
+      writeFile(respPath, (e as Error).toString(), { encoding: 'utf8' }, () => { });
+      return;
+    }
+
     const isHTML = (typeof resp === 'string' && resp.startsWith('<'));
     const isBuffer = resp instanceof Buffer;
     const isStream = resp instanceof Readable;
