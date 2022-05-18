@@ -41,9 +41,9 @@ function watchHotUpdate() {
 /** 都是按照解析完的 module.filename 来记录关系的 */
 const depsMap = new Map<string, Set<string>>();
 
-async function collectWhoDependMe(parentModule: NodeModule, whoImportMeStr?: string) {
+async function collectWhoDependMe(currentModule: NodeModule, whoImportMeStr?: string) {
 
-  const absFileName = parentModule.filename;
+  const absFileName = currentModule.filename;
 
   if (whoImportMeStr) {
     let depSet = depsMap.get(absFileName);
@@ -56,11 +56,11 @@ async function collectWhoDependMe(parentModule: NodeModule, whoImportMeStr?: str
   }
 
   // 防止被重复依赖而导致重复初始化和重复反向依赖收集
-  if (loadedSet.has(parentModule)) return;
-  loadedSet.add(parentModule);
+  if (loadedSet.has(currentModule)) return;
+  loadedSet.add(currentModule);
 
   // 对子模块递归处理
-  const promises = parentModule.children.map(async subModule => {
+  const promises = currentModule.children.map(async subModule => {
     const subPath = subModule.filename;
     // 可能会出现两个模块互相引用的情况造成死循环
     // debug('collectWhoDependMe', absFileName.substring(ServiceDir.length), subPath.substring(ServiceDir.length));
@@ -72,22 +72,19 @@ async function collectWhoDependMe(parentModule: NodeModule, whoImportMeStr?: str
       return;
     };
     if (subModule.loaded === false) return; // 此时必定 loaded=true
-    if (depsMap.get(parentModule.filename)?.has(subPath)) return; // 防止循环引用造成 stack overflow
+    if (depsMap.get(currentModule.filename)?.has(subPath)) return; // 防止循环引用造成 stack overflow
     await collectWhoDependMe(subModule, absFileName);
   });
   await Promise.all(promises);
 
   // inner 依赖了一个 faas，注入自标注路径，来支持内部调用寻址
-  if (parentModule.exports.faas) {
+  if (currentModule.exports.faas) {
     const endPos = absFileName.length - extname(absFileName).length
-    parentModule.exports.faas.faasPath = absFileName.substring(prefixLength, endPos);
+    currentModule.exports.faas.faasPath = absFileName.substring(prefixLength, endPos);
   }
   // 反向依赖收集完后，进行本模块的 lifecycle 初始化，确保只进行一次
-  await awaitModule(parentModule);
+  await awaitModule(currentModule);
 
-  // if (absFileName.endsWith('/test1' + jsExt)) {
-  //   debug('track', subPath, [...depsMap.get(subPath)!]);
-  // }
 }
 
 /** 级联删除依赖自己的模块的缓存，使得再次 import() 他们能加载新版。
