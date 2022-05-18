@@ -29,6 +29,7 @@
     "@elastic/elasticsearch": "^7.5.1",
     "@types/ink-select-input": "^3.0.1",
     "amqplib": "^0.8.0",
+    "better-sqlite3": "^7.5.3",
     "classic-level": "^1.2.0",
     "dotenv": "^16.0.0",
     "elasticsearch": "^16.7.3",
