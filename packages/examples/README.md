@@ -39,6 +39,8 @@ npx typeorm-ts-node-commonjs migration:revert -d src/baas-config/test1.ormconfig
 
 目前仅配置 postgres db，docker-compose.yml 为安装配置 pg 容器的声明文件。
 
+本目录下执行 `docker-compose up -d` 拉起 pg 容器。
+
 范例展示核心部分说明
 =================
 

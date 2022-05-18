@@ -1,4 +1,5 @@
 # reference: https://blitzjs.com/docs/postgres
+# docker-compose up -d
 
 version: "3.7"
 
