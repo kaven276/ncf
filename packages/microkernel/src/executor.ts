@@ -46,8 +46,11 @@ export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promi
   idSeq += 1;
   debug(`request ${idSeq} ${faasPath} coming...`);
 
-  if ('$tspec' in request) {
-    return getFaasTsSpec(faasPath, gwExtras);
+  try {
+    if ('$tspec' in request) {
+      return getFaasTsSpec(faasPath, gwExtras);
+    }
+  } catch (e) {
   }
 
   const dirConfig = await getDirConfig(dirname(faasPath));
