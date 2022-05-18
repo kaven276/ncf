@@ -130,17 +130,15 @@ export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promi
 
     const middlewares: IMiddleWare[] = await import(`${ProjectDir}/${MoundDir}/faas/index${jsExt}`).then((m) => (m.middlewares)).catch(() => []);
 
-    function runMiddware(n: number): Promise<void> {
+    async function runMiddware(n: number): Promise<void> {
       debug(`executing middleware ${n}`);
       const mw: IMiddleWare = middlewares[n];
       if (!mw) {
         debug('after middlewares, executing faas');
-        return new Promise((resolve, reject) => faas(request, stream).then((response) => {
+        return faas(request, stream).then((response) => {
           als.response = response;
-          resolve();
-        }).catch(reject));
+        });
       };
-      //@ts-ignore
       return mw(als, () => runMiddware(n + 1));
     }
 
