@@ -11,7 +11,24 @@ const header = (
       <th>names</th>
     </tr>
   </thead>
-)
+);
+
+function renderUser(user: User) {
+  return (
+    <tr key={user.id}>
+      <td>{user.firstName}</td>
+      <td>{user.lastName}</td>
+      <td>{user.age}</td>
+      <td>
+        {user.names && (
+          <ul>
+            {user.names.map(n => (<li>{n}</li>))}
+          </ul>
+        )}
+      </td>
+    </tr>
+  )
+}
 
 interface IRequest {
   sex?: User["sex"],
@@ -27,26 +44,11 @@ interface IRequest {
  */
 export async function faas(req: IRequest) {
   const users: User[] = await findUsers(req);
-  const rows = users.map(user => (
-    <tr key={user.id}>
-      <td>{user.firstName}</td>
-      <td>{user.lastName}</td>
-      <td>{user.age}</td>
-      <td>
-        {user.names && (
-          <ul>
-            {user.names.map(n => (<li>{n}</li>))}
-          </ul>
-        )}
-      </td>
-    </tr>
-  ));
-
   return (
     <html lang="zh-CN">
       <table cellPadding={10} style={{ border: "1px solid lime" }}>
         {header}
-        <tbody>{rows}</tbody>
+        <tbody>{users.map(renderUser)}</tbody>
       </table>
     </html>
   );
