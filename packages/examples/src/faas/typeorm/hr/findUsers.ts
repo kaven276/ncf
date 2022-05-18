@@ -2,7 +2,7 @@ import { User, UserRole } from "entity/User";
 import ds from '.';
 import { IsNull, LessThan, MoreThan, Like, ILike } from "typeorm";
 import { Service } from '@ncf/microkernel';
-import { ISpec } from './findUsers.spec';
+import type { ISpec } from './findUsers.spec';
 
 /**
  * 完整测测试 ORM find 参数，包括

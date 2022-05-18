@@ -1,7 +1,6 @@
 import React from 'react';
 import { User } from "entity/User";
 import { faas as findUsers } from '../typeorm/hr/findUsers';
-import { renderToStaticMarkup } from 'react-dom/server';
 
 const header = (
   <thead>
@@ -27,8 +26,6 @@ interface IRequest {
  * 4) dynamic query/sql
  */
 export async function faas(req: IRequest) {
-  // return innerCall(findUsers, req);
-  //@ts-ignore
   const users: User[] = await findUsers(req);
   const rows = users.map(user => (
     <tr key={user.id}>
@@ -42,12 +39,15 @@ export async function faas(req: IRequest) {
           </ul>
         )}
       </td>
-    </tr>)
-  );
-  return '<!DOCTYPE html>' + renderToStaticMarkup(
+    </tr>
+  ));
+
+  return (
     <html lang="zh-CN">
-      <table cellPadding={10} style={{ border: "1px solid lime" }}>{header}<tbody>{rows}</tbody></table>
+      <table cellPadding={10} style={{ border: "1px solid lime" }}>
+        {header}
+        <tbody>{rows}</tbody>
+      </table>
     </html>
   );
-  // return users;
 }
