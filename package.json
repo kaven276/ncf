@@ -9,6 +9,7 @@
     "packages/ext-later-rocksdb",
     "packages/mw-validator",
     "packages/mw-jwt",
+    "packages/mw-react-server-render",
     "packages/baas-typeorm",
     "packages/baas-pg",
     "packages/baas-ioredis",
