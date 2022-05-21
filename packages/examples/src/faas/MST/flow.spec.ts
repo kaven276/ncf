@@ -20,3 +20,12 @@ export interface RejectFlow {
   },
   response: any,
 }
+
+
+export interface QueryFlow {
+  path: '/MST/rejectFlow',
+  request: {
+    flowInst: number,
+  },
+  response: any,
+}
