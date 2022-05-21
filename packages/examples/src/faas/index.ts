@@ -1,5 +1,5 @@
 import { makeRe } from 'minimatch';
-import { IMiddleWare } from '@ncf/microkernel';
+import { getCaller, IMiddleWare } from '@ncf/microkernel';
 import { validate, showApiJsonSchema } from '@ncf/mw-validator';
 import { logTimeUse } from 'src/mw/logTimeUse';
 import { collectTimes } from 'src/mw/apm';
@@ -27,10 +27,15 @@ export const checkAuth: IMiddleWare = async (ctx, next) => {
 }
 
 
-export const middlewares = [
+export const middlewares: (IMiddleWare | false)[] = [
   showApiJsonSchema,
   i18nMiddleware,
-  // jwtMiddleware,
+  async (ctx, next) => {
+    // 如果是带身份自动测试的话，fake 出调用者身份，否则注释掉
+    ctx.caller.user = 'admin';
+    await next();
+  },
+  jwtMiddleware,
   mwLoggerWinston,
   mwCache,
   validate,
@@ -56,14 +61,16 @@ export const config = {
 export const PI = 3.1415926;
 
 export function check401() {
-  if (!getJWT()) {
+  if (!getCaller().user) {
     throwServiceError(401, '未认证');
   }
 }
 
 export function checkIsAdmin() {
   console.log('checkIsAdmin', getJWTStruct());
+  console.log('getJWT', getJWT());
   // todo: threadStore.jwt?.sub 报异常 error TS1109: Expression expected.
-  if (getJWTStruct() && getJWTStruct()!.user !== 'admin')
+  if (getCaller().user !== 'admin') {
     throwServiceError(403, '不是管理员')
+  }
 }

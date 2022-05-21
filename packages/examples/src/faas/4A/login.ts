@@ -12,6 +12,12 @@ interface Result {
   token: string,
 }
 
+export interface ISpec {
+  path: '/4A/login',
+  request: ILoginInfo,
+  response: Result,
+}
+
 export const config = {
   ...setRandomLatencyConfig({
     maxLatencyMs: 0

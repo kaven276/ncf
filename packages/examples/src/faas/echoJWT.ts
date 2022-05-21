@@ -1,5 +1,5 @@
 import { getJWT, getJWTStruct } from '@ncf/mw-jwt';
-import { throwServiceError } from '@ncf/microkernel';
+import { throwServiceError, getCaller } from '@ncf/microkernel';
 
 /** 测试通过专用 API 二维从 asyncLocalStorage 中拿到 jwt 信息，用户标识等等 */
 export async function faas() {
@@ -8,6 +8,7 @@ export async function faas() {
     throwServiceError(401, 'JWT凭证无效');
   }
   return {
+    user: getCaller().user,
     JWT: getJWT(),
     jwtStruct: getJWTStruct(),
   }
