@@ -21,5 +21,6 @@ export { mapCall } from './mapCall';
 export { outerCall, setOuterCallAddr } from './outerCall';
 export { laterCall, setEnqueue, setHttpEnqueue } from './laterCall';
 export { resolved, waitReady } from './lifecycle';
+export { getCaller } from './lib/caller';
 
 export { waitFlowStart, bindFlow } from './flow';

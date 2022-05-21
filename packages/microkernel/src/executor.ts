@@ -15,6 +15,7 @@ import { GwExtras } from './lib/gateway';
 import { processLaterFaasCalls } from './laterCall';
 import { getFaasTsSpec } from './lib/getFaasTsSpec';
 import { notifyWaiter } from './flow';
+import { Caller } from './lib/caller';
 
 const debug = getDebug(module);
 
@@ -119,6 +120,7 @@ export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promi
     proxiedPath: proxyTriggerPrefix ? faasPath.substring(proxyTriggerPrefix!.length) : undefined,
     request,
     response: null,
+    caller: {} as Caller,
     fassModule,
     trans: [],
     laterFaasCalls: [],

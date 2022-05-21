@@ -1,6 +1,8 @@
 
+import { Identifier } from 'typescript';
 import { IFaasModule, Service, IApi } from './faas';
 import type { GwExtras } from './gateway';
+import type { Caller } from './caller';
 
 export interface TransactionDealer {
   /** 提交 */
@@ -27,6 +29,8 @@ export interface ICallState {
   request: any,
   /** 响应 */
   response: any,
+  /** 调用者身份信息 */
+  caller: Caller,
   /** faas 服务模块 */
   fassModule: IFaasModule,
   /** 跟踪发生的带提交或回滚的事务清单 */
