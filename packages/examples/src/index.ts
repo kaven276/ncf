@@ -1,3 +1,6 @@
+console.log('> require.main!.filename', require.main!.filename, process.version);
+console.log('> nodejs version', process.version);
+
 import './core';
 import { createRequestListener } from '@ncf/microkernel';
 import { createKoaApp } from '@ncf/gateway-koa';
@@ -11,7 +14,7 @@ import { env } from './env';
 import 'src/flow';
 
 // 作为应用模块使用，不被 import/require，否则退出
-if (require.main !== module) {
+if (require.main !== module && !(require.main!.filename!).endsWith('server.js')) {
   process.exit()
 }
 

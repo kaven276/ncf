@@ -10,7 +10,13 @@ const debug = getDebug(module);
 let lastModifiedFaasModulePath: string;
 
 const iv = repl.start({ prompt: '>>> ' });
-addDisposer(() => iv.close());
+
+// 处于 pm2 守护模式下，不开放 REPL
+if (process.send) {
+  iv.close();
+} else {
+  addDisposer(() => iv.close());
+}
 let autoTest = false;
 
 async function doTest() {
