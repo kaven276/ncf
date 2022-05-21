@@ -12,7 +12,13 @@
     "test": "tap --ts --before dotenv/config",
     "cron": "ts-node --transpile-only src/cron/index.ts",
     "start": "ts-node --transpile-only src/index.ts",
-    "start2": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register dist"
+    "start3": "node src/server.js",
+    "start2": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register dist",
+    "t1": "node -r ts-node/register -r tsconfig-paths/register src/index.ts",
+    "t2": "node src/server.js",
+    "pm2start": "pm2 start --no-daemon ecosystem.config.js",
+    "pm2sh": "./node_modules/.bin/ts-node -r tsconfig-paths/register --transpile-only ./src/index.ts",
+    "pm2b": "pm2 start -n demo ts-node -- -r tsconfig-paths/register --transpile-only ./src/index.ts"
   },
   "peerDependencies": {
     "@elastic/elasticsearch": "^7.5.1",
