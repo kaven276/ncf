@@ -8,7 +8,7 @@ export type { IConfig } from './lib/config';
 export type { IMiddleWare } from './lib/middleware';
 export type { ICallState, TransactionDealer } from './lib/callState';
 
-export { ProjectDir as ProjectDir } from './util/resolve';
+export { ProjectDir as ProjectDir, tsMode, jsExt, pathPattern } from './util/resolve';
 export { createRequestListener } from './serverHttp';
 export { ServiceError, throwServiceError } from './lib/ServiceError';
 export type { GatewayType, GwExtras, GwHttp, GwKoa } from './lib/gateway';
