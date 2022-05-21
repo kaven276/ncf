@@ -1,4 +1,5 @@
 import { createDataSource } from '@ncf/typeorm';
+import { pathPattern } from '@ncf/microkernel';
 import { env } from 'src/env';
 
 // 如果 export config object，使用的时候还需要解耦，非常的麻烦
@@ -12,9 +13,9 @@ let baas = createDataSource({
   schema: env.ORM_PG_SCHEMA,
   synchronize: false,
   logging: false,
-  entities: ["src/baas/typeorm/entity/**/*.ts"],
-  migrations: ["src/baas/typeorm/migration/**/*.ts"],
-  subscribers: ["src/baas/typeorm/subscriber/**/*.ts"],
+  entities: [pathPattern("baas/typeorm/entity/**/*")],
+  migrations: [pathPattern("baas/typeorm/migration/**/*")],
+  subscribers: [pathPattern("baas/typeorm/subscriber/**/*")],
 });
 
 export default baas;

@@ -1,6 +1,7 @@
 import { DataSource } from 'typeorm';
 import { resolved } from '@ncf/microkernel';
 import { env } from 'src/env';
+import { pathPattern } from '@ncf/microkernel';
 
 // psql -h $PGHOST -p 5432 -U postgres -d postgres
 // create user fe CREATEDB CREATEROLE LOGIN CONNECTION LIMIT 80;
@@ -19,9 +20,9 @@ let ds = resolved<DataSource>(async () => {
     schema: env.ORM_PG_SCHEMA3,
     synchronize: true,
     logging: true,
-    entities: ["src/baas/typeorm/entity/**/*.ts"],
-    migrations: ["src/baas/typeorm/migration/**/*.ts"],
-    subscribers: ["src/baas/typeorm/subscriber/**/*.ts"],
+    entities: [pathPattern("baas/typeorm/entity/**/*")],
+    migrations: [pathPattern("baas/typeorm/migration/**/*")],
+    subscribers: [pathPattern("baas/typeorm/subscriber/**/*")],
   });
   await baas.initialize();
   return baas;
