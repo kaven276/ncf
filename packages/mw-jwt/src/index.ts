@@ -62,6 +62,10 @@ export const jwtMiddleware: IMiddleWare = async (ctx, next) => {
   if (!(ctx.gw.gwtype === 'http' || ctx.gw.gwtype === 'koa')) {
     return await next();
   }
+  // 如果已经 fake 过身份，则不再处理了
+  if (ctx.caller.user) {
+    return await next();
+  }
   const token = ctx.gw.http.req.headers.authorization;
   if (token) {
     const jwt = token.startsWith(prefix) ? token.substring(prefixLen) : token;
@@ -71,6 +75,8 @@ export const jwtMiddleware: IMiddleWare = async (ctx, next) => {
       const option: JWTOption = getConfig(jwtOptionKey, ctx) || defaultJwtOption;
       const parsed: JwtPayload = verify(jwt, secret, option) as JwtPayload;
       ctx[JWTParsed] = parsed;
+      ctx.caller.user = parsed.user;
+      ctx.caller.org = parsed.org;
     } catch (e: any) {
       if (e instanceof TokenExpiredError) {
         throwServiceError(403, `JWT 过期，超过 ${e.expiredAt}`);
