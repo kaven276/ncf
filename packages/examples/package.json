@@ -80,6 +80,9 @@
     "@types/tap": "^15.0.7",
     "tap": "^16.2.0"
   },
+  "engines": {
+    "node": ">=18.2.0"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC"
