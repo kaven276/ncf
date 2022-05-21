@@ -1,13 +1,18 @@
 {
   "name": "@ncf/loader-cfg-markdown",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "",
-  "main": "index.ts",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
+    "build": "tsc",
+    "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
