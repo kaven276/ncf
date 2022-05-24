@@ -5,6 +5,7 @@ import { writeFile, createWriteStream } from 'node:fs';
 import { addDisposer } from './util/addDisposer';
 import { Readable } from 'node:stream';
 import { innerCall } from './innerCall';
+import { sep } from 'node:path';
 
 const debug = getDebug(module);
 let lastModifiedFaasModulePath: string;
@@ -83,6 +84,9 @@ export function onFaasModuleChange(absPath: string) {
     lastModifiedFaasModulePath = absPath.replace('.test.ts', '.ts');
   } else {
     lastModifiedFaasModulePath = absPath;
+  }
+  if (sep === "\\") {
+    lastModifiedFaasModulePath = lastModifiedFaasModulePath.replaceAll(sep, '/');
   }
   debug('faas/test change', absPath);
   if (autoTest) {
