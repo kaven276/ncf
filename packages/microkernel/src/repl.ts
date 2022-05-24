@@ -1,11 +1,12 @@
 import repl from 'node:repl';
 import { getDebug } from './util/debug';
-import { jsExt, prefixLength } from './util/resolve';
+import { jsExt, prefixLength, ServiceDir } from './util/resolve';
 import { writeFile, createWriteStream } from 'node:fs';
 import { addDisposer } from './util/addDisposer';
 import { Readable } from 'node:stream';
 import { innerCall } from './innerCall';
-import { sep } from 'node:path';
+import { sep, extname, basename } from 'node:path';
+import { Module } from 'module';
 
 const debug = getDebug(module);
 let lastModifiedFaasModulePath: string;
@@ -24,6 +25,7 @@ async function doTest() {
   if (!lastModifiedFaasModulePath) {
     console.log('还没有变更的 faas 模块，无测试目标！');
   } else {
+    const jsExt = extname(lastModifiedFaasModulePath);
     console.log(`about to test ${lastModifiedFaasModulePath}`);
     const testPath = lastModifiedFaasModulePath.replace(jsExt, '.test' + jsExt);
     let testModule = await import(testPath).catch(() => ({}));
@@ -77,16 +79,29 @@ iv.defineCommand('quit', function saybye() {
   this.close();
 });
 
-/** 统一收集 faas 模块变更 */
+/** 统一收集 faas 模块变更，收集所有来自 faas 引用的模块的变更 */
 export function onFaasModuleChange(absPath: string) {
-  if (!absPath.endsWith('.ts')) return;
-  if (absPath.endsWith('.test.ts')) {
-    lastModifiedFaasModulePath = absPath.replace('.test.ts', '.ts');
+  if (!absPath.startsWith(ServiceDir)) {
+    return; // 不在项目 faas 目录内
+  }
+
+  if (basename(absPath).includes('.resp.')) {
+    return; // 属于自动测试结果文件，不处理
+  }
+
+  const ext = extname(absPath);
+  //@ts-ignore
+  if (!Module._extensions[ext]) return; // 不是注册的模块类型不做处理
+
+  // 对于 windows 平台，转成 linux 路径
+  if (sep === "\\") {
+    absPath = absPath.replaceAll(sep, '/');
+  }
+
+  if (absPath.endsWith('.test' + jsExt)) {
+    lastModifiedFaasModulePath = absPath.replace('.test.ts', ext);
   } else {
     lastModifiedFaasModulePath = absPath;
-  }
-  if (sep === "\\") {
-    lastModifiedFaasModulePath = lastModifiedFaasModulePath.replaceAll(sep, '/');
   }
   debug('faas/test change', absPath);
   if (autoTest) {
