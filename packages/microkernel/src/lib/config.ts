@@ -30,7 +30,10 @@ declare module './faas' {
 
 const defaultConfig: IConfig = {};
 const dirMap = new Map<string, IConfig>();
-export async function getDirConfig(path: string): Promise<IConfig> {
+export async function getDirConfig(
+  /** index.ts 所属的目录的相对项目的路径 */
+  path: string
+): Promise<IConfig> {
   const existingConfig = dirMap.get(path);
   if (existingConfig) {
     return existingConfig;
@@ -67,7 +70,7 @@ export async function getDirConfig(path: string): Promise<IConfig> {
 export function updateConfig(absPath: string) {
   // 目录配置改变的话，更新 config prototype chain
   debug('config changed for', absPath.substring(prefixLength));
-  const path = absPath.substring(prefixLength);
+  const path = dirname(absPath.substring(prefixLength));
   const config = dirMap.get(path)!;
   if (!config) {
     debug(`还未完整加载过配置，配置模块又改变了 ${path}`);
