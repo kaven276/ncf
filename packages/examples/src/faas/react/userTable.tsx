@@ -1,6 +1,7 @@
 import React from 'react';
 import { User } from "entity/User";
 import { faas as findUsers } from '../typeorm/hr/findUsers';
+import { CommonHead } from './common';
 
 const header = (
   <thead>
@@ -30,6 +31,7 @@ function renderUser(user: User) {
   )
 }
 
+
 interface IRequest {
   sex?: User["sex"],
   showNames?: boolean;
@@ -46,10 +48,13 @@ export async function faas(req: IRequest) {
   const users: User[] = await findUsers(req);
   return (
     <html lang="zh-CN">
-      <table cellPadding={10} style={{ border: "1px solid lime" }}>
-        {header}
-        <tbody>{users.map(renderUser)}</tbody>
-      </table>
+      {CommonHead({ title: '用户列表' })}
+      <div className="container">
+        <table className='table' cellPadding={10} style={{ border: "1px solid lime" }}>
+          {header}
+          <tbody>{users.map(renderUser)}</tbody>
+        </table>
+      </div>
     </html>
   );
 }
