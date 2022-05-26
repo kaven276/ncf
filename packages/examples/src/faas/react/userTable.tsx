@@ -3,7 +3,7 @@ import { User } from "entity/User";
 import { faas as findUsers } from '../typeorm/hr/findUsers';
 import { CommonHead } from './common';
 
-const header = (
+export const header = (
   <thead>
     <tr>
       <th>first name</th>
@@ -14,7 +14,7 @@ const header = (
   </thead>
 );
 
-function renderUser(user: User) {
+export function renderUser(user: User) {
   return (
     <tr key={user.id}>
       <td>{user.firstName}</td>
@@ -32,7 +32,7 @@ function renderUser(user: User) {
 }
 
 
-interface IRequest {
+export interface IRequest {
   sex?: User["sex"],
   showNames?: boolean;
   onlyFirstName?: string,

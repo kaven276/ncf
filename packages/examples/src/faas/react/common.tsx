@@ -14,3 +14,17 @@ export function CommonHead(props: {
     </head>
   );
 }
+
+export function Layout(props: {
+  head: Parameters<typeof CommonHead>[0],
+  children: React.ReactNode,
+}) {
+  return (
+    <html lang="zh-CN">
+      <CommonHead title={props.head?.title} />
+      <div className="container">
+        {props.children}
+      </div>
+    </html>
+  )
+}
