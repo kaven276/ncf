@@ -34,6 +34,21 @@ export function getCallState(): ICallState {
   return asyncLocalStorage.getStore()!;
 }
 
+/** 创建调用上下文上的项目 */
+export function createCtxItem<T>(key: Symbol) {
+  return {
+    set(v: T) {
+      const als = getCallState();
+      //@ts-ignore
+      als[key] = v;
+    },
+    get(): T | undefined {
+      //@ts-ignore
+      return getCallState()[key];
+    }
+  }
+}
+
 /** 供 index.ts 中的代理模块获取代理目标的路径，也即去掉 prefix 部分的路径 */
 export function getProxiedPath(): string | undefined {
   return getCallState().proxiedPath;
