@@ -18,9 +18,27 @@ export const config = {
 export async function faas(req: IRequest) {
   const users: User[] = await findUsers(req);
   return (
-    <table className='table' cellPadding={10} style={{ border: "1px solid lime" }}>
-      {header}
-      <tbody>{users.map(renderUser)}</tbody>
-    </table>
+    <div>
+      <br />
+      <form role="form" className="form-inline well" action="./userTable3" method="get">
+        <div className="form-group">
+          <label htmlFor="onlyFirstName">firstName 模糊匹配查询条件</label>
+          <input type="text" className="form-control" id="onlyFirstName"
+            name="onlyFirstName" placeholder="请输入名称"
+            defaultValue={req.onlyFirstName}
+          />
+        </div>
+        <div className="checkbox">
+          <label>
+            <input type="checkbox" name="showNames" defaultChecked={req.showNames} />是否展示别名清单
+          </label>
+        </div>
+        <button type="submit" className="btn btn-default">查询</button>
+      </form>
+      <table className='table table-bordered table-hover table-responsive'>
+        {header}
+        <tbody>{users.map(renderUser)}</tbody>
+      </table>
+    </div>
   );
 }
