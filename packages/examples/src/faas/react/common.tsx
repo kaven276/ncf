@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { getTitle } from '@ncf/mw-react-server-render';
 
 /** 各个 bootstrap 页面的 header */
 export function CommonHead(props: {
@@ -21,7 +21,7 @@ export function Layout(props: {
 }) {
   return (
     <html lang="zh-CN">
-      <CommonHead title={props.head?.title} />
+      <CommonHead title={props.head?.title ?? getTitle()} />
       <div className="container">
         {props.children}
       </div>
