@@ -32,6 +32,7 @@
     "@types/ink-select-input": "^3.0.1",
     "amqplib": "^0.8.0",
     "better-sqlite3": "^7.5.3",
+    "cheerio": "^1.0.0-rc.11",
     "classic-level": "^1.2.0",
     "dotenv": "^16.0.0",
     "elasticsearch": "^16.7.3",
