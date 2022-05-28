@@ -24,7 +24,7 @@ export const mwReactServerRender: IMiddleWare = async (ctx, next) => {
     let resp = ctx.response;
     if (layout) {
       // 如果配置了 layout 则使用 layout
-      resp = createElement(layout, {}, ctx.response);
+      resp = createElement(layout, { children: ctx.response });
     }
     ctx.response = renderToStaticMarkup(resp);
     if (ctx.response.startsWith('<html ')) {
