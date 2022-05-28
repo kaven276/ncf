@@ -1,6 +1,6 @@
 // 本模块同时支持多个灰度标签
 import type { Service } from '@ncf/microkernel';
-import { getVerionTag, Tag } from 'src/mw/versions';
+import { ctxVertionTag, Tag } from 'src/mw/versions';
 
 interface IResponse {
   layout: string,
@@ -17,7 +17,7 @@ interface Api {
 
 /** 演示根据请求中标识的版本要求做相应的特殊处理 */
 export const faas: Service<Api> = async () => {
-  const vt = getVerionTag();
+  const vt = ctxVertionTag.get();
   let res: IResponse;
   if (vt === Tag.DarkTheme) {
     res = {
