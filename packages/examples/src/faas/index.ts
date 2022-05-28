@@ -4,7 +4,7 @@ import { validate, showApiJsonSchema } from '@ncf/mw-validator';
 import { logTimeUse } from 'src/mw/logTimeUse';
 import { collectTimes } from 'src/mw/apm';
 import { jwtMiddleware, cfgSecret, ctxJWT, ctxJWTStruct, cfgJwtOption } from '@ncf/mw-jwt';
-import { randomLatency, setRandomLatencyConfig } from 'src/mw/randomLatency';
+import { randomLatency, cfgLatency } from 'src/mw/randomLatency';
 import { verionTagMiddleware } from 'src/mw/versions';
 import { mwCache } from 'src/mw/cache';
 import { mwLoggerWinston } from 'src/mw/logger-winston';
@@ -54,7 +54,7 @@ export const config = {
     issuer: 'kaven276',
     subject: 'ncf example',
   }),
-  ...setRandomLatencyConfig({
+  ...cfgLatency.set({
     maxLatencyMs: 0,
   }),
 }

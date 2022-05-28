@@ -1,5 +1,5 @@
-import { setRandomLatencyConfig } from 'src/mw/randomLatency';
+import { cfgLatency } from 'src/mw/randomLatency';
 
 export const config = {
-  ...setRandomLatencyConfig({ maxLatencyMs: 0 }),
+  ...cfgLatency.set({ maxLatencyMs: 0 }),
 }

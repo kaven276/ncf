@@ -1,5 +1,5 @@
 import { throwServiceError, getDebug } from '@ncf/microkernel';
-import { setRandomLatencyConfig } from 'src/mw/randomLatency';
+import { cfgLatency } from 'src/mw/randomLatency';
 import { signToken } from '@ncf/mw-jwt';
 import { env } from 'src/env';
 
@@ -19,7 +19,7 @@ export interface ISpec {
 }
 
 export const config = {
-  ...setRandomLatencyConfig({
+  ...cfgLatency.set({
     maxLatencyMs: 0
   }),
 }

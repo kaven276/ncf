@@ -1,5 +1,5 @@
 import { getProxiedPath } from '@ncf/microkernel';
-import { setRandomLatencyConfig } from 'src/mw/randomLatency';
+import { cfgLatency } from 'src/mw/randomLatency';
 
 /** 目录模块导出 faas 代表该目录路径使用反向代理 */
 export async function faas(req: any) {
@@ -12,7 +12,7 @@ export async function faas(req: any) {
 
 /** 说明代理模块也可以受中间及其配置影响，和实体 faas 模块一样 */
 export const config = {
-  ...setRandomLatencyConfig({
+  ...cfgLatency.set({
     maxLatencyMs: 5000,
   }),
 }
