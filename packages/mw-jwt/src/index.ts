@@ -1,19 +1,7 @@
-import { getDebug, getCallState, getConfig, throwServiceError, IMiddleWare } from '@ncf/microkernel';
+import { getDebug, getCallState, getConfig, throwServiceError, IMiddleWare, createCtxItem, createCfgItem } from '@ncf/microkernel';
 import { verify, JwtPayload, TokenExpiredError, sign, SignOptions } from 'jsonwebtoken';
 
 const debug = getDebug(module);
-const JWT = Symbol.for('JWT');
-const JWTParsed = Symbol.for('JWTParsed');
-
-/** 服务调用期间的全部内容 */
-declare module '@ncf/microkernel' {
-  interface ICallState {
-    // 使用 Symbol 作为本功能模块在调用线程数据结构中的 key，防止其他第三方中间件 key 命名重复造成 bug
-    [JWT]?: string,
-    /** sdfsd */
-    [JWTParsed]?: JwtPayload,
-  }
-}
 
 declare module 'jsonwebtoken' {
   interface JwtPayload {
@@ -21,13 +9,20 @@ declare module 'jsonwebtoken' {
   }
 }
 
-const secretKey = Symbol('secret');
-const jwtOptionKey = Symbol('jwtOption');
+/** JWT secret 配置 */
+export const cfgSecret = createCfgItem<string>(Symbol('secret'));
 
 interface JWTOption {
   issuer: string,
   subject: string,
 }
+
+/** JWT 颁发源配置 */
+export const cfgJwtOption = createCfgItem<JWTOption>(Symbol('jwt option'));
+
+const secretKey = Symbol('secret');
+const jwtOptionKey = Symbol('jwtOption');
+
 
 export function setJWT(secret: string, jwtOption: JWTOption) {
   return {
@@ -54,8 +49,16 @@ const defaultJwtOption: JWTOption = {
   subject: 'examples',
 }
 
+/** 设置和获取 jwt 串的 get/set API */
+export const ctxJWT = createCtxItem<string>(Symbol('JWT string'));
+
+/** 设置和获取 jwt 解析后的 get/set API */
+export const ctxJWTStruct = createCtxItem<JwtPayload>(Symbol('JWT payload struct'));
+
+
 const prefix = 'Bearer ';
 const prefixLen = prefix.length;
+
 
 /** jwt 检查校验和解析中间件 */
 export const jwtMiddleware: IMiddleWare = async (ctx, next) => {
@@ -69,12 +72,12 @@ export const jwtMiddleware: IMiddleWare = async (ctx, next) => {
   const token = ctx.gw.http.req.headers.authorization;
   if (token) {
     const jwt = token.startsWith(prefix) ? token.substring(prefixLen) : token;
-    ctx[JWT] = jwt;
+    ctxJWT.set(jwt);
     try {
       const secret: string = getConfig(secretKey, ctx) || defaultSecret;
       const option: JWTOption = getConfig(jwtOptionKey, ctx) || defaultJwtOption;
       const parsed: JwtPayload = verify(jwt, secret, option) as JwtPayload;
-      ctx[JWTParsed] = parsed;
+      ctxJWTStruct.set(parsed);
       ctx.caller.user = parsed.user;
       ctx.caller.org = parsed.org;
     } catch (e: any) {
@@ -87,15 +90,3 @@ export const jwtMiddleware: IMiddleWare = async (ctx, next) => {
   await next();
 }
 
-/** 返回 ALS 中的 JWT 字符串 */
-export function getJWT(): string | undefined {
-  const als = getCallState();
-  debug('als[JWT]', als[JWTParsed]);
-  return als[JWT];
-}
-
-/** 返回 ALS 中的 JWT 解析后的数据结构 */
-export function getJWTStruct(): JwtPayload | undefined {
-  const als = getCallState();
-  return als[JWTParsed];
-}

@@ -1,4 +1,4 @@
-import { getJWTStruct, getJWT } from '@ncf/mw-jwt';
+import { ctxJWT, ctxJWTStruct } from '@ncf/mw-jwt';
 import { getCaller } from '@ncf/microkernel';
 
 // 对于调用期间的 async local state，可以扩展其类型定义的内容
@@ -13,7 +13,7 @@ declare module '@ncf/microkernel' {
 export async function faas() {
   return {
     caller: getCaller(),
-    jwt: getJWT(),
-    jwtStruct: getJWTStruct(),
+    jwt: ctxJWT.get(),
+    jwtStruct: ctxJWTStruct.get(),
   }
 }

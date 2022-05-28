@@ -3,7 +3,7 @@ import { getCaller, IMiddleWare } from '@ncf/microkernel';
 import { validate, showApiJsonSchema } from '@ncf/mw-validator';
 import { logTimeUse } from 'src/mw/logTimeUse';
 import { collectTimes } from 'src/mw/apm';
-import { jwtMiddleware, setJWT, getJWT, getJWTStruct } from '@ncf/mw-jwt';
+import { jwtMiddleware, setJWT, ctxJWT, ctxJWTStruct } from '@ncf/mw-jwt';
 import { randomLatency, setRandomLatencyConfig } from 'src/mw/randomLatency';
 import { verionTagMiddleware } from 'src/mw/versions';
 import { mwCache } from 'src/mw/cache';
@@ -32,7 +32,7 @@ export const middlewares: (IMiddleWare | false)[] = [
   i18nMiddleware,
   async (ctx, next) => {
     // 如果是带身份自动测试的话，fake 出调用者身份，否则注释掉
-    ctx.caller.user = 'admin';
+    // ctx.caller.user = 'admin';
     await next();
   },
   jwtMiddleware,
@@ -67,8 +67,8 @@ export function check401() {
 }
 
 export function checkIsAdmin() {
-  console.log('checkIsAdmin', getJWTStruct());
-  console.log('getJWT', getJWT());
+  console.log('checkIsAdmin', ctxJWTStruct.get());
+  console.log('getJWT', ctxJWT.get());
   // todo: threadStore.jwt?.sub 报异常 error TS1109: Expression expected.
   if (getCaller().user !== 'admin') {
     throwServiceError(403, '不是管理员')
