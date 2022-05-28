@@ -123,3 +123,17 @@ export function getConfig(s: symbol, ctx?: ICallState): any {
   //@ts-ignore
   return getConfigByFaas(fassModule)?.[s];
 }
+
+/** 针对新的配置项，方便的创建对应配置设置和配置读取，默认配置组合 */
+export function createCfgItem<T>(key: symbol, defaultCfg?: T) {
+  return {
+    default: defaultCfg,
+    set(cfg: T) {
+      return { [key]: cfg };
+    },
+    /** 获取配置内容，ctx 通常是 NCF 给中间件参数送入的  */
+    get(ctx: ICallState): T {
+      return getConfig(key, ctx) || defaultCfg;
+    },
+  }
+}

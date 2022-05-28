@@ -13,7 +13,7 @@ export { createRequestListener } from './serverHttp';
 export { ServiceError, throwServiceError } from './lib/ServiceError';
 export type { GatewayType, GwExtras, GwHttp, GwKoa } from './lib/gateway';
 export { execute, getCallState, createCtxItem, getProxiedPath } from './executor';
-export { getConfig } from './lib/config';
+export { getConfig, createCfgItem } from './lib/config';
 export { getDebug } from './util/debug';
 export { addDisposer, shutdown } from './util/addDisposer';
 export { innerCall } from './innerCall';

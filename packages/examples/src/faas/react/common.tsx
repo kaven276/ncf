@@ -1,5 +1,5 @@
 import React from 'react';
-import { ctxTitle } from '@ncf/mw-react-server-render';
+import { ctxTitle, type Layout } from '@ncf/mw-react-server-render';
 
 /** 各个 bootstrap 页面的 header */
 export function CommonHead(props: {
@@ -15,13 +15,10 @@ export function CommonHead(props: {
   );
 }
 
-export function Layout(props: {
-  head: Parameters<typeof CommonHead>[0],
-  children: React.ReactNode,
-}) {
+export const layout: Layout = (props) => {
   return (
     <html lang="zh-CN">
-      <CommonHead title={props.head?.title ?? ctxTitle.get()} />
+      <CommonHead title={ctxTitle.get()} />
       <div className="container">
         {props.children}
       </div>
