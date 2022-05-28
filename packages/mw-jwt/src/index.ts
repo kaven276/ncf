@@ -10,43 +10,32 @@ declare module 'jsonwebtoken' {
 }
 
 /** JWT secret 配置 */
-export const cfgSecret = createCfgItem<string>(Symbol('secret'));
+export const cfgSecret = createCfgItem<string>(Symbol('secret'), 'has a van');
 
 interface JWTOption {
+  /** 颁发者，颁发机构 */
   issuer: string,
+  /** 针对的业务域或者主题 */
   subject: string,
 }
 
 /** JWT 颁发源配置 */
-export const cfgJwtOption = createCfgItem<JWTOption>(Symbol('jwt option'));
+export const cfgJwtOption = createCfgItem<JWTOption>(Symbol('jwt option'), {
+  issuer: 'NCF',
+  subject: 'examples',
+});
 
-const secretKey = Symbol('secret');
-const jwtOptionKey = Symbol('jwtOption');
-
-
-export function setJWT(secret: string, jwtOption: JWTOption) {
-  return {
-    [secretKey]: secret,
-    [jwtOptionKey]: jwtOption,
-  }
-}
 
 /** 生成 JWT token */
 export function signToken(user: string, opt: SignOptions) {
   const ctx = getCallState();
   const token = sign({
     user: user,
-  }, getConfig(secretKey, ctx), {
-    ...getConfig(jwtOptionKey, ctx),
+  }, cfgSecret.get(ctx), {
+    ...cfgJwtOption.get(ctx),
     ...opt,
   });
   return token;
-}
-
-const defaultSecret = 'has a van';
-const defaultJwtOption: JWTOption = {
-  issuer: 'NCF',
-  subject: 'examples',
 }
 
 /** 设置和获取 jwt 串的 get/set API */
@@ -74,9 +63,7 @@ export const jwtMiddleware: IMiddleWare = async (ctx, next) => {
     const jwt = token.startsWith(prefix) ? token.substring(prefixLen) : token;
     ctxJWT.set(jwt);
     try {
-      const secret: string = getConfig(secretKey, ctx) || defaultSecret;
-      const option: JWTOption = getConfig(jwtOptionKey, ctx) || defaultJwtOption;
-      const parsed: JwtPayload = verify(jwt, secret, option) as JwtPayload;
+      const parsed: JwtPayload = verify(jwt, cfgSecret.get(ctx), cfgJwtOption.get(ctx)) as JwtPayload;
       ctxJWTStruct.set(parsed);
       ctx.caller.user = parsed.user;
       ctx.caller.org = parsed.org;

@@ -3,7 +3,7 @@ import { getCaller, IMiddleWare } from '@ncf/microkernel';
 import { validate, showApiJsonSchema } from '@ncf/mw-validator';
 import { logTimeUse } from 'src/mw/logTimeUse';
 import { collectTimes } from 'src/mw/apm';
-import { jwtMiddleware, setJWT, ctxJWT, ctxJWTStruct } from '@ncf/mw-jwt';
+import { jwtMiddleware, cfgSecret, ctxJWT, ctxJWTStruct, cfgJwtOption } from '@ncf/mw-jwt';
 import { randomLatency, setRandomLatencyConfig } from 'src/mw/randomLatency';
 import { verionTagMiddleware } from 'src/mw/versions';
 import { mwCache } from 'src/mw/cache';
@@ -49,7 +49,8 @@ export const middlewares: (IMiddleWare | false)[] = [
 
 
 export const config = {
-  ...setJWT('ncf is best', {
+  ...cfgSecret.set('ncf is best'),
+  ...cfgJwtOption.set({
     issuer: 'kaven276',
     subject: 'ncf example',
   }),
