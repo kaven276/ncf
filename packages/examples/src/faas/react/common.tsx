@@ -15,7 +15,7 @@ export function CommonHead(props: {
   );
 }
 
-export const layout: Layout = (props) => {
+export const Layout1: Layout = (props) => {
   return (
     <html lang="zh-CN">
       <CommonHead title={ctxTitle.get()} />
