@@ -28,6 +28,17 @@ services:
       - 33060:33060
     volumes:
       - mysqlData:/var/lib/mysql
+
+  mongo:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=docker
+      - MONGO_INITDB_ROOT_PASSWORD=mongopw
+    ports:
+      - 27017:27017
+    volumes:
+      - mongoData:/data/db
 volumes:
   data:
   mysqlData:
+  mongoData:
