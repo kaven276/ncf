@@ -4,19 +4,18 @@
 version: "3.7"
 
 services:
-  db:
+
+  postgres:
     image: postgres:latest
     volumes:
-      - data:/var/lib/postgresql/data
-    env_file: ./.env.local #Here we are using the already existing .env.local file
+      - postgresData:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=ncf
+      - POSTGRES_PASSWORD=ncf2022
+      - POSTGRES_DB=postgres
+      - DATABASE_URL=postgresql://ncf:ncf2022@localhost:5432/postgres
     ports:
       - 5432:5432
-
-  db-test:
-    image: postgres:latest
-    env_file: ./.env.test.local
-    ports:
-      - 5433:5432
 
   mysql:
     image: mysql:latest
@@ -38,7 +37,8 @@ services:
       - 27017:27017
     volumes:
       - mongoData:/data/db
+
 volumes:
-  data:
+  postgresData:
   mysqlData:
   mongoData:

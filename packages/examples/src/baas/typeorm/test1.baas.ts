@@ -11,7 +11,7 @@ let baas = createDataSource({
   type: "postgres",
   url: env.TYPEORM_URL,
   schema: env.ORM_PG_SCHEMA,
-  synchronize: false,
+  synchronize: true,
   logging: false,
   entities: [pathPattern("baas/typeorm/entity/**/*")],
   migrations: [pathPattern("baas/typeorm/migration/**/*")],
