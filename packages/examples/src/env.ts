@@ -33,6 +33,8 @@ interface ENV {
   ITSM_URL: string,
 };
 
+const DefaultPostgresUrl = 'postgresql://ncf:ncf2022@localhost:5432/postgres';
+
 /** 所有 baas 链接串默认值都是本机默认端口，无用户名密码的或者范例用户名密码的 */
 const envSchema: JSONSchemaType<ENV> = {
   type: "object",
@@ -42,11 +44,11 @@ const envSchema: JSONSchemaType<ENV> = {
     BAAS_HOST: { type: 'string', default: '127.0.0.1' },
     DEFAULT_LANG: { type: 'string', enum: ['chinese', 'english'], default: 'chinese' },
 
-    TYPEORM_URL: { type: 'string', default: 'postgresql://ncf:ncf2022@localhost:5432/postgres' },
+    TYPEORM_URL: { type: 'string', default: DefaultPostgresUrl },
     ORM_PG_SCHEMA: { type: 'string', default: 'public' },
-    TYPEORM_URL3: { type: 'string', default: 'postgresql://ncf:ncf2022@localhost:5432/postgres' },
+    TYPEORM_URL3: { type: 'string', default: DefaultPostgresUrl },
     ORM_PG_SCHEMA3: { type: 'string', default: 'public' },
-    PG_URL: { type: 'string', default: 'postgresql://test1:test1@localhost:25432/pgsqlib' },
+    PG_URL: { type: 'string', default: DefaultPostgresUrl },
     REDIS_URL: { type: 'string', default: 'redis://localhost:6379/0' },
     AMQP_URL: { type: 'string', default: 'amqp://admin:admin@localhost:5672' },
     ES_URL: { type: 'string', default: 'http://localhost:9200' },
