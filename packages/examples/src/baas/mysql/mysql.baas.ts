@@ -6,9 +6,9 @@ let baas = createDataSource({
   type: "mysql",
   host: "127.0.0.1",
   port: 3306,
-  database: 'wordpress',
+  database: 'ncf',
   username: 'root',
-  password: '123456',
+  password: 'secret',
   synchronize: true,
   logging: true,
   // 复用一下 sqlite 的模型

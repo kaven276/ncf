@@ -18,5 +18,16 @@ services:
     ports:
       - 5433:5432
 
+  mysql:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_DATABASE=ncf
+    ports:
+      - 3306:3306
+      - 33060:33060
+    volumes:
+      - mysqlData:/var/lib/mysql
 volumes:
   data:
+  mysqlData:
