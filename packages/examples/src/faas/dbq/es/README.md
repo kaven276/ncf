@@ -18,3 +18,10 @@ New value: W0tgAkRec=g4FTjj97Na
 ```
 
 得到的新密码，更新 es8.baas.ts 中的配置。
+
+
+## kibana 配置
+
+```
+docker exec -it examples-elasticsearch-1 /usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s kibana
+```
