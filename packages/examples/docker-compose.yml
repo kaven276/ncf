@@ -62,6 +62,17 @@ services:
     volumes:
       - redisData:/data
 
+  # https://hub.docker.com/_/rethinkdb
+  # http://localhost:28080/ 控制台
+  rethinkdb:
+    image: rethinkdb:2.4.2
+    ports:
+      - 28015:28015
+      - 29015:29015
+      - 28080:8080
+    volumes:
+      - rethinkData:/data
+
   # 4369/tcp, 5671/tcp, 0.0.0.0:5672->5672/tcp, 15671/tcp, 15691-15692/tcp, 25672/tcp, 0.0.0.0:15672->15672/tcp
   rabbitmq:
     image: rabbitmq:management
@@ -86,4 +97,5 @@ volumes:
   mongoData:
   elasticsearchData:
   redisData:
+  rethinkData:
   rabbitmqData:

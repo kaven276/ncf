@@ -1587,6 +1587,13 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
+"@types/rethinkdb@^2.3.17":
+  version "2.3.17"
+  resolved "https://registry.npmmirror.com/@types/rethinkdb/-/rethinkdb-2.3.17.tgz#84dd087d2452704b8915dc779f60b2fc88641fce"
+  integrity sha512-+ca0JPz1qznhM+OUPf/XUqYKp3WOIm3Kak8TaIyA6k82JEZd1Vl10u1HRhJmsOV4riVwLr8TPpYCLpupEkMz5w==
+  dependencies:
+    "@types/node" "*"
+
 "@types/rocksdb@^3.0.1":
   version "3.0.1"
   resolved "https://registry.npmmirror.com/@types/rocksdb/-/rocksdb-3.0.1.tgz#bb1e43ca3bfb5d7969211525979160ada09c00bc"
@@ -2040,6 +2047,11 @@ bl@^4.0.3:
     buffer "^5.5.0"
     inherits "^2.0.4"
     readable-stream "^3.4.0"
+
+"bluebird@>= 2.3.2 < 3":
+  version "2.11.0"
+  resolved "https://registry.npmmirror.com/bluebird/-/bluebird-2.11.0.tgz#534b9033c022c9579c56ba3b3e5a5caafbb650e1"
+  integrity sha512-UfFSr22dmHPQqPP9XWHRhq+gWnHCYguQGkXQlbyPtW5qTnhFWA8/iXg765tH0cAjy7l/zPJ1aBTO0g5XgA7kvQ==
 
 bluebird@^3.7.2:
   version "3.7.2"
@@ -3196,7 +3208,7 @@ es6-error@^4.0.1:
     once "^1.4.0"
     pump "^3.0.0"
 
-"es8@npm:@elastic/elasticsearch@~8.2.2":
+"es8@npm:@elastic/elasticsearch@~8.2.1":
   version "8.2.1"
   resolved "https://registry.npmmirror.com/@elastic/elasticsearch/-/elasticsearch-8.2.1.tgz#7fbced5f4e13b50c6ccaaf642e8ba4e8e62b71e1"
   integrity sha512-Kwerd8DfNZdBGgl7fkn+20kXkw1QePB3goTv5QwW9poo2d4VbPE0EChmh6irpXWAGsVSYiKr8x6bh8dH5YdylA==
@@ -6654,6 +6666,13 @@ restore-cursor@^3.1.0:
     onetime "^5.1.0"
     signal-exit "^3.0.2"
 
+rethinkdb@^2.4.2:
+  version "2.4.2"
+  resolved "https://registry.npmmirror.com/rethinkdb/-/rethinkdb-2.4.2.tgz#9c5d8dde3300ddacfdfae0fc8ded3754602d447a"
+  integrity sha512-6DzwqEpFc8cqesAdo07a845oBRxLiHvWzopTKBo/uY2ypGWIsJQFJk3wjRDtSEhczxJqLS0jnf37rwgzYAw8NQ==
+  dependencies:
+    bluebird ">= 2.3.2 < 3"
+
 retry@^0.12.0:
   version "0.12.0"
   resolved "https://registry.npmmirror.com/retry/-/retry-0.12.0.tgz"
@@ -7637,10 +7656,15 @@ typeorm@^0.3.3:
     xml2js "^0.4.23"
     yargs "^17.3.1"
 
-typescript@4.6.2, typescript@^4.6.2, typescript@^4.6.4:
+typescript@4.6.2, typescript@^4.6.2:
   version "4.6.2"
   resolved "https://registry.npmmirror.com/typescript/-/typescript-4.6.2.tgz#fe12d2727b708f4eef40f51598b3398baa9611d4"
   integrity sha512-HM/hFigTBHZhLXshn9sN37H085+hQGeJHJ/X7LpBWLID/fbc2acUMfU+lGD98X81sKP+pFa9f0DZmCwB9GnbAg==
+
+typescript@^4.6.4:
+  version "4.7.2"
+  resolved "https://registry.npmmirror.com/typescript/-/typescript-4.7.2.tgz#1f9aa2ceb9af87cca227813b4310fff0b51593c4"
+  integrity sha512-Mamb1iX2FDUpcTRzltPxgWMKy3fhg0TN378ylbktPGPK/99KbDtMQ4W1hwgsbPAsG3a0xKa1vmw4VKZQbkvz5A==
 
 uglify-js@^3.1.4:
   version "3.15.3"
