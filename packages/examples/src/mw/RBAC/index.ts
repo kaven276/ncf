@@ -1,16 +1,9 @@
 import { throwServiceError, type IMiddleWare } from '@ncf/microkernel';
 import { ifUserHasRole } from 'src/faas/4A/ifUserHasRole';
 
-declare module '@ncf/microkernel' {
-  interface IFaasModule {
-    /** 允许执行本 faas 的角色 */
-    role?: string;
-  }
-}
-
 /** 从环境获取 version tag，仅仅作为参照实现 */
 export const mwRBAC: IMiddleWare = async (ctx, next) => {
-  const faasRole = ctx.fassModule.role;
+  const faasRole = ctx.fassModule.faas.role;
   if (faasRole) {
     // console.dir(ctx.caller);
     const user = ctx.caller.user;

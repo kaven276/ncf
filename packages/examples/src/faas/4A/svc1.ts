@@ -1,7 +1,8 @@
-import { Roles, roles } from './roles';
+import { Service } from '@ncf/microkernel';
 
-export const role: Roles = roles.normal;
-
-export const faas = async () => {
+export const faas: Service = async () => {
   return 'ok';
 }
+
+// 配置 faas 要求的角色
+faas.role = 'normal';
