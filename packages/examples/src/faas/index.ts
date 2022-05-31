@@ -33,7 +33,7 @@ export const middlewares: (IMiddleWare | false)[] = [
   i18nMiddleware,
   async (ctx, next) => {
     // 如果是带身份自动测试的话，fake 出调用者身份，否则注释掉
-    ctx.caller.user = 'admin';
+    ctx.caller.user = 'user1';
     await next();
   },
   jwtMiddleware,
