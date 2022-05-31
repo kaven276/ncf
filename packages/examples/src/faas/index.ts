@@ -8,6 +8,7 @@ import { randomLatency, cfgLatency } from 'src/mw/randomLatency';
 import { verionTagMiddleware } from 'src/mw/versions';
 import { mwCache } from 'src/mw/cache';
 import { mwLoggerWinston } from 'src/mw/logger-winston';
+import { mwRBAC } from 'src/mw/RBAC';
 import { mwReactServerRender } from '@ncf/mw-react-server-render';
 import { throwServiceError } from '@ncf/microkernel';
 import { i18nMiddleware } from 'src/i18n';
@@ -32,7 +33,7 @@ export const middlewares: (IMiddleWare | false)[] = [
   i18nMiddleware,
   async (ctx, next) => {
     // 如果是带身份自动测试的话，fake 出调用者身份，否则注释掉
-    // ctx.caller.user = 'admin';
+    ctx.caller.user = 'admin';
     await next();
   },
   jwtMiddleware,
@@ -40,6 +41,7 @@ export const middlewares: (IMiddleWare | false)[] = [
   mwCache,
   validate,
   checkAuth,
+  mwRBAC,
   logTimeUse,
   collectTimes,
   randomLatency,
