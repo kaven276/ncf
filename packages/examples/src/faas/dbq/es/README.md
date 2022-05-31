@@ -1,10 +1,10 @@
-ELK 数据源
+elastic-search 8.2.2 的使用范例
 
-确保安装和服务端相同版本的 nodejs client npm 包
-yarn add es7@npm:@elastic/elasticsearch@~7.5
+## 默认用户 elastic 的密码获取参考
 
-# 通过 docker compose 启动 es8.2.2 后的密码配置
+`docker compose up -d elasticsearch` 后需要修改和拿到密码，参照如下
 
+```
 elasticsearch@e4b62e3f7488:~/bin$ /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic
 WARNING: Owner of file [/usr/share/elasticsearch/config/users] used to be [root], but now is [elasticsearch]
 WARNING: Owner of file [/usr/share/elasticsearch/config/users_roles] used to be [root], but now is [elasticsearch]
@@ -15,3 +15,6 @@ Please confirm that you would like to continue [y/N]y
 
 Password for the [elastic] user successfully reset.
 New value: W0tgAkRec=g4FTjj97Na
+```
+
+得到的新密码，更新 es8.baas.ts 中的配置。
