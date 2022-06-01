@@ -47,6 +47,7 @@
     "ink-table": "^3.0.0",
     "ink-text-input": "^4.0.3",
     "ioredis": "^5.0.3",
+    "kafkajs": "^2.0.2",
     "leveldown": "^6.1.1",
     "levelup": "^5.1.1",
     "mobx": "^6.5.0",
