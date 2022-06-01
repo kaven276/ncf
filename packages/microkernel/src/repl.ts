@@ -43,7 +43,7 @@ async function doTest() {
       writeFile(respPath, (e as Error).toString(), { encoding: 'utf8' }, () => { });
       return;
     }
-
+    console.log(lastModifiedFaasModulePath, resp);
     const isHTML = (typeof resp === 'string' && resp.startsWith('<'));
     const isBuffer = resp instanceof Buffer;
     const isStream = resp instanceof Readable;
@@ -60,6 +60,7 @@ async function doTest() {
       resp.pipe(f);
     } else if (!!resp) {
       const respPath = lastModifiedFaasModulePath.replace(jsExt, '.resp.json');
+      console.log(respPath);
       writeFile(respPath, JSON.stringify(resp, null, 2), { encoding: 'utf8' }, () => { });
     }
   }

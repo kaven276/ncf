@@ -119,6 +119,18 @@ services:
     depends_on:
       - zookeeper
 
+  # https://hub.docker.com/r/yugabytedb/yugabyte
+  # https://www.yugabyte.com
+
+  # https://nats.io
+  # https://hub.docker.com/_/nats
+  nats:
+    image: docker.io/nats:2.8.4-alpine3.15
+    ports:
+      - 4222:4222
+      - 6222:6222
+      - 8222:8222
+
 volumes:
   postgresData:
   mysqlData:
