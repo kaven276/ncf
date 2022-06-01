@@ -5,7 +5,7 @@ import { state } from './state';
 const debug = getDebug(module);
 
 interface Api {
-  path: '/amqp/receiver',
+  path: '/dbq/amqp/receiver',
   request: undefined,
   response: {
     inst: number,

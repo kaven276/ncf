@@ -7,5 +7,5 @@ interface IRequest {
 
 /** 测试直接使用 pg 单个连接提供服务 */
 export async function faas(req: IRequest) {
-  await redis.set(req.key ?? "mykey", req.value ?? "value");
+  await redis.set(req.key ?? "mykey", req.value ?? "value2");
 }

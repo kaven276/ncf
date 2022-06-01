@@ -4,7 +4,7 @@ export interface IRequest {
 }
 
 export interface ISpec {
-  path: '/redis/transaction',
+  path: '/dbq/redis/transaction',
   request: IRequest,
   response: any,
 }

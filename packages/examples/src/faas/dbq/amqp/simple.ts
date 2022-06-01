@@ -4,7 +4,7 @@ import mq from '.';
 const debug = getDebug(module);
 
 interface Api {
-  path: '/amqp/simple',
+  path: '/dbq/amqp/simple',
   request: undefined,
   response: {
     msgList: string[],
