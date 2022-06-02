@@ -1,7 +1,7 @@
 import { innerCall } from '@ncf/microkernel';
 
 export const faas = async () => {
-  return innerCall('/nested/start', { multi: 10 });
+  return innerCall('/composite/nested/start', { multi: 10 });
 }
 
 import tap from 'tap';

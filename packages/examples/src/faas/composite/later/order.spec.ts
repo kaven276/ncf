@@ -12,7 +12,7 @@ export interface Request {
  * 也方便使用 tsconfig.json 中单独 include，防止全面包含过于浪费资源
  */
 export interface ISpec {
-  path: '/later/order',
+  path: '/composite/later/order',
   request: Request,
   response: void,
 }

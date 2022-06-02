@@ -2,7 +2,7 @@ import { ISpec } from './order.spec';
 import { innerCall } from '@ncf/microkernel';
 
 export const faas = async () => {
-   return innerCall<ISpec>('/later/order', {
+   return innerCall<ISpec>('/composite/later/order', {
      userId: 'LiYong',
      productId: 'macbook16',
      amount: 1,

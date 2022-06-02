@@ -1,6 +1,6 @@
 import { outerCall } from '@ncf/microkernel';
 import { scheduleJob } from 'node-schedule';
-import { ISpec } from 'src/faas/later/order.spec';
+import { ISpec } from 'src/faas/composite/later/order.spec';
 
 export const job = scheduleJob('fake orders', '*/5 * * * * *', () => {
   outerCall<ISpec>('/later/order', {
