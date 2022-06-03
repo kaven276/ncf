@@ -1,22 +1,10 @@
-import { getConfig } from '@ncf/microkernel';
+import { createCfgItem } from '@ncf/microkernel';
 
-const configKey = Symbol('ConcurrencyThreshold');
-
-export interface ConcurrencyConfig {
+interface ConcurrencyConfig {
   /** faas 最大的同时在途执行数量 */
   maxConcurrency: number,
 }
 
-const defaultConfig: ConcurrencyConfig = {
+export const cfgMaxConcurrency = createCfgItem<ConcurrencyConfig>(Symbol('ConcurrencyThreshold'), {
   maxConcurrency: 1000,
-}
-
-export function setMaxConcurrencyConfig(cfg: ConcurrencyConfig) {
-  return {
-    [configKey!]: cfg
-  }
-}
-
-export function getMaxConcurrencyConfig(): ConcurrencyConfig {
-  return getConfig(configKey) ?? defaultConfig;
-}
+});
