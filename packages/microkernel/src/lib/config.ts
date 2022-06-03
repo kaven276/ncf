@@ -128,6 +128,7 @@ export function getConfig(s: symbol, ctx?: ICallState): any {
 export function createCfgItem<T>(key: symbol, defaultCfg?: T) {
   return {
     default: defaultCfg,
+    /** 对目录 index 和 faas 模块做配置 */
     set(cfg: T) {
       return { [key]: cfg };
     },
@@ -135,5 +136,12 @@ export function createCfgItem<T>(key: symbol, defaultCfg?: T) {
     get(ctx: ICallState): T {
       return getConfig(key, ctx) || defaultCfg;
     },
+    /** 获取 faas 专有配置内容，不看目录配置(不走prototype chain节省处理)  */
+    get1(ctx: ICallState): T | undefined {
+      const cfg = getConfigByFaas(ctx.fassModule);
+      if (!cfg) return undefined;
+      const desc = Object.getOwnPropertyDescriptor(cfg, key);
+      return desc ? desc.value : defaultCfg;
+    }
   }
 }

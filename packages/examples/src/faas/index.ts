@@ -9,6 +9,7 @@ import { verionTagMiddleware } from 'src/mw/versions';
 import { mwCache } from 'src/mw/cache';
 import { mwLoggerWinston } from 'src/mw/logger-winston';
 import { mwRBAC } from 'src/mw/RBAC';
+import { mwInstance } from 'src/mw/ClassDemo';
 import { mwReactServerRender } from '@ncf/mw-react-server-render';
 import { throwServiceError } from '@ncf/microkernel';
 import { i18nMiddleware } from 'src/i18n';
@@ -46,6 +47,7 @@ export const middlewares: (IMiddleWare | false)[] = [
   collectTimes,
   randomLatency,
   mwReactServerRender,
+  mwInstance.middleware,
   verionTagMiddleware,
 ];
 

@@ -11,3 +11,8 @@ export interface IMiddleWare {
     next: () => Promise<void>
   ): Promise<void>,
 }
+
+/** 支持 middleware 的类的标准，用于可配置可修改配置的中间件 */
+export abstract class MiddleWareClass {
+  middleware: IMiddleWare;
+}
