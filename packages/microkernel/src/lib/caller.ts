@@ -1,5 +1,5 @@
 // faas 调用者身份信息
-import { getCallState } from '../executor';
+import { getCallState } from '../lib/callState';
 
 export interface Caller {
   /** 访问的用户 */

@@ -12,7 +12,8 @@ export { ProjectDir as ProjectDir, tsMode, jsExt, pathPattern } from './util/res
 export { createRequestListener } from './serverHttp';
 export { ServiceError, throwServiceError } from './lib/ServiceError';
 export type { GatewayType, GwExtras, GwHttp, GwKoa } from './lib/gateway';
-export { execute, getCallState, createCtxItem, getProxiedPath } from './executor';
+export { getCallState, createCtxItem } from './lib/callState';
+export { execute, getProxiedPath } from './executor';
 export { getConfig, createCfgItem } from './lib/config';
 export { MiddleWareClass } from './lib/middleware';
 export { getDebug } from './util/debug';

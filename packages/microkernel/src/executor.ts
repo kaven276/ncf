@@ -1,7 +1,6 @@
 import { IncomingMessage } from 'node:http';
 import { dirname } from 'node:path';
-import { AsyncLocalStorage } from 'node:async_hooks';
-import { ICallState } from './lib/callState';
+import { type ICallState, getCallState, asyncLocalStorage } from './lib/callState';
 import { ServiceError, throwServiceError } from './lib/ServiceError';
 import { IFaasModule } from './lib/faas';
 import { getConfigByFaas, proxyTriggerPrefixKey, getDirConfig, ensureFaasConfig } from './lib/config';
@@ -26,27 +25,6 @@ interface IEntranceProps {
   request: object,
   stream?: IncomingMessage,
   mock?: boolean,
-}
-
-const asyncLocalStorage = new AsyncLocalStorage<ICallState>();
-
-export function getCallState(): ICallState {
-  return asyncLocalStorage.getStore()!;
-}
-
-/** 创建调用上下文上的项目 */
-export function createCtxItem<T>(key: Symbol) {
-  return {
-    set(v: T) {
-      const als = getCallState();
-      //@ts-ignore
-      als[key] = v;
-    },
-    get(): T | undefined {
-      //@ts-ignore
-      return getCallState()[key];
-    }
-  }
 }
 
 /** 供 index.ts 中的代理模块获取代理目标的路径，也即去掉 prefix 部分的路径 */

@@ -4,7 +4,7 @@
 // 融调用如果执行失败，或者写明异步执行了，则记录队列成功后，executor commit
 
 import { Service, IApi } from './lib/faas';
-import { getCallState } from './executor';
+import { getCallState } from './lib/callState';
 import { ICallState } from './lib/callState';
 import { request, RequestOptions, Agent } from 'node:http';
 

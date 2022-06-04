@@ -1,7 +1,7 @@
 import { ProjectDir, jsExt, MoundDir } from '../util/resolve';
 import { IFaasModule } from '../lib/faas';
 import { getDebug } from '../util/debug';
-import { getCallState } from '../executor';
+import { getCallState } from '../lib/callState';
 import { ICallState } from './callState';
 import { registerDep } from '../hotUpdate';
 import { join, dirname } from 'path';

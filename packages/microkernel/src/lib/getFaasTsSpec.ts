@@ -1,6 +1,6 @@
 import { createReadStream } from 'node:fs';
 import { normalize } from 'node:path';
-import { getCallState } from '../executor';
+import { getCallState } from '../lib/callState';
 import { throwServiceError } from './ServiceError';
 import { ProjectDir, MoundDir } from '../util/resolve';
 import { GwExtras } from './gateway';

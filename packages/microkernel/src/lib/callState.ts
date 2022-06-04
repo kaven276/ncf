@@ -1,5 +1,4 @@
-
-import { Identifier } from 'typescript';
+import { AsyncLocalStorage } from 'node:async_hooks';
 import { IFaasModule, Service, IApi } from './faas';
 import type { GwExtras } from './gateway';
 import type { Caller } from './caller';
@@ -39,3 +38,26 @@ export interface ICallState {
   laterFaasCalls: LaterFaasCall[],
   gw: GwExtras,
 };
+
+/** 调用上下文对象 */
+export const asyncLocalStorage = new AsyncLocalStorage<ICallState>();
+
+/** 获取当前调用期间的调用上下文状态 */
+export function getCallState(): ICallState {
+  return asyncLocalStorage.getStore()!;
+}
+
+/** 创建调用上下文上的项目，用于中间件和 faas 的信息传递 */
+export function createCtxItem<T>(key: Symbol) {
+  return {
+    set(v: T) {
+      const als = getCallState();
+      //@ts-ignore
+      als[key] = v;
+    },
+    get(): T | undefined {
+      //@ts-ignore
+      return getCallState()[key];
+    }
+  }
+}
