@@ -1,8 +1,8 @@
 import { level1 } from './level1';
 import { state2 } from './state2';
-import { cfgCache } from 'src/mw/cache';
+import { cfgCache, cfgCacheKeyFn } from 'src/mw/cache';
 
-export function getCacheKey(req: any): string {
+function getCacheKey(req: any): string {
   return String(req?.multi ?? 2);
 }
 
@@ -10,7 +10,8 @@ export const config = {
   ...cfgCache.set({
     /** 缓存有效期 10s */
     maxAge: 10 * 1000,
-  })
+  }),
+  ...cfgCacheKeyFn.set(getCacheKey)
 }
 
 /** 查看 level2 ts 改变，是否再访问 start，看到是更新后的代码 */
