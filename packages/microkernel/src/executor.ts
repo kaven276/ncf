@@ -54,6 +54,16 @@ export function getProxiedPath(): string | undefined {
   return getCallState().proxiedPath;
 }
 
+let middlewares: IMiddleWare[] | undefined;
+async function getMiddlewares() {
+  const tryPath = normalize(`${ProjectDir}/${MoundDir}/faas/middlewares${jsExt}`);
+  const mm = await import(tryPath);
+  await registerDep(tryPath);
+  middlewares = mm.middlewares();
+}
+
+const getMiddlewaresPromise = getMiddlewares();
+
 /** 进入服务执行，提供执行环境，事务管理。
  * 返回 Promise
  */
@@ -148,11 +158,13 @@ export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promi
 
     // 最终做成像 koa 式的包洋葱中间件
 
-    const middlewares: IMiddleWare[] = await import(`${ProjectDir}/${MoundDir}/faas/index${jsExt}`).then((m) => (m.middlewares)).catch(() => []);
+    if (!middlewares) {
+      await getMiddlewaresPromise;
+    }
 
     async function runMiddware(n: number): Promise<void> {
       debug(`executing middleware ${n}`);
-      const mw: IMiddleWare = middlewares[n];
+      const mw: IMiddleWare = middlewares![n];
       if (!mw) {
         debug('after middlewares, executing faas');
         return faas(request, stream).then((response) => {
