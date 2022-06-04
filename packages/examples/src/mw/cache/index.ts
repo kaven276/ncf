@@ -1,4 +1,5 @@
 import { IMiddleWare, createCfgItem, getDebug } from '@ncf/microkernel';
+export { RedisCache } from './redisCache';
 
 const debug = getDebug(module);
 
@@ -12,7 +13,6 @@ export const cfgCache = createCfgItem<CacheConfig>(Symbol('Cache'), {
   maxAge: 60 * 1000,
 });
 
-
 export interface CacheKeyFn {
   /** 缓存最大有效的毫秒数 */
   (req: any): string;
@@ -21,7 +21,7 @@ export interface CacheKeyFn {
 /** 配置如何确定缓存 key，无默认值 */
 export const cfgCacheKeyFn = createCfgItem<CacheKeyFn>(Symbol('CacheKeyFn'));
 
-interface CachedItem {
+export interface CachedItem {
   content: any,
   createdAt: number,
   hitCount: number,
