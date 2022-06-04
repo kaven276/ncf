@@ -1,4 +1,4 @@
-import { IMiddleWare, getConfig, getDebug } from '@ncf/microkernel';
+import { IMiddleWare, createCfgItem, getDebug } from '@ncf/microkernel';
 
 const debug = getDebug(module);
 
@@ -15,12 +15,10 @@ export interface CacheConfig {
   maxAge: number,
 }
 
-const configKey = Symbol('Cache');
-
-const defaultConfig: CacheConfig = {
+export const cfgCache = createCfgItem<CacheConfig>(Symbol('Cache'), {
   /** 默认1分钟缓存有效期 */
   maxAge: 60 * 1000,
-}
+});
 
 interface CachedItem {
   content: any,
@@ -32,7 +30,7 @@ const cacheStore = new Map<string, OneFaasCache>();
 
 /** 延迟开始执行不超过任意毫秒数  */
 export const mwCache: IMiddleWare = async (ctx, next) => {
-  const config: CacheConfig = getConfig(configKey, ctx) || defaultConfig;
+  const config: CacheConfig = cfgCache.get(ctx);
   if (ctx.fassModule.getCacheKey) {
     const cacheKey = ctx.fassModule.getCacheKey(ctx.request);
     if (cacheKey === undefined) {
@@ -67,11 +65,5 @@ export const mwCache: IMiddleWare = async (ctx, next) => {
     }
   } else {
     await next();
-  }
-}
-
-export function setCacheConfig(cfg: CacheConfig) {
-  return {
-    [configKey!]: cfg
   }
 }

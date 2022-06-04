@@ -1,13 +1,13 @@
 import { level1 } from './level1';
 import { state2 } from './state2';
-import { setCacheConfig } from 'src/mw/cache';
+import { cfgCache } from 'src/mw/cache';
 
 export function getCacheKey(req: any): string {
   return String(req?.multi ?? 2);
 }
 
 export const config = {
-  ...setCacheConfig({
+  ...cfgCache.set({
     /** 缓存有效期 10s */
     maxAge: 10 * 1000,
   })
