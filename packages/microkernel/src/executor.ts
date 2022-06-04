@@ -180,6 +180,10 @@ export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promi
       return als.response;
     } catch (e: any) {
 
+      if (e instanceof Error) {
+        console.error(e.stack);
+      }
+
       // 处理出现异常会，事务自动回滚
       await Promise.all(store.trans.map(tran => tran.rollback()));
 
