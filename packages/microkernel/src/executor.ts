@@ -123,6 +123,7 @@ export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promi
     proxiedPath: proxyTriggerPrefix ? faasPath.substring(proxyTriggerPrefix!.length) : undefined,
     request,
     response: null,
+    stream,
     caller: {} as Caller,
     fassModule,
     trans: [],

@@ -2,6 +2,7 @@ import { AsyncLocalStorage } from 'node:async_hooks';
 import { IFaasModule, Service, IApi } from './faas';
 import type { GwExtras } from './gateway';
 import type { Caller } from './caller';
+import type { Readable } from 'node:stream';
 
 export interface TransactionDealer {
   /** 提交 */
@@ -28,6 +29,8 @@ export interface ICallState {
   request: any,
   /** 响应 */
   response: any,
+  /** 请求流，比如上传文件的流 */
+  stream?: Readable,
   /** 调用者身份信息 */
   caller: Caller,
   /** faas 服务模块 */
