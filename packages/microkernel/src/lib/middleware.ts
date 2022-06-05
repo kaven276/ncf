@@ -25,7 +25,7 @@ export abstract class MiddleWareClass {
 /** 项目配置的中间件清单，顺序重要 */
 let middlewares: IMiddleWare[] | undefined;
 async function getMiddlewares() {
-  const tryPath = normalize(`${ProjectDir}/${MoundDir}/faas/middlewares${jsExt}`);
+  const tryPath = normalize(`${ProjectDir}/${MoundDir}/middlewares${jsExt}`);
   const mm = await import(tryPath);
   await registerDep(tryPath);
   middlewares = mm.middlewares();
