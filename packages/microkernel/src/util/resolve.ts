@@ -1,5 +1,5 @@
 import { Module } from 'module';
-
+import { normalize } from 'node:path';
 
 export const ProjectDir = process.cwd();
 
@@ -14,3 +14,5 @@ export const prefixLength = ServiceDir.length;
 export function pathPattern(fpath: string) {
   return tsMode ? `src/${fpath}.ts` : `dist/${fpath}.js`;
 }
+
+export const MiddlewareFilePath = normalize(`${ProjectDir}/${MoundDir}/middlewares${jsExt}`);

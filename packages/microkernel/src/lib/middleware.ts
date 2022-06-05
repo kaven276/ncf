@@ -1,7 +1,6 @@
 /* 这里面定义 middleware 的规范 */
 import { ICallState } from './callState';
-import { normalize } from 'path';
-import { ProjectDir, jsExt, MoundDir } from '../util/resolve';
+import { MiddlewareFilePath } from '../util/resolve';
 import { registerDep } from '../hotUpdate';
 import { getDebug } from '../util/debug';
 
@@ -24,8 +23,8 @@ export abstract class MiddleWareClass {
 
 /** 项目配置的中间件清单，顺序重要 */
 let middlewares: IMiddleWare[] | undefined;
-async function getMiddlewares() {
-  const tryPath = normalize(`${ProjectDir}/${MoundDir}/middlewares${jsExt}`);
+export async function getMiddlewares() {
+  const tryPath = MiddlewareFilePath;
   const mm = await import(tryPath);
   await registerDep(tryPath);
   middlewares = mm.middlewares();

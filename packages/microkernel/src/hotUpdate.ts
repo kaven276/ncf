@@ -2,7 +2,8 @@ import { watch } from 'chokidar';
 import { getDebug } from './util/debug';
 import { updateConfig } from './lib/config';
 import { awaitModule, tryDestroyModule } from './lifecycle';
-import { ProjectDir, jsExt, MoundDir } from './util/resolve';
+import { ProjectDir, jsExt, MoundDir, MiddlewareFilePath } from './util/resolve';
+import { getMiddlewares } from './lib/middleware';
 import { extname, sep } from 'path';
 import { addDisposer } from './util/addDisposer';
 import { onFaasModuleChange } from './repl';
@@ -114,6 +115,10 @@ function deleteCacheForUpdated(updatedFileName: string) {
   depsMap.delete(updatedFileName); // 依赖自己的部分全完成
 
   if (!importers) {
+    if (updatedFileName === MiddlewareFilePath) {
+      getMiddlewares(); // 更新中间件
+      return;
+    }
     if (!updatedFileName.endsWith('./test' + jsExt)) {
       debug('top depender modified', updatedFileName);
       const testPath = updatedFileName.replace(jsExt, '.test' + jsExt);
