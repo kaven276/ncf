@@ -4,7 +4,7 @@ import { type ICallState, getCallState, asyncLocalStorage } from './lib/callStat
 import { ServiceError, throwServiceError } from './lib/ServiceError';
 import { IFaasModule } from './lib/faas';
 import { getConfigByFaas, proxyTriggerPrefixKey, getDirConfig, ensureFaasConfig } from './lib/config';
-import { IMiddleWare } from './lib/middleware';
+import { runMiddwares } from './lib/middleware';
 import { ProjectDir, jsExt, MoundDir } from './util/resolve';
 import { getDebug } from './util/debug';
 import assert from 'assert/strict';
@@ -32,15 +32,6 @@ export function getProxiedPath(): string | undefined {
   return getCallState().proxiedPath;
 }
 
-let middlewares: IMiddleWare[] | undefined;
-async function getMiddlewares() {
-  const tryPath = normalize(`${ProjectDir}/${MoundDir}/faas/middlewares${jsExt}`);
-  const mm = await import(tryPath);
-  await registerDep(tryPath);
-  middlewares = mm.middlewares();
-}
-
-const getMiddlewaresPromise = getMiddlewares();
 
 /** 进入服务执行，提供执行环境，事务管理。
  * 返回 Promise
@@ -135,26 +126,13 @@ export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promi
 
     assert.equal(als, store);
 
-    // 最终做成像 koa 式的包洋葱中间件
-
-    if (!middlewares) {
-      await getMiddlewaresPromise;
-    }
-
-    async function runMiddware(n: number): Promise<void> {
-      debug(`executing middleware ${n}`);
-      const mw: IMiddleWare = middlewares![n];
-      if (!mw) {
+    try {
+      await runMiddwares(als, async () => {
         debug('after middlewares, executing faas');
         return faas(request, stream).then((response) => {
           als.response = response;
         });
-      };
-      return mw(als, () => runMiddware(n + 1));
-    }
-
-    try {
-      await runMiddware(0);
+      });
 
       // 处理 later faas calls，前提是主体事务成功了，放到主体事务提交前完成，确保如果写任务队列失败了，主体事务可以得到回滚
       await processLaterFaasCalls(store);
