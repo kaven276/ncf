@@ -6,13 +6,13 @@ import { collectTimes } from 'src/mw/apm';
 import { jwtMiddleware } from '@ncf/mw-jwt';
 import { randomLatency } from 'src/mw/randomLatency';
 import { verionTagMiddleware } from 'src/mw/versions';
-import { mwCache, RedisCache } from 'src/mw/cache';
+import { mwCache } from 'src/mw/cache';
+// import { createCacheMiddleware } from './thingsDependBaas';
 import { mwLoggerWinston } from 'src/mw/logger-winston';
 import { mwRBAC } from 'src/mw/RBAC';
 import { mwInstance } from 'src/mw/ClassDemo';
 import { mwReactServerRender } from '@ncf/mw-react-server-render';
 import { i18nMiddleware } from 'src/i18n';
-import redis from 'src/baas/ioredis/redisdb1.baas';
 
 const faasRegExp = makeRe('/faas2*');
 
@@ -30,7 +30,7 @@ export const checkAuth: IMiddleWare = async (ctx, next) => {
 
 /** lazy 方式提供中间件清单，确保所有带 resolved 声明周期的依赖模块已经 ready 后再执行j */
 export const middlewares = () => {
-  const mwRedisCache = new RedisCache(redis);
+
   return [
     showApiJsonSchema,
     i18nMiddleware,
@@ -42,7 +42,8 @@ export const middlewares = () => {
     jwtMiddleware,
     mwLoggerWinston,
     // mwCache,
-    mwRedisCache.middleware,
+    // 如果启动了本机默认端口的 redis，才放开本中间件
+    // createCacheMiddleware().middleware,
     validate,
     checkAuth,
     mwRBAC,
