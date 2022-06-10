@@ -33,7 +33,9 @@ interface ENV {
   ITSM_URL: string,
 };
 
-const DefaultPostgresUrl = 'postgresql://ncf:ncf2022@localhost:5432/postgres';
+/** 默认各种后台服务的地址，方便从虚机访问本机实机上docker服务集 */
+const DefaultBaasHost = '127.0.0.1';
+const DefaultPostgresUrl = `postgresql://ncf:ncf2022@${DefaultBaasHost}t:5432/postgres`;
 
 /** 所有 baas 链接串默认值都是本机默认端口，无用户名密码的或者范例用户名密码的 */
 const envSchema: JSONSchemaType<ENV> = {
@@ -41,7 +43,7 @@ const envSchema: JSONSchemaType<ENV> = {
   properties: {
     PORT: { type: "integer", default: 8000, maximum: 65535, minimum: 8000 },
     JWT_EFFECT_TIME: { type: "integer", default: 24 * 60 * 60, maximum: 24 * 60 * 60, minimum: 10 * 60 },
-    BAAS_HOST: { type: 'string', default: '127.0.0.1' },
+    BAAS_HOST: { type: 'string', default: DefaultBaasHost },
     DEFAULT_LANG: { type: 'string', enum: ['chinese', 'english'], default: 'chinese' },
 
     TYPEORM_URL: { type: 'string', default: DefaultPostgresUrl },
@@ -49,9 +51,9 @@ const envSchema: JSONSchemaType<ENV> = {
     TYPEORM_URL3: { type: 'string', default: DefaultPostgresUrl },
     ORM_PG_SCHEMA3: { type: 'string', default: 'public' },
     PG_URL: { type: 'string', default: DefaultPostgresUrl },
-    REDIS_URL: { type: 'string', default: 'redis://localhost:6379/0' },
-    AMQP_URL: { type: 'string', default: 'amqp://admin:admin@localhost:5672' },
-    ES_URL: { type: 'string', default: 'http://localhost:9200' },
+    REDIS_URL: { type: 'string', default: `redis://${DefaultBaasHost}:6379/0` },
+    AMQP_URL: { type: 'string', default: `amqp://admin:admin@${DefaultBaasHost}:5672` },
+    ES_URL: { type: 'string', default: `http://${DefaultBaasHost}:9200` },
     ITSM_URL: { type: 'string' },
   },
   required: [
