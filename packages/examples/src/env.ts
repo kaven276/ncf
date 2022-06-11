@@ -35,7 +35,7 @@ interface ENV {
 
 /** 默认各种后台服务的地址，方便从虚机访问本机实机上docker服务集 */
 const DefaultBaasHost = '127.0.0.1';
-const DefaultPostgresUrl = `postgresql://ncf:ncf2022@${DefaultBaasHost}t:5432/postgres`;
+const DefaultPostgresUrl = `postgresql://ncf:ncf2022@${DefaultBaasHost}:5432/postgres`;
 
 /** 所有 baas 链接串默认值都是本机默认端口，无用户名密码的或者范例用户名密码的 */
 const envSchema: JSONSchemaType<ENV> = {
