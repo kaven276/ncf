@@ -2,6 +2,7 @@ import React from 'react';
 import { User } from "entity/User";
 import { faas as findUsers } from '../typeorm/hr/findUsers';
 import { CommonHead } from './common';
+import { Service } from '@ncf/microkernel';
 
 export const header = (
   <thead>
@@ -37,6 +38,9 @@ export interface IRequest {
   showNames?: boolean;
   onlyFirstName?: string,
 }
+
+interface Spec { path: any, request: IRequest, response: any };
+
 /**
  * 完整测测试 ORM find 参数，包括
  * 1) select/where/order
@@ -44,7 +48,7 @@ export interface IRequest {
  * 3) take, skip
  * 4) dynamic query/sql
  */
-export async function faas(req: IRequest) {
+export const faas: Service<Spec> = async (req: IRequest) => {
   const users: User[] = await findUsers(req);
   return (
     <html lang="zh-CN">
@@ -57,4 +61,14 @@ export async function faas(req: IRequest) {
       </div>
     </html>
   );
+}
+
+// 针对 tsx 自动多请求测试配置范例
+faas.tests = {
+  test1: {
+    sex: 'm',
+  },
+  test2: {
+    showNames: true,
+  }
 }

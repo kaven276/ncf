@@ -1,6 +1,8 @@
 import repl from 'node:repl';
 import { getDebug } from './util/debug';
-import { jsExt, prefixLength, ServiceDir } from './util/resolve';
+import { IFaasModule } from './lib/faas';
+import { mapCall } from './mapCall';
+import { jsExt, prefixLength, ServiceDir, absPathToFaasPath } from './util/resolve';
 import { writeFile, createWriteStream } from 'node:fs';
 import { addDisposer } from './util/addDisposer';
 import { Readable } from 'node:stream';
@@ -30,9 +32,13 @@ async function doTest() {
     const testPath = lastModifiedFaasModulePath.replace(jsExt, '.test' + jsExt);
     let testModule = await import(testPath).catch(() => ({}));
     if (!testModule.faas) {
-      // 没有定义单元测试，自动默认为无参数执行对应的模块
+      const faasModule: IFaasModule = await import(lastModifiedFaasModulePath).catch(() => ({}));
+      const { faas } = faasModule;
+      // 没有定义单元测试，自动默认使用 faas.tests 测试，无则使用无参数执行对应的模块
       testModule = {
-        faas: async () => innerCall(lastModifiedFaasModulePath.substring(prefixLength).replace(jsExt, ''))
+        faas: faas.tests
+          ? async () => mapCall(absPathToFaasPath(lastModifiedFaasModulePath), faas.tests || {})
+          : async () => innerCall(lastModifiedFaasModulePath.substring(prefixLength).replace(jsExt, ''))
       };
     }
     let resp: any;

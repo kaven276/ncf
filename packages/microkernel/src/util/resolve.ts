@@ -1,5 +1,5 @@
 import { Module } from 'module';
-import { normalize } from 'node:path';
+import { normalize, join, dirname, basename, extname, posix } from 'node:path';
 
 export const ProjectDir = process.cwd();
 
@@ -16,3 +16,10 @@ export function pathPattern(fpath: string) {
 }
 
 export const MiddlewareFilePath = normalize(`${ProjectDir}/${MoundDir}/middlewares${jsExt}`);
+
+/** faas 模块文件系统路径(linux/windows) 对应到服务调用路径 faasPath */
+export function absPathToFaasPath(absPath: string): string {
+  const path1 = absPath.substring(prefixLength);
+  const path2 = join(dirname(path1), basename(path1, extname(path1)));
+  return posix.normalize(path2);
+}
