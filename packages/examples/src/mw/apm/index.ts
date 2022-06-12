@@ -22,6 +22,21 @@ class Stat {
     /** 最大并行量，这个记录也会被用于控制单个服务的最大并发量，因为该并发量可以对应数据库连接量，防止异常重试导致占用大量数据库连接，影响到其他服务 */
     public hwConcurrency: number = 0,
   ) { }
+  onBefore() {
+    this.concurrency += 1;
+    if (this.concurrency > this.hwConcurrency) {
+      this.hwConcurrency = this.concurrency;
+    }
+  }
+  onAfter(startTime: number) {
+    this.concurrency -= 1;
+    const timeUsed = Date.now() - startTime;
+    if (timeUsed > this.maxExecTime) {
+      this.maxExecTime = timeUsed;
+    }
+    this.times += 1;
+    this.totalExecTime += timeUsed;
+  }
 }
 const statMap = new Map<FaasPath, Stat>();
 
@@ -37,18 +52,9 @@ export const collectTimes: IMiddleWare = async (ctx, next) => {
   if (stat.concurrency >= maxConcurrency) {
     throwServiceError(400, `在途并行量超过设定的 ${maxConcurrency} 个！禁止继续执行`);
   }
-  stat.concurrency += 1;
-  if (stat.concurrency > stat.hwConcurrency) {
-    stat.hwConcurrency = stat.concurrency;
-  }
+  stat.onBefore();
   await next();
-  stat.concurrency -= 1;
-  const timeUsed = Date.now() - startTime;
-  if (timeUsed > stat.maxExecTime) {
-    stat.maxExecTime = timeUsed;
-  }
-  stat.times += 1;
-  stat.totalExecTime += timeUsed;
+  stat.onAfter(startTime);
 }
 
 /** 给出 top10，以 totalExecTime 大到小排序 */
