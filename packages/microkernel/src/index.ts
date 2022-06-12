@@ -18,6 +18,7 @@ export { getConfig, createCfgItem } from './lib/config';
 export { MiddleWareClass } from './lib/middleware';
 export { getDebug } from './util/debug';
 export { addDisposer, shutdown } from './util/addDisposer';
+export { AutoCreateItemMap } from './util/AutoCreateItemMap';
 export { innerCall } from './innerCall';
 export { mapCall } from './mapCall';
 export { outerCall, setOuterCallAddr } from './outerCall';
