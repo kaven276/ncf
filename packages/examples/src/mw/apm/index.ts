@@ -16,8 +16,9 @@ export const collectTimes: IMiddleWare = async (ctx, next) => {
   }
   stat.onBefore();
   debug('collectTimes', stat);
-  await next();
-  stat.onAfter(startTime);
+  const promise = next();
+  promise.finally(() => stat.onAfter(startTime));
+  await promise;
 }
 
 /** 给出 top10，以 totalExecTime 大到小排序 */
