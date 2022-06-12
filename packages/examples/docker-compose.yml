@@ -38,6 +38,25 @@ services:
     volumes:
       - mongoData:/data/db
 
+  # docker-compose 启动后看不到服务，原因未知
+  hbase:
+    image: ibmcom/hbase-s390x:1.2.6
+    ports:
+      - 16010:16010
+      - 2181:2181
+      - 60000:60000
+      - 60010:60010
+      - 60020:60020
+      - 60030:8080
+      - 8080:8080
+      - 8085:8085
+      - 9090:9090
+      - 9095:9095
+    volumes:
+      - hbaseConf:/root/hbase/conf
+      - hbaseData:/root/hbase/data
+      - hbaseLogs/root/hbase/logs
+
   # docker run -d --name elasticsearch --net somenetwork -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" elasticsearch:tag
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.2.2
@@ -135,6 +154,9 @@ volumes:
   postgresData:
   mysqlData:
   mongoData:
+  hbaseConf:
+  hbaseData:
+  hbaseLogs:
   elasticsearchData:
   redisData:
   rethinkData:
