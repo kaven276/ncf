@@ -14,7 +14,8 @@
     "start": "node src/server.js",
     "startJs": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register dist",
     "pm2start": "pm2 start --no-daemon ecosystem.config.js",
-    "pm2": "pm2 start ecosystem.config.js"
+    "pm2": "pm2 start ecosystem.config.js",
+    "antlr4ts": "antlr4ts -visitor path/to/MyGrammar.g4"
   },
   "peerDependencies": {
     "@elastic/elasticsearch": "^7.5.1",
@@ -90,5 +91,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "optionalDependencies": {
+    "antlr4ts": "^0.5.0-alpha.4",
+    "antlr4ts-cli": "^0.5.0-alpha.4"
+  }
 }
