@@ -12,14 +12,37 @@ import '@ncf/loader-cfg-markdown';
 // import '@ncf/loader-sql-pg';
 import { env } from './env';
 import 'src/flow';
+import send from 'koa-send';
+import { join } from 'node:path';
 
 // 作为应用模块使用，不被 import/require，否则退出
 if (require.main !== module && !(require.main!.filename!).endsWith('server.js')) {
   process.exit()
 }
 
+
+const StaticMountPoint = '/static';
+const prefixLen = StaticMountPoint.length;
+const StaticRootPath = join(__dirname, StaticMountPoint);
+const koaApp = createKoaApp();
+
+koaApp.middleware.unshift(async (ctx, next) => {
+  console.log(ctx.path, ctx.url)
+  if (ctx.path.startsWith('/static')) {
+
+    const done = await send(ctx, ctx.path.substring(prefixLen), {
+      root: StaticRootPath,
+      index: 'index.html',
+      hidden: false,
+      maxAge: 0, // 生产模式下应该开缓存，开发模式下为了看到最新版设置为0
+    });
+  } else {
+    await next();
+  }
+});
+
 // 使用多个 NCF app 接入层，分别监听不同的端口
-const server1 = createServer(createKoaApp().callback()).listen(env.PORT, () => {
+const server1 = createServer(koaApp.callback()).listen(env.PORT, () => {
   console.log(`listening at ${env.PORT}`);
 });
 const server2 = createServer(createRequestListener()).listen(env.PORT + 1);
