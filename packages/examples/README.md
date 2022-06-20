@@ -100,14 +100,15 @@ npx typeorm-ts-node-commonjs migration:revert -d src/baas-config/test1.ormconfig
 
 ## faas 范例
 
+* /faas/basic 最基础的 faas 概念，faas, 接口规范，请求响应schema校验，import 其他模块
 * /faas/cfg 各种静态配置 loader 范例
 * /faas/sql 各种 sql as service loader 范例，目前还没有移植 postgre/oracle 的老的 sqlib，仅占位用
 * /faas/file 文件上传下载转换，多文件上传范例
 * /faas/proxy /faas/ITSM 代理范例
-* /faas/transaction 两阶段事务范例
-* /faas/later 延迟执行范例，相当于解耦的弱事务，最终一致性模型
-* /es /pg /typeorm /redis /amqp /kv 各种常见基础设施数据库队列的集成范例
-* /nested faas 间调用，依赖有状态模块的范例
+* /faas/composite/nested faas 间调用，依赖有状态模块的范例
+* /faas/composite/transaction 两阶段事务范例
+* /faas/composite/later 延迟执行范例，相当于解耦的弱事务，最终一致性模型
+* /dbq 中的子目录 /es /pg /typeorm /redis /amqp /kv 各种常见基础设施数据库队列的集成范例
 * /4A 认证，权限校验等 AAAA 范例，目前只有登录服务
 * /fromMW 基于中间件的服务，展示通过 faas 展示和控制中间件
 * /versions 展示基于特性的灰度控制方案
