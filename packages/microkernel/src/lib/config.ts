@@ -4,9 +4,9 @@ import { getDebug } from '../util/debug';
 import { getCallState } from '../lib/callState';
 import { ICallState } from './callState';
 import { registerDep } from '../hotUpdate';
-import { join, dirname } from 'path';
+import { join, dirname, normalize, sep } from 'path';
 
-const ServiceDir = `${ProjectDir}/${MoundDir}/faas`;
+const ServiceDir = normalize(`${ProjectDir}/${MoundDir}/faas`);
 const prefixLength = ServiceDir.length;
 const debug = getDebug(module);
 
@@ -38,7 +38,7 @@ export async function getDirConfig(
   if (existingConfig) {
     return existingConfig;
   }
-  const parent = (path === '/') ? defaultConfig : (await getDirConfig(dirname(path)));
+  const parent = (path === sep) ? defaultConfig : (await getDirConfig(dirname(path)));
   // 随后动态加载配置更新
   const configPath = join(ServiceDir, path, 'index' + jsExt);
   const dirModule = await import(configPath).then(async (m: any) => {
