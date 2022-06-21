@@ -36,7 +36,7 @@ async function doTest() {
       const { faas } = faasModule;
       // 没有定义单元测试，自动默认使用 faas.tests 测试，无则使用无参数执行对应的模块
       testModule = {
-        faas: faas.tests
+        faas: faas && faas.tests
           ? async () => mapCall(absPathToFaasPath(lastModifiedFaasModulePath), faas.tests || {})
           : async () => innerCall(lastModifiedFaasModulePath.substring(prefixLength).replace(jsExt, ''))
       };
