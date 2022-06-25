@@ -1,12 +1,13 @@
 import { getProxiedPath, Service } from '@ncf/microkernel';
 import { cfgLatency } from 'src/mw/randomLatency';
+import { env } from 'src/env';
 
 /** 目录模块导出 faas 代表该目录路径使用反向代理 */
 export const faas: Service = async(req: any) => {
   const targetPath = getProxiedPath();
   if (true) {
     // 直接代理到自己，方便测试和演示
-    return fetch(`http://localhost:8000/typeorm${targetPath}`, {
+    return fetch(`http://localhost:${env.PORT}/typeorm${targetPath}`, {
       method: 'POST',
       body: JSON.stringify(req),
       headers: {
