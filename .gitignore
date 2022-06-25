@@ -19,3 +19,5 @@ memo.md
 /packages/expr/
 /packages/autoflow/
 *.resp.json
+.VSCodeCounter/
+/packages/next1/
