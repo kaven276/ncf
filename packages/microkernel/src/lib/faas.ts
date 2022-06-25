@@ -18,6 +18,8 @@ export interface Service<T extends IApi = IApi> {
 }
 
 export interface IFaasModule<T extends IApi = IApi> {
-  fake: boolean,
+  /** 如果本没有 faas 模块文件，而是凭空构建的，为了是虚拟存在方便编程 */
+  fake?: true,
+  /** 实现 faas 服务的异步函数 */
   faas: Service<T>,
 }
