@@ -2,7 +2,7 @@ import repl from 'node:repl';
 import { getDebug } from './util/debug';
 import { IFaasModule } from './lib/faas';
 import { mapCall } from './mapCall';
-import { jsExt, prefixLength, ServiceDir, absPathToFaasPath } from './util/resolve';
+import { jsExt, prefixLength, ServiceDir, absPathToFaasPath, tsMode } from './util/resolve';
 import { writeFile, createWriteStream } from 'node:fs';
 import { addDisposer } from './util/addDisposer';
 import { Readable } from 'node:stream';
@@ -21,7 +21,7 @@ if (process.send) {
 } else {
   addDisposer(() => iv.close());
 }
-let autoTest = false;
+let autoTest = tsMode;
 
 async function doTest() {
   if (!lastModifiedFaasModulePath) {
