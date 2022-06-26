@@ -3,7 +3,7 @@ import { dirname } from 'node:path';
 import { type ICallState, getCallState, asyncLocalStorage } from './lib/callState';
 import { ServiceError, throwServiceError } from './lib/ServiceError';
 import { IFaasModule } from './lib/faas';
-import { getConfigByFaas, proxyTriggerPrefixKey, getDirConfig, ensureFaasConfig } from './lib/config';
+import { getConfigByFaas, proxyTriggerPrefixKey, getDirConfigPara, ensureFaasConfig } from './lib/config';
 import { runMiddwares } from './lib/middleware';
 import { ProjectDir, jsExt, MoundDir } from './util/resolve';
 import { getDebug } from './util/debug';
@@ -48,7 +48,7 @@ export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promi
   } catch (e) {
   }
 
-  const dirConfig = await getDirConfig(dirname(faasPath));
+  const dirConfig = await getDirConfigPara(dirname(faasPath));
   /** 即便是代理，依然尝试加载 faas 模块，因为里面可能有请求响应校验和其他配置，虽然没有 export faas */
   const proxyTriggerPrefix: string | undefined = dirConfig[proxyTriggerPrefixKey];
 

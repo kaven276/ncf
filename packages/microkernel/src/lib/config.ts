@@ -1,13 +1,13 @@
-import { ProjectDir, jsExt, MoundDir } from '../util/resolve';
+import { jsExt, ServiceDir, prefixLength } from '../util/resolve';
 import { IFaasModule } from '../lib/faas';
 import { getDebug } from '../util/debug';
 import { getCallState } from '../lib/callState';
 import { ICallState } from './callState';
 import { registerDep } from '../hotUpdate';
-import { join, dirname, normalize, sep } from 'path';
+import { join, dirname, sep } from 'path';
+import * as assert from 'node:assert/strict';
+import { toNamespacedPath } from 'node:path/posix';
 
-const ServiceDir = normalize(`${ProjectDir}/${MoundDir}/faas`);
-const prefixLength = ServiceDir.length;
 const debug = getDebug(module);
 
 export const proxyTriggerPrefixKey = Symbol('proxyTriggerPrefix');
@@ -19,6 +19,8 @@ export interface IConfig {
   // [proxySettingKey]?: string | boolean,
   /** 在该前缀下，使用代理来处理，没有 faas module .faas 时，使用 dir/index.ts 中的 .faas 替换 */
   [proxyTriggerPrefixKey]?: string,
+  /** 各个自定义的配置项，key 必须是 symbol 以确保配置间互不冲突 */
+  [s: symbol]: any,
 }
 
 declare module './faas' {
@@ -30,42 +32,57 @@ declare module './faas' {
 
 const defaultConfig: IConfig = {};
 const dirMap = new Map<string, IConfig>();
-export async function getDirConfig(
+async function getDirConfig(
   /** index.ts 所属的目录的相对项目的路径 */
   path: string
 ): Promise<IConfig> {
-  const existingConfig = dirMap.get(path);
-  if (existingConfig) {
-    return existingConfig;
-  }
-  const parent = (path === sep) ? defaultConfig : (await getDirConfig(dirname(path)));
+  assert.ok(!dirMap.has(path), '因为有para版本控制，不可能出现已有 config 记录');
+  debug('loading dir config', path);
+  const parent = (path === sep) ? defaultConfig : (await getDirConfigPara(dirname(path)));
   // 随后动态加载配置更新
   const configPath = join(ServiceDir, path, 'index' + jsExt);
   const dirModule = await import(configPath).then(async (m: any) => {
     await registerDep(configPath);
-    debug('load', path, m);
     return m;
   }).catch((e) => {
     // debug('config not exists for dir', path, configPath);
     if (e.code !== 'MODULE_NOT_FOUND') {
       console.dir(e);
     }
-    return {};
+    return;
   });
 
   const newConfig = Object.create(parent);
-  if (dirModule.config) {
+  if (dirModule?.config) {
     Object.assign(newConfig!, dirModule.config);
   }
   // dirModule.faas 配置代表该路径是代理服务
-  if (dirModule.faas) {
+  if (dirModule?.faas) {
     debug('have proxy', path);
     newConfig[proxyTriggerPrefixKey] = path;
   }
   dirMap.set(path, newConfig);
+  debug('loaded dir config', path, newConfig);
   return newConfig;
 }
 
+/** 记录每个目录配置模块的加载状态，防止并发的加载重复操作，并发归一 */
+const loadMap = new Map<string, Promise<IConfig>>();
+
+/** 异步获取指定目录的配置，并发归一 */
+export async function getDirConfigPara(
+  /** index.ts 所属的目录的相对项目的路径 */
+  path: string
+): Promise<IConfig> {
+  let loadState = loadMap.get(path);
+  if (!loadState) {
+    loadState = getDirConfig(path);
+    loadMap.set(path, loadState);
+  } else {
+    debug('load repeat', path);
+  }
+  return await loadState;
+}
 
 export function updateConfig(absPath: string) {
   // 目录配置改变的话，更新 config prototype chain
