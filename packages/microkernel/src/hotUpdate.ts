@@ -9,9 +9,6 @@ import { addDisposer } from './util/addDisposer';
 import { onFaasModuleChange } from './repl';
 import * as assert from 'node:assert/strict';
 
-/** 跟踪一个模块是否被初始化过 */
-const loadedSet = new WeakSet<NodeModule>();
-
 const debug = getDebug(module);
 let started = false;
 
@@ -53,10 +50,6 @@ declare global {
 async function collectWhoDependMeReal(currentModule: NodeModule, whoImportMeStr?: string): Promise<void> {
 
   const absFileName = currentModule.filename;
-
-  // 防止被重复依赖而导致重复初始化和重复反向依赖收集
-  assert.ok(!loadedSet.has(currentModule));
-  loadedSet.add(currentModule);
 
   // 对子模块递归处理
   const promises = currentModule.children.map(async subModule => {
