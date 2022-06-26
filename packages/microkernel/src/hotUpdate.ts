@@ -2,17 +2,16 @@ import { watch } from 'chokidar';
 import { getDebug } from './util/debug';
 import { updateConfig } from './lib/config';
 import { awaitModule, tryDestroyModule } from './lifecycle';
-import { ProjectDir, jsExt, MoundDir, MiddlewareFilePath } from './util/resolve';
+import { ProjectDir, jsExt, MiddlewareFilePath, prefixLength } from './util/resolve';
 import { getMiddlewares } from './lib/middleware';
 import { extname, sep } from 'path';
 import { addDisposer } from './util/addDisposer';
 import { onFaasModuleChange } from './repl';
-const ServiceDir = `${ProjectDir}/${MoundDir}/faas`;
+import * as assert from 'node:assert/strict';
 
 /** 跟踪一个模块是否被初始化过 */
 const loadedSet = new WeakSet<NodeModule>();
 
-const prefixLength = ServiceDir.length;
 const debug = getDebug(module);
 let started = false;
 
@@ -42,9 +41,11 @@ function watchHotUpdate() {
 /** 都是按照解析完的 module.filename 来记录关系的 */
 const depsMap = new Map<string, Set<string>>();
 
-async function collectWhoDependMe(currentModule: NodeModule, whoImportMeStr?: string) {
+async function collectWhoDependMeReal(currentModule: NodeModule, whoImportMeStr?: string) {
 
   const absFileName = currentModule.filename;
+
+  // debug('collectWhoDependMe', currentModule.filename);
 
   if (whoImportMeStr) {
     let depSet = depsMap.get(absFileName);
@@ -57,8 +58,10 @@ async function collectWhoDependMe(currentModule: NodeModule, whoImportMeStr?: st
   }
 
   // 防止被重复依赖而导致重复初始化和重复反向依赖收集
-  if (loadedSet.has(currentModule)) return;
-  loadedSet.add(currentModule);
+  assert.ok(!loadedSet.has(currentModule));
+
+  // if (loadedSet.has(currentModule)) return;
+  // loadedSet.add(currentModule);
 
   // 对子模块递归处理
   const promises = currentModule.children.map(async subModule => {
@@ -68,13 +71,17 @@ async function collectWhoDependMe(currentModule: NodeModule, whoImportMeStr?: st
     if (!subPath.startsWith(ProjectDir)) {
       if (subModule.exports.awaitModule === true) {
         // 反向依赖收集完后，进行本模块的 lifecycle 初始化，确保只进行一次
+        // debug('await module', subModule.filename);
         await awaitModule(subModule);
       }
       return;
     };
-    if (subModule.loaded === false) return; // 此时必定 loaded=true
+    assert.equal(subModule.loaded, true);
+    if (subModule.loaded === false) {
+      return; // 此时必定 loaded=true
+    }
     if (depsMap.get(currentModule.filename)?.has(subPath)) return; // 防止循环引用造成 stack overflow
-    await collectWhoDependMe(subModule, absFileName);
+    await collectWhoDependMePara(subModule, absFileName);
   });
   await Promise.all(promises);
 
@@ -83,9 +90,27 @@ async function collectWhoDependMe(currentModule: NodeModule, whoImportMeStr?: st
     const endPos = absFileName.length - extname(absFileName).length
     currentModule.exports.faas.faasPath = absFileName.substring(prefixLength, endPos);
   }
+  // debug('awaitModule', currentModule.filename);
   // 反向依赖收集完后，进行本模块的 lifecycle 初始化，确保只进行一次
   await awaitModule(currentModule);
 
+}
+
+
+/** 跟踪一个模块是否被初始化过 */
+const loadMap = new WeakMap<NodeModule, Promise<any>>();
+
+/** 模块没处理过，则处理，如果处理中也是要等待；支持对一个模块并发初始化的处理 */
+async function collectWhoDependMePara(currentModule: NodeModule, whoImportMeStr?: string) {
+  let loadingOrLoaded = loadMap.get(currentModule);
+  let first = !!loadingOrLoaded;
+  if (!loadingOrLoaded) {
+    loadingOrLoaded = collectWhoDependMeReal(currentModule, whoImportMeStr);
+    loadMap.set(currentModule, loadingOrLoaded);
+  }
+  debug('module loading', first, currentModule.filename.slice(prefixLength), '-by-', whoImportMeStr?.slice(prefixLength));
+  await loadingOrLoaded;
+  debug('module loaded', first, currentModule.filename.slice(prefixLength), '-by-', whoImportMeStr?.slice(prefixLength));
 }
 
 /** 级联删除依赖自己的模块的缓存，使得再次 import() 他们能加载新版。
@@ -147,8 +172,8 @@ function deleteCacheForUpdated(updatedFileName: string) {
 export const registerDep = async (absServicePath: string) => {
   debug('collecting from', absServicePath);
   const m = require.cache[absServicePath]!;
-  await collectWhoDependMe(m);
-  await awaitModule(m);
+  await collectWhoDependMePara(m);
+  // await awaitModule(m);
 }
 
 
