@@ -41,27 +41,22 @@ function watchHotUpdate() {
 /** 都是按照解析完的 module.filename 来记录关系的 */
 const depsMap = new Map<string, Set<string>>();
 
-async function collectWhoDependMeReal(currentModule: NodeModule, whoImportMeStr?: string) {
+declare global {
+  interface NodeModule {
+    /** 是否已经在后处理了，如果没有 ready，且在后处理中，也需要等待 */
+    __initPromise?: Promise<any>,
+    /** 是否已经完全后处理完毕处于就绪状态 */
+    __ready?: true,
+  }
+}
+
+async function collectWhoDependMeReal(currentModule: NodeModule, whoImportMeStr?: string): Promise<void> {
 
   const absFileName = currentModule.filename;
 
-  // debug('collectWhoDependMe', currentModule.filename);
-
-  if (whoImportMeStr) {
-    let depSet = depsMap.get(absFileName);
-    if (!depSet) {
-      // submodule 第一次被依赖
-      depSet = new Set<string>();
-      depsMap.set(absFileName, depSet);
-    }
-    depSet.add(whoImportMeStr); // 添加反向依赖关系
-  }
-
   // 防止被重复依赖而导致重复初始化和重复反向依赖收集
   assert.ok(!loadedSet.has(currentModule));
-
-  // if (loadedSet.has(currentModule)) return;
-  // loadedSet.add(currentModule);
+  loadedSet.add(currentModule);
 
   // 对子模块递归处理
   const promises = currentModule.children.map(async subModule => {
@@ -96,21 +91,29 @@ async function collectWhoDependMeReal(currentModule: NodeModule, whoImportMeStr?
 
 }
 
-
-/** 跟踪一个模块是否被初始化过 */
-const loadMap = new WeakMap<NodeModule, Promise<any>>();
-
 /** 模块没处理过，则处理，如果处理中也是要等待；支持对一个模块并发初始化的处理 */
-async function collectWhoDependMePara(currentModule: NodeModule, whoImportMeStr?: string) {
-  let loadingOrLoaded = loadMap.get(currentModule);
-  let first = !!loadingOrLoaded;
-  if (!loadingOrLoaded) {
-    loadingOrLoaded = collectWhoDependMeReal(currentModule, whoImportMeStr);
-    loadMap.set(currentModule, loadingOrLoaded);
+async function collectWhoDependMePara(currentModule: NodeModule, whoImportMeStr?: string): Promise<void> {
+  if (whoImportMeStr) {
+    let depSet = depsMap.get(currentModule.filename);
+    if (!depSet) {
+      // submodule 第一次被依赖
+      depSet = new Set<string>();
+      depsMap.set(currentModule.filename, depSet);
+    }
+    depSet.add(whoImportMeStr); // 添加反向依赖关系
+  }
+
+  if (currentModule.__ready) {
+    return;
+  }
+  const first = !currentModule.__initPromise;
+  if (first) {
+    currentModule.__initPromise = collectWhoDependMeReal(currentModule, whoImportMeStr);
   }
   debug('module loading', first, currentModule.filename.slice(prefixLength), '-by-', whoImportMeStr?.slice(prefixLength));
-  await loadingOrLoaded;
+  await currentModule.__initPromise;
   debug('module loaded', first, currentModule.filename.slice(prefixLength), '-by-', whoImportMeStr?.slice(prefixLength));
+
 }
 
 /** 级联删除依赖自己的模块的缓存，使得再次 import() 他们能加载新版。

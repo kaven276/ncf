@@ -12,6 +12,7 @@ import type { ISpec } from './findUsers.spec';
  * 4) dynamic query/sql
  */
 export const faas: Service<ISpec> = async (req) => {
+  // console.log(ds);
   // 在 async thread 开始时自动进行
   const userRepo = ds.getRepository(User);
   return await userRepo.find({
