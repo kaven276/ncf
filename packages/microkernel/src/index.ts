@@ -14,7 +14,7 @@ export { ServiceError, throwServiceError } from './lib/ServiceError';
 export type { GatewayType, GwExtras, GwHttp, GwKoa } from './lib/gateway';
 export { getCallState, createCtxItem } from './lib/callState';
 export { execute, getProxiedPath } from './executor';
-export { getConfig, createCfgItem } from './lib/config';
+export { createCfgItem } from './lib/config';
 export { MiddleWareClass } from './lib/middleware';
 export { getDebug } from './util/debug';
 export { addDisposer, shutdown } from './util/addDisposer';

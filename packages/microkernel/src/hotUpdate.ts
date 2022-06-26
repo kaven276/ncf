@@ -35,19 +35,19 @@ function watchHotUpdate() {
   addDisposer(() => watcher.close());
 }
 
-/** 都是按照解析完的 module.filename 来记录关系的 */
-const depsMap = new Map<string, Set<string>>();
-
 declare global {
+  // 每个 NodeJs 模块都可以有就绪中和已就绪状态，可以跟踪依赖自己的模块
   interface NodeModule {
     /** 是否已经在后处理了，如果没有 ready，且在后处理中，也需要等待 */
     __initPromise?: Promise<any>,
     /** 是否已经完全后处理完毕处于就绪状态 */
     __ready?: true,
+    /** import 本模块的模块的绝对路径集合，用于热更新级联更新依赖自己的模块 */
+    __depSet?: Set<string>,
   }
 }
 
-async function collectWhoDependMeReal(currentModule: NodeModule, whoImportMeStr?: string): Promise<void> {
+async function collectWhoDependMeReal(currentModule: NodeModule): Promise<void> {
 
   const absFileName = currentModule.filename;
 
@@ -64,11 +64,8 @@ async function collectWhoDependMeReal(currentModule: NodeModule, whoImportMeStr?
       }
       return;
     };
-    assert.equal(subModule.loaded, true);
-    if (subModule.loaded === false) {
-      return; // 此时必定 loaded=true
-    }
-    if (depsMap.get(currentModule.filename)?.has(subPath)) return; // 防止循环引用造成 stack overflow
+    assert.ok(subModule.loaded); // 此时必定 loaded=true
+    if (currentModule.__depSet?.has(subPath)) return; // 防止循环引用造成 stack overflow
     await collectWhoDependMePara(subModule, absFileName);
   });
   await Promise.all(promises);
@@ -87,11 +84,10 @@ async function collectWhoDependMeReal(currentModule: NodeModule, whoImportMeStr?
 /** 模块没处理过，则处理，如果处理中也是要等待；支持对一个模块并发初始化的处理 */
 async function collectWhoDependMePara(currentModule: NodeModule, whoImportMeStr?: string): Promise<void> {
   if (whoImportMeStr) {
-    let depSet = depsMap.get(currentModule.filename);
+    let depSet = currentModule.__depSet;
     if (!depSet) {
       // submodule 第一次被依赖
-      depSet = new Set<string>();
-      depsMap.set(currentModule.filename, depSet);
+      depSet = currentModule.__depSet = new Set<string>();
     }
     depSet.add(whoImportMeStr); // 添加反向依赖关系
   }
@@ -101,12 +97,11 @@ async function collectWhoDependMePara(currentModule: NodeModule, whoImportMeStr?
   }
   const first = !currentModule.__initPromise;
   if (first) {
-    currentModule.__initPromise = collectWhoDependMeReal(currentModule, whoImportMeStr);
+    currentModule.__initPromise = collectWhoDependMeReal(currentModule);
   }
   debug('module loading', first, currentModule.filename.slice(prefixLength), '-by-', whoImportMeStr?.slice(prefixLength));
   await currentModule.__initPromise;
   debug('module loaded', first, currentModule.filename.slice(prefixLength), '-by-', whoImportMeStr?.slice(prefixLength));
-
 }
 
 /** 级联删除依赖自己的模块的缓存，使得再次 import() 他们能加载新版。
@@ -117,6 +112,7 @@ function deleteCacheForUpdated(updatedFileName: string) {
 
   // 如果是 BAAS 模块更新，老的 BAAS 资源需要先清除掉释放资源
   const m = require.cache[updatedFileName]!;
+  const importers = m.__depSet;
   tryDestroyModule(m);
 
   // 从模块缓存是删除，这样再次加载改模块就能看到更新的版本
@@ -127,13 +123,6 @@ function deleteCacheForUpdated(updatedFileName: string) {
     updateConfig(updatedFileName);
   }
 
-  // 回溯再无引用者，则退出
-  const importers = depsMap.get(updatedFileName);
-  // if (updatedFileName.endsWith('/test1' + jsExt)) {
-  //   debug('on delete importers', updatedFileName, importers);
-  // }
-
-  depsMap.delete(updatedFileName); // 依赖自己的部分全完成
 
   if (!importers) {
     if (updatedFileName === MiddlewareFilePath) {
