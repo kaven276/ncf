@@ -2,7 +2,7 @@ import { getDebug } from '@ncf/microkernel';
 import type { SqlModue } from './SqlModule';
 import { Module } from 'module';
 import { loaderPostgresSQL } from './sqlToFaas';
-export { setHowToGetPgConnection } from './config';
+export { cfgPgConnection } from './config';
 
 const debug = getDebug(module);
 

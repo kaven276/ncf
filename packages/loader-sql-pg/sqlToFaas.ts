@@ -2,9 +2,9 @@ import { readFile } from 'fs/promises';
 import { resultAutoConcise } from "./resultAutoConcise";
 import * as sqlparser from "./sqlParser";
 import type { SqlModue } from './SqlModule';
-import { getDebug, getConfig } from '@ncf/microkernel';
+import { getDebug, getCallState } from '@ncf/microkernel';
 import type { QueryConfig, Pool, PoolClient } from 'pg';
-import { configKey } from './config';
+import { cfgPgConnection } from './config';
 
 const debug = getDebug(module);
 
@@ -103,7 +103,7 @@ export async function loaderPostgresSQL(abspath: string, regPath: string, dirCon
     // 第一步取得连接池
     // const pool = getPGPool();
     // 这里的 Client 也可能是 pool 或者纳入事务管理的 client。
-    const conn: Pool | PoolClient = getConfig(configKey)();
+    const conn: Pool | PoolClient = cfgPgConnection.get(getCallState())();
     // debug('executing', m.path, Object.keys(m));
     // debug(conn, conn.query);
     let queryOption: QueryConfig;
