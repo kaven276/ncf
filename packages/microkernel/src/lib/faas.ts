@@ -20,6 +20,10 @@ export interface Service<T extends IApi = IApi> {
 export interface IFaasModule<T extends IApi = IApi> {
   /** 如果本没有 faas 模块文件，而是凭空构建的，为了是虚拟存在方便编程 */
   fake?: true,
+  /** 是否已经在后处理了，如果没有 ready，且在后处理中，也需要等待 */
+  __initPromise?: Promise<any>,
+  /** 是否已经完全后处理完毕(绑定 dir config 并且等等所有依赖模块就绪)，就绪状态 */
+  __ready?: true,
   /** 实现 faas 服务的异步函数 */
   faas: Service<T>,
 }

@@ -1,12 +1,10 @@
 import { jsExt, ServiceDir, prefixLength } from '../util/resolve';
 import { IFaasModule } from '../lib/faas';
 import { getDebug } from '../util/debug';
-import { getCallState } from '../lib/callState';
 import { ICallState } from './callState';
 import { registerDep } from '../hotUpdate';
 import { join, dirname, sep } from 'path';
 import * as assert from 'node:assert/strict';
-import { toNamespacedPath } from 'node:path/posix';
 
 const debug = getDebug(module);
 
@@ -27,6 +25,8 @@ declare module './faas' {
   interface IFaasModule<T> {
     /** faas 服务模块可能带有配置 */
     config?: IConfig,
+    /** faas 模块绑定的配置，带 prototype chain */
+    __config?: IConfig,
   }
 }
 
@@ -129,18 +129,6 @@ export function ensureFaasConfig(dirConfig: IConfig, fassModule: IFaasModule): I
   return faasConfig;
 }
 
-/** 根据当前的模块找到其配置 */
-export function getConfigByFaas(fassModule: IFaasModule): IConfig | undefined {
-  return configMap.get(fassModule);
-}
-
-/** 获取当前 faas 的指定项的配置 */
-export function getConfig(s: symbol, ctx?: ICallState): any {
-  const { fassModule } = ctx || getCallState();
-  //@ts-ignore
-  return getConfigByFaas(fassModule)?.[s];
-}
-
 /** 针对新的配置项，方便的创建对应配置设置和配置读取，默认配置组合 */
 export function createCfgItem<T>(key: symbol, defaultCfg?: T) {
   return {
@@ -151,11 +139,11 @@ export function createCfgItem<T>(key: symbol, defaultCfg?: T) {
     },
     /** 获取配置内容，ctx 通常是 NCF 给中间件参数送入的  */
     get(ctx: ICallState): T {
-      return getConfig(key, ctx) || defaultCfg;
+      return ctx.fassModule.__config?.[key] || defaultCfg;
     },
     /** 获取 faas 专有配置内容，不看目录配置(不走prototype chain节省处理)  */
     get1(ctx: ICallState): T | undefined {
-      const cfg = getConfigByFaas(ctx.fassModule);
+      const cfg = ctx.fassModule.__config;
       if (!cfg) return undefined;
       const desc = Object.getOwnPropertyDescriptor(cfg, key);
       return desc ? desc.value : defaultCfg;

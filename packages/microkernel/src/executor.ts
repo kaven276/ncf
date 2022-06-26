@@ -3,7 +3,7 @@ import { dirname } from 'node:path';
 import { type ICallState, getCallState, asyncLocalStorage } from './lib/callState';
 import { ServiceError, throwServiceError } from './lib/ServiceError';
 import { IFaasModule } from './lib/faas';
-import { getConfigByFaas, proxyTriggerPrefixKey, getDirConfigPara, ensureFaasConfig } from './lib/config';
+import { proxyTriggerPrefixKey, getDirConfigPara } from './lib/config';
 import { runMiddwares } from './lib/middleware';
 import { ProjectDir, jsExt, MoundDir } from './util/resolve';
 import { getDebug } from './util/debug';
@@ -95,11 +95,17 @@ export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promi
   }
 
   // 如果 config 已经创建，则为同步执行；否则第一次加载配置会是异步执行
-  if (!getConfigByFaas(fassModule)) {
-    ensureFaasConfig(dirConfig, fassModule);
-    if (!fassModule.fake) {
-      await registerDep(tryPath);
+  if (!fassModule.__ready) {
+    if (!fassModule.__initPromise) {
+      if (fassModule.config) {
+        fassModule.__config = Object.assign(Object.create(dirConfig), fassModule.config);
+      } else {
+        fassModule.__config = dirConfig;
+      }
+      fassModule.__initPromise = registerDep(tryPath);
     }
+    await fassModule.__initPromise;
+    fassModule.__ready = true;
   }
 
   // 反向登记依赖的 children，child 改变时，可以将依赖服务删除
