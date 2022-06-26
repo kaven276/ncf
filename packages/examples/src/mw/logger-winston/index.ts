@@ -1,4 +1,4 @@
-import { IMiddleWare, getConfig, getDebug } from '@ncf/microkernel';
+import { IMiddleWare, getDebug } from '@ncf/microkernel';
 import * as winston from 'winston';
 
 const debug = getDebug(module);
