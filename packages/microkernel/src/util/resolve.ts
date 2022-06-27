@@ -12,6 +12,8 @@ export const tsMode = Boolean(Module._extensions['.ts']);
 export const jsExt = tsMode ? '.ts' : '.js';
 /** 应用代码是挂载到 src 还是编译目标目录 dist */
 export const MoundDir = tsMode ? 'src' : 'dist';
+/** code root dir path, maybe src or dist */
+export const CodeDir = normalize(`${ProjectDir}/${MoundDir}`);
 /** faas root dir path */
 export const ServiceDir = normalize(`${ProjectDir}/${MoundDir}/faas`);
 /** faas root dir path length */

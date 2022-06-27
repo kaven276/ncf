@@ -2,7 +2,7 @@ import { watch } from 'chokidar';
 import { getDebug } from './util/debug';
 import { updateConfig } from './lib/config';
 import { awaitModule, tryDestroyModule } from './lifecycle';
-import { ProjectDir, jsExt, MiddlewareFilePath, prefixLength } from './util/resolve';
+import { CodeDir, jsExt, MiddlewareFilePath, prefixLength } from './util/resolve';
 import { getMiddlewares } from './lib/middleware';
 import { extname, sep } from 'path';
 import { addDisposer } from './util/addDisposer';
@@ -17,7 +17,7 @@ function watchHotUpdate() {
 
   started = true;
 
-  const watcher = watch(ProjectDir, {
+  const watcher = watch(CodeDir, {
     depth: 9,
     persistent: true,
     ignoreInitial: true,
@@ -56,7 +56,7 @@ async function collectWhoDependMeReal(currentModule: NodeModule): Promise<void> 
     const subPath = subModule.filename;
     // 可能会出现两个模块互相引用的情况造成死循环
     // debug('collectWhoDependMe', absFileName.substring(ServiceDir.length), subPath.substring(ServiceDir.length));
-    if (!subPath.startsWith(ProjectDir)) {
+    if (!subPath.startsWith(CodeDir)) {
       if (subModule.exports.awaitModule === true) {
         // 反向依赖收集完后，进行本模块的 lifecycle 初始化，确保只进行一次
         // debug('await module', subModule.filename);
