@@ -7,7 +7,7 @@ import { writeFile, createWriteStream } from 'node:fs';
 import { addDisposer } from './util/addDisposer';
 import { Readable } from 'node:stream';
 import { innerCall } from './innerCall';
-import { sep, extname, basename } from 'node:path';
+import { extname, basename, posix } from 'node:path';
 import { Module } from 'module';
 
 const debug = getDebug(module);
@@ -38,7 +38,7 @@ async function doTest() {
       testModule = {
         faas: faas && faas.tests
           ? async () => mapCall(absPathToFaasPath(lastModifiedFaasModulePath), faas.tests || {})
-          : async () => innerCall(lastModifiedFaasModulePath.substring(prefixLength).replace(jsExt, ''))
+          : async () => innerCall(posix.normalize(lastModifiedFaasModulePath.substring(prefixLength).replace(jsExt, '')))
       };
     }
     let resp: any;
@@ -99,11 +99,6 @@ export function onFaasModuleChange(absPath: string) {
   const ext = extname(absPath);
   //@ts-ignore
   if (!Module._extensions[ext]) return; // 不是注册的模块类型不做处理
-
-  // 对于 windows 平台，转成 linux 路径
-  if (sep === "\\") {
-    absPath = absPath.replaceAll(sep, '/');
-  }
 
   if (absPath.endsWith('.test' + jsExt)) {
     lastModifiedFaasModulePath = absPath.replace('.test.ts', ext);
