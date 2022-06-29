@@ -1,4 +1,4 @@
-import { getDebug, getCallState, getConfig, throwServiceError, IMiddleWare, createCtxItem, createCfgItem } from '@ncf/microkernel';
+import { getDebug, getCallState, throwServiceError, IMiddleWare, createCtxItem, createCfgItem } from '@ncf/microkernel';
 import { verify, JwtPayload, TokenExpiredError, sign, SignOptions } from 'jsonwebtoken';
 
 const debug = getDebug(module);
