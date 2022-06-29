@@ -50,6 +50,7 @@
     "ioredis": "^5.0.3",
     "kafkajs": "^2.0.2",
     "koa-send": "^5.0.1",
+    "koa2-proxy-middleware": "^0.0.4",
     "leveldown": "^6.1.1",
     "levelup": "^5.1.1",
     "mobx": "^6.5.0",

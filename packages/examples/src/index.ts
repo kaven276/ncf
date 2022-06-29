@@ -14,6 +14,7 @@ import { env } from './env';
 import 'src/flow';
 import send from 'koa-send';
 import { join } from 'node:path';
+import proxy from 'koa2-proxy-middleware';
 
 // 作为应用模块使用，不被 import/require，否则退出
 if (require.main !== module && !(require.main!.filename!).endsWith('server.js')) {
@@ -25,6 +26,21 @@ const StaticMountPoint = '/static';
 const prefixLen = StaticMountPoint.length;
 const StaticRootPath = join(__dirname, StaticMountPoint);
 const koaApp = createKoaApp();
+
+// curl http://localhost:8000/self/typeorm/hr/findUsers
+koaApp.middleware.unshift(proxy({
+  targets: {
+    '/self': {
+      // this is option of http-proxy-middleware
+      target: 'http://localhost:8000', // target host
+      changeOrigin: true, // needed for virtual hosted sites
+      pathRewrite: {
+        '/self': '', // rewrite path
+      }
+    },
+  },
+}));
+
 
 koaApp.middleware.unshift(async (ctx, next) => {
   console.log(ctx.path, ctx.url)
