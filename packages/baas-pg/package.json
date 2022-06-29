@@ -1,6 +1,6 @@
 {
   "name": "@ncf/pg",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "nodejs pg 的连接池 baas 供应",
   "main": "dist/index.js",
   "files": [
@@ -11,10 +11,10 @@
     "registry": "https://registry.npmjs.org/"
   },
   "peerDependencies": {
+    "@ncf/microkernel": "*",
     "pg": "^8.7.3"
   },
   "dependencies": {
-    "@ncf/microkernel": "*"
   },
   "scripts": {
     "build": "tsc",

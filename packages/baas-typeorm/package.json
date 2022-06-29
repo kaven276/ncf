@@ -1,6 +1,6 @@
 {
   "name": "@ncf/typeorm",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "export api to get typeorm connection with transaction context",
   "main": "dist/index.js",
   "files": [
@@ -19,11 +19,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@ncf/microkernel": "*",
     "typescript": "^4.6.4",
     "typeorm": "^0.3.3"
   },
   "peerDependencies": {
+    "@ncf/microkernel": "*",
     "reflect-metadata": "^0.1.13"
   }
 }

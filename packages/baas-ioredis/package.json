@@ -1,6 +1,6 @@
 {
   "name": "@ncf/ioredis",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "nodejs redis 连接 baas 供应",
   "main": "./dist/index.js",
   "exports": {
@@ -19,10 +19,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "peer-dependencies": {
+    "@ncf/microkernel": "*",
     "ioredis": "^5.0.3"
   },
   "dependencies": {
-    "@ncf/microkernel": "*",
     "typescript": "^4.6.4"
   },
   "keywords": [],

@@ -1,6 +1,6 @@
 {
   "name": "@ncf/mw-validator",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "request/response validator for NCF by ajv or manually",
   "main": "dist/index.js",
   "files": [
@@ -19,8 +19,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@ncf/microkernel": "*",
     "ajv": "^8.10.0",
     "typescript": "^4.6.4"
+  },
+  "peerDependencies": {
+    "@ncf/microkernel": "*"
   }
 }
