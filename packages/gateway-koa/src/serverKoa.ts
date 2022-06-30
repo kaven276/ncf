@@ -29,6 +29,13 @@ interface IFailureResponse {
 type IFinalResponse = ISuccessResponse | IFailureResponse;
 
 
+declare module 'koa' {
+  interface Request {
+    /** http 请求体的原始报文，主要用于代理转发透传 */
+    rawBody?: any,
+  }
+}
+
 /*
 * 选 KOA 而非裸 nodejs http 的原因
 * body parse
@@ -58,6 +65,8 @@ function useCors(allowedOrigin?: string) {
   }
 }
 
+const unparsed = Symbol.for('unparsedBody');
+
 /** KOA 中间件，支持到 NCF core 的调用，NCF 架构网关 */
 function useNCF() {
   return async (ctx: Koa.ParameterizedContext<Koa.DefaultState, Koa.DefaultContext, any>) => {
@@ -84,9 +93,9 @@ function useNCF() {
         stream = req;
         // debug('found stream');
       } else {
-        // debug(' = ctx.request.body');
-        // request = Object.assign({}, ctx.request.body, ctx.request.query);
         request = ctx.request.body;
+        ctx.request.rawBody = request[unparsed];
+        delete request[unparsed];
       }
     }
 
@@ -140,6 +149,7 @@ export function createKoaApp() {
   koa.use(useCors());
   koa.use(koaBody({
     // strict: true,
+    includeUnparsed: true,
     patchKoa: true,
     multipart: true,
     formLimit: 2 * 1024 * 1024,
