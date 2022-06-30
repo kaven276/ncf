@@ -15,6 +15,7 @@ import { processLaterFaasCalls } from './laterCall';
 import { getFaasTsSpec } from './lib/getFaasTsSpec';
 import { notifyWaiter } from './flow';
 import { Caller } from './lib/caller';
+import { doRewrite } from './lib/rewrite';
 
 const debug = getDebug(module);
 
@@ -37,7 +38,8 @@ export function getProxiedPath(): string | undefined {
  * 返回 Promise
  */
 export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promise<any> {
-  const { faasPath, request, stream, mock } = income;
+  const { faasPath: faasPathOri, request, stream, mock } = income;
+  const faasPath = await doRewrite(faasPathOri);
   idSeq += 1;
   debug(`request ${idSeq} ${faasPath} coming...`);
 

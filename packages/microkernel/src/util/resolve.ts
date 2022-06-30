@@ -26,6 +26,8 @@ export function pathPattern(fpath: string) {
 
 /** 中间件配置文件路径 */
 export const MiddlewareFilePath = normalize(`${ProjectDir}/${MoundDir}/middlewares${jsExt}`);
+/** rewrite 配置文件路径 */
+export const RewriteFilePath = normalize(`${ProjectDir}/${MoundDir}/rewrite${jsExt}`);
 
 /** 根据当前os类型，自动选择合适的路径标准化函数 */
 const stardardize = (sep === '\\') ? (path: string) => path.replaceAll(/\\/g, '/') : (path: string) => path;
