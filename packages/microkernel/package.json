@@ -1,6 +1,6 @@
 {
   "name": "@ncf/microkernel",
-  "version": "0.21.0",
+  "version": "0.21.1",
   "description": "typescript based nodejs concise framework micro-kernel",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -34,5 +34,5 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "gitHead": "5b8e3422f51e1bd5b5b37412a3bd0d2869caabfa"
+  "gitHead": "ccbc71c25c2de54d33a936e95bee79f2f6943438"
 }
