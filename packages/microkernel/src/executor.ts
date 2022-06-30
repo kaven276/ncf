@@ -102,9 +102,13 @@ export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promi
       } else {
         fassModule.__config = dirConfig;
       }
-      fassModule.__initPromise = registerDep(tryPath);
+      if (!fassModule.fake) {
+        fassModule.__initPromise = fassModule.fake ? Promise.resolve() : registerDep(tryPath);
+      }
     }
-    await fassModule.__initPromise;
+    if (fassModule.__initPromise) {
+      await fassModule.__initPromise;
+    }
     fassModule.__ready = true;
   }
 
