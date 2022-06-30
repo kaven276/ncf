@@ -38,7 +38,8 @@ async function getDirConfig(
 ): Promise<IConfig> {
   assert.ok(!dirMap.has(path), '因为有para版本控制，不可能出现已有 config 记录');
   debug('loading dir config', path);
-  const parent = (path === sep) ? defaultConfig : (await getDirConfigPara(dirname(path)));
+  // 给入的路径要求是标准路径，不能使 windows 的 \ 分隔符
+  const parent = (path === '/') ? defaultConfig : (await getDirConfigPara(dirname(path)));
   // 随后动态加载配置更新
   const configPath = join(ServiceDir, path, 'index' + jsExt);
   const dirModule = await import(configPath).then(async (m: any) => {

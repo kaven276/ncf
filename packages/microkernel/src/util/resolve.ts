@@ -1,5 +1,5 @@
 import { Module } from 'module';
-import { normalize, join, dirname, basename, extname, posix } from 'node:path';
+import { normalize, join, dirname, basename, extname, posix, sep } from 'node:path';
 
 /** NCF 应用工程的根路径 */
 export const ProjectDir = process.cwd();
@@ -27,9 +27,12 @@ export function pathPattern(fpath: string) {
 /** 中间件配置文件路径 */
 export const MiddlewareFilePath = normalize(`${ProjectDir}/${MoundDir}/middlewares${jsExt}`);
 
+/** 根据当前os类型，自动选择合适的路径标准化函数 */
+const stardardize = (sep === '\\') ? (path: string) => path.replaceAll(/\\/g, '/') : (path: string) => path;
+
 /** faas 模块文件系统路径(linux/windows) 对应到服务调用路径 faasPath */
 export function absPathToFaasPath(absPath: string): string {
   const path1 = absPath.substring(prefixLength);
   const path2 = join(dirname(path1), basename(path1, extname(path1)));
-  return posix.normalize(path2);
+  return stardardize(path2);
 }

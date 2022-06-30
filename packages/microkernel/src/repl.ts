@@ -2,12 +2,12 @@ import repl from 'node:repl';
 import { getDebug } from './util/debug';
 import { IFaasModule } from './lib/faas';
 import { mapCall } from './mapCall';
-import { jsExt, prefixLength, ServiceDir, absPathToFaasPath, tsMode } from './util/resolve';
+import { jsExt, ServiceDir, absPathToFaasPath, tsMode } from './util/resolve';
 import { writeFile, createWriteStream } from 'node:fs';
 import { addDisposer } from './util/addDisposer';
 import { Readable } from 'node:stream';
 import { innerCall } from './innerCall';
-import { extname, basename, posix } from 'node:path';
+import { extname, basename } from 'node:path';
 import { Module } from 'module';
 
 const debug = getDebug(module);
@@ -38,7 +38,7 @@ async function doTest() {
       testModule = {
         faas: faas && faas.tests
           ? async () => mapCall(absPathToFaasPath(lastModifiedFaasModulePath), faas.tests || {})
-          : async () => innerCall(posix.normalize(lastModifiedFaasModulePath.substring(prefixLength).replace(jsExt, '')))
+          : async () => innerCall(absPathToFaasPath(lastModifiedFaasModulePath))
       };
     }
     let resp: any;
