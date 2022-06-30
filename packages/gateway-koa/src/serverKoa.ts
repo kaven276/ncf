@@ -142,7 +142,7 @@ export function createKoaApp() {
     // strict: true,
     patchKoa: true,
     multipart: true,
-    formLimit: '2M',
+    formLimit: 2 * 1024 * 1024,
     formidable: {
       uploadDir: process.cwd() + '/upload',
     }
