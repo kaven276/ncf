@@ -126,16 +126,25 @@ function useNCF() {
     }
 
     // 如果返回的内容是 html 则直接返回页面
-    if (typeof result === 'string' && result.startsWith('<')) {
+    if (typeof result === 'string') {
+      if (result.startsWith('<')) {
+        ctx.response.set('content-type', 'text/html;charset=utf-8');
+      } else if (result.startsWith('{')) {
+        ctx.response.set('content-type', 'application/json');
+      }
       ctx.body = result;
-      ctx.response.set('content-type', 'text/html;charset=utf-8');
       ctx.response.status = 200;
     } else if (result instanceof Readable) {
       ctx.body = result;
       // ctx.response.set('content-type', 'text/html;charset=utf-8');
       ctx.response.status = 200;
     } else {
-      ctx.body = { code: 0, data: result };
+      if (ctx.state.keepOriginResponse) {
+        // 如果 faas 设置不让增加响应 wrapper 的话
+        ctx.body = result;
+      } else {
+        ctx.body = { code: 0, data: result };
+      }
       ctx.response.set('content-type', 'application/json');
       ctx.response.status = 200;
     }
