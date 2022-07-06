@@ -30,6 +30,7 @@
   "dependencies": {
     "@elastic/elasticsearch": "^7.5.1",
     "@ncf/microkernel": "*",
+    "@types/formidable": "^2.0.5",
     "@types/ink-select-input": "^3.0.1",
     "amqplib": "^0.8.0",
     "better-sqlite3": "^7.5.3",
@@ -41,6 +42,7 @@
     "es7": "npm:@elastic/elasticsearch@~7.5",
     "es8": "npm:@elastic/elasticsearch@~8.2.1",
     "fetch3": "npm:node-fetch@^3",
+    "formidable": "^2.0.1",
     "ink": "^3.2.0",
     "ink-markdown": "^1.0.1",
     "ink-multi-select": "^2.0.0",
