@@ -153,14 +153,20 @@ function useNCF() {
   }
 }
 
-export function createKoaApp() {
+interface GatewayKoaOptions {
+  /** 控制是否打开 koa-body 的 multipart */
+  multipart: boolean,
+}
+export function createKoaApp(opts: GatewayKoaOptions = {
+  multipart: false,
+}) {
   const koa = new Koa();
   koa.use(useCors());
   koa.use(koaBody({
     // strict: true,
     includeUnparsed: true,
     patchKoa: true,
-    multipart: true,
+    multipart: opts.multipart,
     formLimit: 2 * 1024 * 1024,
     formidable: {
       uploadDir: process.cwd() + '/upload',
