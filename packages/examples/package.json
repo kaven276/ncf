@@ -39,7 +39,7 @@
     "dotenv": "^16.0.0",
     "elasticsearch": "^16.7.3",
     "es6": "npm:@elastic/elasticsearch@^6.8",
-    "es7": "npm:@elastic/elasticsearch@~7.5",
+    "es7": "npm:@elastic/elasticsearch@~7.17",
     "es8": "npm:@elastic/elasticsearch@~8.2.1",
     "fetch3": "npm:node-fetch@^3",
     "formidable": "^2.0.1",

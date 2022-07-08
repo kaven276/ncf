@@ -289,7 +289,7 @@
     enabled "2.0.x"
     kuler "^2.0.0"
 
-"@elastic/elasticsearch@^7.5.1":
+"@elastic/elasticsearch@^7.5.1", "es7@npm:@elastic/elasticsearch@~7.17":
   version "7.17.0"
   resolved "https://registry.npmmirror.com/@elastic/elasticsearch/-/elasticsearch-7.17.0.tgz#589fb219234cf1b0da23744e82b1d25e2fe9a797"
   integrity sha512-5QLPCjd0uLmLj1lSuKSThjNpq39f6NmlTy9ROLFwG5gjyTgpwSqufDeYG/Fm43Xs05uF7WcscoO7eguI3HuuYA==
@@ -3534,18 +3534,6 @@ es6-error@^4.0.1:
     once "^1.4.0"
     pump "^3.0.0"
     secure-json-parse "^2.1.0"
-
-"es7@npm:@elastic/elasticsearch@~7.5":
-  version "7.5.1"
-  resolved "https://registry.npmmirror.com/@elastic/elasticsearch/-/elasticsearch-7.5.1.tgz#2d44d7b7cc4f986560395fb7a582717f7bb20344"
-  integrity sha512-MoZ8/DgwYDf2KaOIVonvPv+ywslacCBHSQwzPjRRzUxs5TD4HTNbaxhhc2S8cjHA1XqT5i7zLepDXbvAYyYDeQ==
-  dependencies:
-    debug "^4.1.1"
-    decompress-response "^4.2.0"
-    into-stream "^5.1.0"
-    ms "^2.1.1"
-    once "^1.4.0"
-    pump "^3.0.0"
 
 "es8@npm:@elastic/elasticsearch@~8.2.1":
   version "8.2.1"
@@ -8750,15 +8738,10 @@ typeorm@^0.3.3:
     xml2js "^0.4.23"
     yargs "^17.3.1"
 
-typescript@4.6.2, typescript@^4.6.2:
+typescript@4.6.2, typescript@^4.6.2, typescript@^4.6.4:
   version "4.6.2"
   resolved "https://registry.npmmirror.com/typescript/-/typescript-4.6.2.tgz#fe12d2727b708f4eef40f51598b3398baa9611d4"
   integrity sha512-HM/hFigTBHZhLXshn9sN37H085+hQGeJHJ/X7LpBWLID/fbc2acUMfU+lGD98X81sKP+pFa9f0DZmCwB9GnbAg==
-
-typescript@^4.6.4:
-  version "4.7.4"
-  resolved "https://registry.npmmirror.com/typescript/-/typescript-4.7.4.tgz#1a88596d1cf47d59507a1bcdfb5b9dfe4d488235"
-  integrity sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==
 
 uglify-js@^3.1.4:
   version "3.15.3"
