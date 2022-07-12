@@ -6,6 +6,7 @@ PDF viewer
 
 PDF maker
 ----------
+* https://github.com/diegomura/react-pdf
 * https://www.npmjs.com/package/pdfmake
 * http://pdfmake.org/playground.html
 * https://www.npmjs.com/package/pdfjs
