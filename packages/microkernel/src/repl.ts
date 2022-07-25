@@ -64,10 +64,10 @@ async function doTest() {
       const respPath = lastModifiedFaasModulePath.replace(jsExt, '.resp.jpg');
       const f = createWriteStream(respPath);
       resp.pipe(f);
-    } else if (!!resp) {
+    } else {
       const respPath = lastModifiedFaasModulePath.replace(jsExt, '.resp.json');
       console.log(respPath);
-      writeFile(respPath, JSON.stringify(resp, null, 2), { encoding: 'utf8' }, () => { });
+      writeFile(respPath, resp === undefined ? '' : JSON.stringify(resp, null, 2), { encoding: 'utf8' }, () => { });
     }
   }
 }
