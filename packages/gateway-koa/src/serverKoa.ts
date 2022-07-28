@@ -4,6 +4,7 @@ import koaBody from 'koa-body';
 import { execute, getDebug, ServiceError, GwKoa } from '@ncf/microkernel';
 import { URL } from 'url';
 import { Readable } from 'node:stream';
+import { bodyparser } from './bodyParser';
 
 const debug = getDebug(module);
 
@@ -172,6 +173,7 @@ export function createKoaApp(opts: GatewayKoaOptions = {
       uploadDir: process.cwd() + '/upload',
     }
   }));
+  false && koa.use(bodyparser());
   koa.use(useNCF());
 
   koa.on('error', (err, ctx) => {
