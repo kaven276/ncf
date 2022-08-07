@@ -92,7 +92,7 @@ export function onFaasModuleChange(absPath: string) {
     return; // 不在项目 faas 目录内
   }
 
-  if (basename(absPath).match(/(\.(resp|baas|spec|check)\.|README.md)/)) {
+  if (basename(absPath).match(/(\.(resp|baas|spec|check)\.|^_.*|README.md)/)) {
     return; // 属于自动测试结果等非 faas 文件文件，不处理
   }
 
