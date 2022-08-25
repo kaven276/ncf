@@ -8,6 +8,7 @@ import { getDebug } from '@ncf/microkernel';
 
 const debug = getDebug(module);
 
+minusStore.faasPath!
 let orderId = 0;
 /** 下单订购服务，部分处理直接丢入任务队列，发短信通知尝试同步执行 */
 export const faas: Service<ISpec> = async (req: Request) => {
