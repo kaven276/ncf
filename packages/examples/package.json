@@ -67,6 +67,7 @@
     "node-schedule": "^2.1.0",
     "pdfmake": "^0.2.5",
     "pg": "^8.7.3",
+    "prisma": "^4.2.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "reflect-metadata": "^0.1.13",
