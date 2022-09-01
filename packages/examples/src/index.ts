@@ -1,5 +1,6 @@
 console.log('> require.main!.filename', require.main!.filename, process.version);
 console.log('> nodejs version', process.version);
+// process.env.MW_FILE_NAME = 'mw2'; // 这里可以配置非默认的中间件配置模块文件名
 
 import './core';
 import { createRequestListener } from '@ncf/microkernel';

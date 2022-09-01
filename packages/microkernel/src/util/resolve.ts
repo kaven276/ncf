@@ -24,8 +24,9 @@ export function pathPattern(fpath: string) {
   return normalize(tsMode ? `src/${fpath}.ts` : `dist/${fpath}.js`);
 }
 
+const mwFileName = process.env.MW_FILE_NAME || 'middlewares';
 /** 中间件配置文件路径 */
-export const MiddlewareFilePath = normalize(`${ProjectDir}/${MoundDir}/middlewares${jsExt}`);
+export const MiddlewareFilePath = normalize(`${ProjectDir}/${MoundDir}/${mwFileName}${jsExt}`);
 /** rewrite 配置文件路径 */
 export const RewriteFilePath = normalize(`${ProjectDir}/${MoundDir}/rewrite${jsExt}`);
 
