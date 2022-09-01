@@ -1,4 +1,4 @@
-import { watch } from 'chokidar';
+import { watch, type FSWatcher } from 'chokidar';
 import { getDebug } from './util/debug';
 import { updateConfig } from './lib/config';
 import { awaitModule, tryDestroyModule } from './lifecycle';
@@ -12,12 +12,13 @@ import * as assert from 'node:assert/strict';
 const debug = getDebug(module);
 let started = false;
 
+let watcher: FSWatcher;
 /** 启动服务热更新，只针对服务入口模块，级联模块暂时不支持 */
 function watchHotUpdate() {
 
   started = true;
 
-  const watcher = watch(CodeDir, {
+  watcher = watch(CodeDir, {
     depth: 9,
     persistent: true,
     ignoreInitial: true,
@@ -159,6 +160,15 @@ export const registerDep = async (absServicePath: string) => {
   const m = require.cache[absServicePath]!;
   await collectWhoDependMePara(m);
   // await awaitModule(m);
+}
+
+/** 执行后台长任务 */
+export async function runTask(m: NodeModule, task: () => Promise<void>) {
+  if (watcher) {
+    watcher.close();
+  }
+  await registerDep(m.id);
+  await task();
 }
 
 
