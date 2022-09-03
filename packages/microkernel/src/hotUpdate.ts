@@ -27,10 +27,13 @@ function watchHotUpdate() {
   });
 
   watcher.on("change", (absPath) => {
-    onFaasModuleChange(absPath);
-    if (!require.cache[absPath]) return;
-    debug('file change', absPath);
+    if (!require.cache[absPath]) {
+      onFaasModuleChange(absPath);
+      return; // 从没有加载过，第一次加载，无需清理老版本，直接返回
+    };
+    debug('file change/saved', absPath);
     deleteCacheForUpdated(absPath);
+    onFaasModuleChange(absPath); // 使用新版本自动测试
   });
 
   addDisposer(() => watcher.close());
@@ -73,7 +76,7 @@ async function collectWhoDependMeReal(currentModule: NodeModule): Promise<void> 
 
   // inner 依赖了一个 faas，注入自标注路径，来支持内部调用寻址
   if (currentModule.exports.faas) {
-    const endPos = absFileName.length - extname(absFileName).length
+    const endPos = absFileName.length - extname(absFileName).length;
     currentModule.exports.faas.faasPath = absFileName.substring(prefixLength, endPos);
   }
   // debug('awaitModule', currentModule.filename);
@@ -160,7 +163,7 @@ export const registerDep = async (absServicePath: string) => {
   const m = require.cache[absServicePath]!;
   await collectWhoDependMePara(m);
   // await awaitModule(m);
-}
+};
 
 /** 执行后台长任务 */
 export async function runTask(m: NodeModule, task: () => Promise<void>) {
