@@ -25,7 +25,7 @@ export function createDataSource(dsOptions: DataSourceOptions) {
         const connection = await connect.apply(this, args);
         if (!connection._hasSet) {
           connection._hasSet = true; // 保证每个实际创建的 connection 只执行一次 set search_path，不重复
-          await connection.query(`set search_path to ${dsOptions.schema}`);
+          await connection.query(`set search_path to ${dsOptions.schema},public`);
         }
         return connection;
       }
