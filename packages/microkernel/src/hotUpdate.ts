@@ -116,6 +116,10 @@ function deleteCacheForUpdated(updatedFileName: string) {
 
   // 如果是 BAAS 模块更新，老的 BAAS 资源需要先清除掉释放资源
   const m = require.cache[updatedFileName]!;
+  if (!m) {
+    // debug('already delete cache, just bypass', updatedFileName);
+    return;
+  }
   const importers = m.__depSet;
   tryDestroyModule(m);
 
