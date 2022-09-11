@@ -1,6 +1,6 @@
 {
   "name": "@ncf/microkernel",
-  "version": "0.22.1",
+  "version": "0.23.0",
   "description": "typescript based nodejs concise framework micro-kernel",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
