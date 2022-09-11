@@ -8,7 +8,7 @@ import { runMiddwares } from './lib/middleware';
 import { ProjectDir, jsExt, MoundDir } from './util/resolve';
 import { getDebug } from './util/debug';
 import assert from 'assert/strict';
-import { registerDep } from './hotUpdate';
+import { registerDep, executedSet } from './hotUpdate';
 import { normalize } from 'path';
 import { GwExtras } from './lib/gateway';
 import { processLaterFaasCalls } from './laterCall';
@@ -141,6 +141,7 @@ export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promi
     try {
       await runMiddwares(als, async () => {
         debug('after middlewares, executing faas');
+        executedSet.add(fassModule);
         return faas(request, stream).then((response) => {
           als.response = response;
         });

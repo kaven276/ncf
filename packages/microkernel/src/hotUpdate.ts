@@ -1,5 +1,6 @@
 import { watch, type FSWatcher } from 'chokidar';
 import { getDebug } from './util/debug';
+import type { IFaasModule } from './lib/faas';
 import { updateConfig } from './lib/config';
 import { awaitModule, tryDestroyModule } from './lifecycle';
 import { CodeDir, jsExt, MiddlewareFilePath, prefixLength } from './util/resolve';
@@ -9,6 +10,7 @@ import { addDisposer } from './util/addDisposer';
 import { onFaasModuleChange } from './repl';
 import * as assert from 'node:assert/strict';
 
+export const executedSet = new WeakSet<IFaasModule>();
 const debug = getDebug(module);
 let started = false;
 
@@ -33,7 +35,6 @@ function watchHotUpdate() {
     };
     debug('file change/saved', absPath);
     deleteCacheForUpdated(absPath);
-    onFaasModuleChange(absPath); // 使用新版本自动测试
   });
 
   addDisposer(() => watcher.close());
@@ -131,6 +132,13 @@ function deleteCacheForUpdated(updatedFileName: string) {
     updateConfig(updatedFileName);
   }
 
+  if (executedSet.has(m.exports)) {
+    // 所有曾经执行过的依赖本模块的 faas 都将自动重新测试
+    // debug('re test', updatedFileName);
+    onFaasModuleChange(updatedFileName);
+  } else {
+    // debug('no retest', updatedFileName);
+  }
 
   if (!importers) {
     if (updatedFileName === MiddlewareFilePath) {
