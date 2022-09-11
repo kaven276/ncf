@@ -24,50 +24,53 @@ if (process.send) {
 let autoTest = tsMode;
 
 async function doTest() {
-  if (!lastModifiedFaasModulePath) {
+  const mPath = lastModifiedFaasModulePath;
+  if (!mPath) {
     console.log('还没有变更的 faas 模块，无测试目标！');
   } else {
-    const jsExt = extname(lastModifiedFaasModulePath);
-    console.log(`about to test ${lastModifiedFaasModulePath}`);
-    const testPath = lastModifiedFaasModulePath.replace(jsExt, '.test' + jsExt);
+    const jsExt = extname(mPath);
+    console.log(`about to test ${mPath}`);
+    const testPath = mPath.replace(jsExt, '.test' + jsExt);
     let testModule = await import(testPath).catch(() => ({}));
     if (!testModule.faas) {
-      const faasModule: IFaasModule = await import(lastModifiedFaasModulePath).catch(() => ({}));
+      const faasModule: IFaasModule = await import(mPath).catch(() => ({}));
       const { faas } = faasModule;
       // 没有定义单元测试，自动默认使用 faas.tests 测试，无则使用无参数执行对应的模块
       if (!faas) return;
       testModule = {
         faas: faas.tests
-          ? async () => mapCall(absPathToFaasPath(lastModifiedFaasModulePath), faas.tests!)
-          : async () => innerCall(absPathToFaasPath(lastModifiedFaasModulePath))
+          ? async () => mapCall(absPathToFaasPath(mPath), faas.tests!)
+          : async () => innerCall(absPathToFaasPath(mPath))
       };
     }
     let resp: any;
     try {
       resp = await testModule.faas();
     } catch (e: unknown) {
-      const respPath = lastModifiedFaasModulePath.replace(jsExt, '.resp.json');
+      const respPath = mPath.replace(jsExt, '.resp.json');
       writeFile(respPath, (e as Error).toString(), { encoding: 'utf8' }, () => { });
       return;
     }
-    console.log(lastModifiedFaasModulePath, resp);
+    // debug(lastModifiedFaasModulePath, resp);
     const isHTML = (typeof resp === 'string' && resp.startsWith('<'));
     const isBuffer = resp instanceof Buffer;
     const isStream = resp instanceof Readable;
     if (isHTML) {
-      const respPath = lastModifiedFaasModulePath.replace(jsExt, '.resp.html');
+      const respPath = mPath.replace(jsExt, '.resp.html');
       writeFile(respPath, resp, { encoding: 'utf8' }, () => { });
     } else if (isBuffer) {
       //@ts-ignore
-      const respPath = lastModifiedFaasModulePath.replace(jsExt, `.resp.${resp.ext ?? 'bin'}`);
+      const respPath = mPath.replace(jsExt, `.resp.${resp.ext ?? 'bin'}`);
       writeFile(respPath, resp, () => { });
     } else if (isStream) {
-      const respPath = lastModifiedFaasModulePath.replace(jsExt, '.resp.jpg');
+      const respPath = mPath.replace(jsExt, '.resp.jpg');
       const f = createWriteStream(respPath);
       resp.pipe(f);
+    } else if (typeof resp === 'string') {
+      const respPath = mPath.replace(jsExt, '.resp.txt');
+      writeFile(respPath, resp, { encoding: 'utf8' }, () => { });
     } else {
-      const respPath = lastModifiedFaasModulePath.replace(jsExt, '.resp.json');
-      console.log(respPath);
+      const respPath = mPath.replace(jsExt, '.resp.json');
       writeFile(respPath, resp === undefined ? '' : JSON.stringify(resp, null, 2), { encoding: 'utf8' }, () => { });
     }
   }
