@@ -25,6 +25,6 @@ export { outerCall, setOuterCallAddr } from './outerCall';
 export { laterCall, setEnqueue, setHttpEnqueue } from './laterCall';
 export { resolved, waitReady } from './lifecycle';
 export { getCaller } from './lib/caller';
-export { runTask } from './hotUpdate';
+export { whenModuleReady, runTask } from './hotUpdate';
 
 export { waitFlowStart, bindFlow } from './flow';

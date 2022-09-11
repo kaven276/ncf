@@ -177,12 +177,19 @@ export const registerDep = async (absServicePath: string) => {
   // await awaitModule(m);
 };
 
+/** 等待全部依赖本模块的其他模块(逐级依赖)都 ready 后，返回 */
+export const whenModuleReady = async (m: NodeModule) => {
+  debug('collecting from', m.id);
+  await collectWhoDependMePara(m);
+  // await awaitModule(m);
+};
+
 /** 执行后台长任务 */
 export async function runTask(m: NodeModule, task: () => Promise<void>) {
   if (watcher) {
     watcher.close();
   }
-  await registerDep(m.id);
+  await whenModuleReady(m);
   await task();
 }
 
