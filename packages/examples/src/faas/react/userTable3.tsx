@@ -4,6 +4,7 @@ import { faas as findUsers } from '../typeorm/hr/findUsers';
 import { IRequest, header, renderUser } from './userTable';
 import { Layout1 } from './common';
 import { cfgLayout, ctxTitle } from '@ncf/mw-react-server-render';
+import { Helmet } from "react-helmet";
 
 
 /** 单独对本faas服务配置 Layout/title，当然正式使用时会在目录配置上统一设置，使得代码非常的简练 */
@@ -18,6 +19,9 @@ export async function faas(req: IRequest) {
   ctxTitle.set('user table 3');
   return (
     <div>
+      <Helmet>
+        <title>user table 3 from helmet xxx</title>
+      </Helmet>
       <br />
       <form role="form" className="form-inline well" action="./userTable3" method="get">
         <div className="form-group">

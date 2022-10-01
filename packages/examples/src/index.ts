@@ -16,6 +16,9 @@ import 'src/flow';
 import send from 'koa-send';
 import { join } from 'node:path';
 import proxy from 'koa2-proxy-middleware';
+import { addLoader } from '@ncf/mw-react-server-render';
+
+addLoader();
 
 // 作为应用模块使用，不被 import/require，否则退出
 if (require.main !== module && !(require.main!.filename!).endsWith('server.js')) {

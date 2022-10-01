@@ -1,0 +1,7 @@
+.users_table>thead {
+  color: red
+}
+
+.users_table>tbody {
+  color: green
+}

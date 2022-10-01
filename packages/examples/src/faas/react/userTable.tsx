@@ -24,7 +24,7 @@ export function renderUser(user: User) {
       <td>
         {user.names && (
           <ul>
-            {user.names.map(n => (<li>{n}</li>))}
+            {user.names.map(n => (<li key={n}>{n}</li>))}
           </ul>
         )}
       </td>
