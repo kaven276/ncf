@@ -4,6 +4,7 @@ import { faas as findUsers } from '../typeorm/hr/findUsers';
 import { Service } from '@ncf/microkernel';
 import { Helmet, cfgLayout, toClientScript, fnToIIFE } from "@ncf/mw-react-server-render";
 import { header, renderUser } from './userTable';
+import { asyncUsersTable4 } from './component/table4';
 import { Layout2 } from './common';
 import tableJsText from './userTable.ssr.js';
 import tableCssText from './userTable.ssr.css';
@@ -129,6 +130,7 @@ export const config = {
  */
 export const faas: Service<Spec> = async (req: IRequest) => {
   const users: User[] = await findUsers(req);
+  const UserTable4 = await asyncUsersTable4();
   return (
     <div className="container">
       <Helmet>
@@ -146,6 +148,8 @@ export const faas: Service<Spec> = async (req: IRequest) => {
       {true && <UserTable2 users={users} />}
       <br />
       {true && <UserTable3 users={users} />}
+      <br />
+      <UserTable4 />
       <Later />
     </div>
   );
