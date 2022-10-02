@@ -56,6 +56,11 @@ export const mwReactServerRender: IMiddleWare = async (ctx, next) => {
 }
 
 /** 将服务端的js转入client */
+export function fnToIIFE(fn: () => void) {
+  return `(${fn.toString()})()`;
+}
+
+/** 将服务端的js转入client */
 export function toClientScript(fn: () => void) {
-  return createElement('script', undefined, `(${fn.toString()})()`);
+  return createElement('script', undefined, fnToIIFE(fn));
 }

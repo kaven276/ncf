@@ -1,6 +1,6 @@
-const ut = $('.users_table');
+const ut = $('.users2');
 // console.dir(t);
-ut.click((e) => {
-  console.dir(e);
-  console.info('table clicked ' + e.currentTarget.id)
-})
+ut.on('click', (e) => {
+  // console.dir(e);
+  console.info('table clicked ' + e.currentTarget.className)
+});
