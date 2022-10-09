@@ -194,7 +194,7 @@ export async function runTask(m: NodeModule, task: () => Promise<void>) {
 }
 
 
-// 只有开发环境才会启用自动热更新，生产环境可以节省资源
-if (process.env.NODE_ENV === 'development' || jsExt === '.ts') {
+// 部署到服务器上需要设置 NODE_ENV 环境变量来标识部署环境，本地开发环境不配置则默认开启开发热更新
+if (process.env.NODE_ENV === undefined) {
   watchHotUpdate();
 }
