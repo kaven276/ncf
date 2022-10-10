@@ -3,6 +3,15 @@ import { IMiddleWare, createCtxItem, createCfgItem } from '@ncf/microkernel';
 import { createElement, type ReactElement } from 'react';
 import { Helmet } from 'react-helmet';
 export { addLoader } from './ssr-loader';
+import { ServerStyleSheet } from 'styled-components';
+
+const styled = (() => {
+  try {
+    return import('styled-components');
+  } catch (e) {
+    return;
+  }
+})();
 
 export { Helmet };
 
@@ -30,7 +39,16 @@ export const mwReactServerRender: IMiddleWare = async (ctx, next) => {
       // 如果配置了 layout 则使用 layout
       resp = createElement(layout, { children: ctx.response });
     }
-    ctx.response = renderToStaticMarkup(resp);
+    let styleTags: string = '';
+    if (styled) {
+      const sheet = new ServerStyleSheet();
+      ctx.response = renderToStaticMarkup(sheet.collectStyles(resp));
+      styleTags = sheet.getStyleTags();
+      // console.dir(styleTags);
+    } else {
+      ctx.response = renderToStaticMarkup(resp);
+    }
+
     // console.dir(ctx.response);
     if (ctx.response.startsWith('<html ')) {
       ctx.response = DOCTYPE + ctx.response;
@@ -45,6 +63,7 @@ export const mwReactServerRender: IMiddleWare = async (ctx, next) => {
         ${helmet.title.toString()}
         ${helmet.link.toString()}
         ${helmet.style.toString()}
+        ${styleTags}
       <body ${helmet.bodyAttributes.toString()}>
         ${ctx.response}
       </body>

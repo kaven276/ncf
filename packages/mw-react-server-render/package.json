@@ -1,6 +1,6 @@
 {
   "name": "@ncf/mw-react-server-render",
-  "version": "0.5.1",
+  "version": "0.6.2",
   "description": "fass can return jsx/tsx, this middleware will translate it to html string as faas response",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -30,6 +30,7 @@
     "typescript": "^4.6.4"
   },
   "peerDependencies": {
-    "@ncf/microkernel": "*"
+    "@ncf/microkernel": "*",
+    "styled-components": "^5.3.6"
   }
 }
