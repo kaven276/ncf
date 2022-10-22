@@ -23,9 +23,11 @@ const rotate = keyframes`
 // Here we create a component that will rotate everything we pass in over two seconds
 const Rotate = styled.div`
   display: inline-block;
-  animation: ${rotate} 2s linear infinite;
   padding: 2rem 1rem;
   font-size: 1.2rem;
+  &:hover {
+    animation: ${rotate} 2s linear infinite;
+  }
 `;
 
 interface ButtonProps {
@@ -36,13 +38,29 @@ const Button = styled.button<ButtonProps>`
   /* Adapt the colors based on primary prop */
   background: ${props => props.primary ? "palevioletred" : "white"};
   color: ${props => props.primary ? "white" : "palevioletred"};
-
   font-size: 1em;
   margin: 1em;
   padding: 0.25em 1em;
   border: 2px solid palevioletred;
   border-radius: 3px;
 `;
+
+// Static object
+const Box = styled.div({
+  background: 'palevioletred',
+});
+
+// Adapting based on props
+const PropsBox = styled(Box)((props: {
+  $background: string,
+}) => ({
+  display: 'inline-block',
+  $background: props.$background,
+  padding: '50px',
+  margin: '50px',
+  border: '1px solid silver',
+  borderRadius: '8px',
+}));
 
 export const faas = async (req: ButtonProps) => {
   return (
@@ -55,7 +73,12 @@ export const faas = async (req: ButtonProps) => {
         <Button primary={req.primary} id='a'>click me</Button>
         <Button as="a" href="/">click me</Button>
       </div>
-      <Rotate>waiting...</Rotate>
+      <Box>
+        <Rotate>waiting...</Rotate>
+      </Box>
+      <PropsBox $background="silver">
+        <Rotate>waiting...</Rotate>
+      </PropsBox>
     </div>
   )
 }

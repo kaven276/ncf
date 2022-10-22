@@ -47,6 +47,7 @@ export const mwReactServerRender: IMiddleWare = async (ctx, next) => {
       const sheet = new ServerStyleSheet();
       ctx.response = renderToStaticMarkup(sheet.collectStyles(resp));
       styleTags = sheet.getStyleTags();
+      sheet.seal();
       // console.dir(styleTags);
     } else {
       ctx.response = renderToStaticMarkup(resp);
