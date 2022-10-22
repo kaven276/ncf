@@ -21,6 +21,9 @@ export type Layout = (props: { children: JSX.Element }) => JSX.Element;
 /** react page layout 的目录配置项，一般只配置 body 里面的内容即可，html/head/body 由 react-helmet 支持 */
 export const cfgLayout = createCfgItem<Layout>(Symbol('layout'));
 
+/** stitches config 对象 */
+export const cfgStitchesConfig = createCfgItem<any>(Symbol('StitchesConfig'));
+
 /** 设置和获取服务端页面的 document title 的 get/set API */
 export const ctxTitle = createCtxItem<string>(Symbol('html title'));
 
@@ -51,6 +54,11 @@ export const mwReactServerRender: IMiddleWare = async (ctx, next) => {
       // console.dir(styleTags);
     } else {
       ctx.response = renderToStaticMarkup(resp);
+    }
+
+    const stitchesConfig = cfgStitchesConfig.get(ctx);
+    if (stitchesConfig) {
+      styleTags = `<style id="stitches">${stitchesConfig.getCssText()}</style>`
     }
 
     // console.dir(ctx.response);
