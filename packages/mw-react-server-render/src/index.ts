@@ -24,6 +24,9 @@ export const cfgLayout = createCfgItem<Layout>(Symbol('layout'));
 /** 设置和获取服务端页面的 document title 的 get/set API */
 export const ctxTitle = createCtxItem<string>(Symbol('html title'));
 
+/** 打到前端 window.data 的数据 */
+export const ctxData = createCtxItem<string>(Symbol('data'));
+
 const DOCTYPE = '<!DOCTYPE html>';
 
 /** 如果响应是 react 元素，则渲染成 html 字符串，返回转换完的响应  */
@@ -67,6 +70,7 @@ export const mwReactServerRender: IMiddleWare = async (ctx, next) => {
       <body ${helmet.bodyAttributes.toString()}>
         ${ctx.response}
       </body>
+      <script>window.data = ${JSON.stringify(ctxData.get())}</script>
       ${helmet.script.toString()}
       </html>
       `;
