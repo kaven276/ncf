@@ -16,3 +16,15 @@
 * [服务端组件 React server-component 介绍](https://zhuanlan.zhihu.com/p/379835181)
 * [rfcs server-components](https://github.com/josephsavona/rfcs/blob/server-components/text/0000-server-components.md)
 * [从零开始，揭秘React服务端渲染核心技术](https://juejin.cn/post/6844903902500880392#heading-8)
+
+## jss
+
+install `yarn add jss jss-preset-default`
+
+## styled-component
+
+install `yarn add styled-components` `yarn add -D @types/styled-components`
+
+## emotion
+
+install `yarn add @emotion/react @emotion/styled`
