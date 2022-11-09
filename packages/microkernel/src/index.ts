@@ -1,8 +1,3 @@
-import { jsExt } from './util/resolve';
-if (!process.env.DEBUG && jsExt === '.ts') {
-  process.env.DEBUG = '*';
-}
-
 export type { IApi, IFaasModule, Service } from './lib/faas';
 export type { IConfig } from './lib/config';
 export type { IMiddleWare } from './lib/middleware';
