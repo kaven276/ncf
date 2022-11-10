@@ -61,6 +61,10 @@ koaApp.middleware.unshift(async (ctx, next) => {
   }
 });
 
+import('./stats.js').then(fn => {
+  koaApp.middleware.unshift(fn.middleware)
+});
+
 // 使用多个 NCF app 接入层，分别监听不同的端口
 const server1 = createServer(koaApp.callback()).listen(env.PORT, () => {
   console.log(`listening at ${env.PORT}`);
