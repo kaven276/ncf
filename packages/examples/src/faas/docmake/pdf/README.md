@@ -10,5 +10,6 @@ PDF maker
 * https://www.npmjs.com/package/pdfmake
 * http://pdfmake.org/playground.html
 * https://www.npmjs.com/package/pdfjs
+* http://pdfkit.org 低级 API
 
 考虑通过 react 生成 PDF 文档
