@@ -1,6 +1,6 @@
 (function () {
   const env = Object.assign({}, window.envConfig, window.envOverride || {});
-  const ICON_URL = env.ICON_URL || 'https://icon.enncloud.cn';
+  const ICON_URL = env.ICON_URL || 'https://icon.xxx.cn';
   const link = document.createElement('link');
   link.rel = 'stylesheet';
   link.type = 'text/css';
@@ -20,6 +20,6 @@
 
   const style = document.createElement('style');
   style.innerHTML = `.logo-image{background-image:url(${ICON_URL}/logo/fe/logo_common.png) !important}`
-  
+
   document.head.appendChild(style);
 })();
