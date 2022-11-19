@@ -16,6 +16,7 @@ import { getFaasTsSpec } from './lib/getFaasTsSpec';
 import { notifyWaiter } from './flow';
 import { Caller } from './lib/caller';
 import { doRewrite } from './lib/rewrite';
+import { extname } from 'node:path';
 
 const debug = getDebug(module);
 
@@ -39,7 +40,7 @@ export function getProxiedPath(): string | undefined {
  */
 export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promise<any> {
   const { faasPath: faasPathOri, request, stream, mock } = income;
-  const faasPath = await doRewrite(faasPathOri);
+  let faasPath = await doRewrite(faasPathOri);
   idSeq += 1;
   debug(`request ${idSeq} ${faasPath} coming...`);
 
@@ -61,7 +62,16 @@ export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promi
   // step1: 定位服务模块文件路径
   // 新的 resolve 方式，自顶而下查看 dir config，如果 proxy:true, ext:xxx 则影响 faas resolve
   // 输出为 faas 地址，到具体文件名和后缀，可能来自 dir config (proxy faasPath) 或 faas module
-  const ext = dirConfig.ext || jsExt;
+  const ext = (() => {
+    const inExt = extname(faasPathOri);
+    // 如果访问地址是 .html 后缀，则直接映射到 .jsx/.tsx 文件名
+    if (inExt === '.html') {
+      faasPath = faasPath.slice(0, -5);
+      return jsExt + 'x';
+    } else {
+      return dirConfig.ext || jsExt
+    }
+  })();
   // debug(ext, faasPath, extname(faasPath));
   const tryPath = normalize(`${ProjectDir}/${MoundDir}/faas${faasPath}${mock ? '.mock' : ''}${ext}`);
 
