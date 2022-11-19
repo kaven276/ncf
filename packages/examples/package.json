@@ -72,6 +72,7 @@
     "nanoid": "^3.3.4",
     "nats": "^2.7.1",
     "neo4j-driver": "^5.1.0",
+    "node-nlp": "^4.24.0",
     "node-schedule": "^2.1.0",
     "pdfkit": "^0.13.0",
     "pdfmake": "^0.2.5",
