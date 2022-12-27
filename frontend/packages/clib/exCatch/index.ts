@@ -26,7 +26,7 @@ export interface ErrorInfo {
 }
 
 export interface ApiInfo {
-  type: 'base' | 'AsyncTrack' 
+  type: 'base' | 'AsyncTrack'
   path: string,
   req: any,
   res: any,
@@ -44,7 +44,7 @@ interface BasicInfo {
 export const getBasicInfo = () => {
   return {
     userAgent: navigator.userAgent,
-    userName: localStorage.getItem('enncloud-username'),
+    userName: localStorage.getItem('xxx-username'),
     appcode: global.prefix || "",
     COMMITHASH: envConfig?.COMMITHASH || "",
     BRANCH: envConfig?.BRANCH || "",
@@ -53,12 +53,12 @@ export const getBasicInfo = () => {
 
 export const SaveErrorInfo = (errorInfo: ErrorInfo, apiInfo?: ApiInfo) => {
   console.log({
-    errorInfo: {...errorInfo,route:window.location.pathname},
+    errorInfo: { ...errorInfo, route: window.location.pathname },
     apiInfo,
     basicInfo: getBasicInfo()
   }, 'error info')
-  fetchEX('post /logFrontError',{
-    errorInfo: {...errorInfo,route:window.location.pathname},
+  fetchEX('post /logFrontError', {
+    errorInfo: { ...errorInfo, route: window.location.pathname },
     apiInfo,
   })
 }

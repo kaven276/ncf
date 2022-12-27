@@ -23,8 +23,8 @@ function loadScriptAsync(src, isBundle, integrity) {
   script.src = src;
   if (integrity) {
     // 下面不注释会报
-    // Subresource Integrity: The resource '<URL>' has an integrity attribute, 
-    // but the resource requires the request to be CORS enabled to check the integrity, and it is not. 
+    // Subresource Integrity: The resource '<URL>' has an integrity attribute,
+    // but the resource requires the request to be CORS enabled to check the integrity, and it is not.
     // The resource has been blocked because the integrity cannot be enforced.
     // script.integrity = integrity;
   }
@@ -107,7 +107,7 @@ const times = {};
 const innerCDN = window.envConfig.ICON_URL ? (window.envConfig.ICON_URL + '/npm/') : '';
 const cdnList = [
   innerCDN,
-  'https://njr.enncloud.cn/',
+  'https://njr.xxx.cn/',
   'https://unpkg.com/',
   'https://cdn.jsdelivr.net/npm/',
 ].filter(Boolean);
@@ -144,7 +144,7 @@ function testUrl(id) {
       reject(reason);
     }
     // 超过指定时长没响应都认为不可用
-    // 比如 njr.enncloud.cn 从香港服务，大陆访问慢，不做选择
+    // 比如 njr.xxx.cn 从香港服务，大陆访问慢，不做选择
     // 比如 cdn.jsdelivr.net 从国内访问从 2021 年底变慢，不做选择
     timer = setTimeout(() => fail('timeout'), 1000);
     fetch(url, {
@@ -188,7 +188,7 @@ function testUrl(id) {
 }
 
 // 按照 cdnList 顺序依次检测可用性(无缓存方式，随机)，列表中第一个可用的被选中
-// 确保 njr.enncloud.cn 为正式 cdn，其他 cdn 为备份 cdn.
+// 确保 njr.xxx.cn 为正式 cdn，其他 cdn 为备份 cdn.
 // 测试选一个 js，不用浏览器本地缓存，模拟第一次访问。失败或者超过1s都认为不可用。
 // 测试包含内容长度测试，防止服务返回 200 但是内容不是想要的 js 内容。
 function selectFirstAvailable() {
