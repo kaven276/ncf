@@ -36,7 +36,7 @@ const DOCTYPE = '<!DOCTYPE html>';
 export const mwReactServerRender: IMiddleWare = async (ctx, next) => {
   await next();
 
-  const isResponseReactElement = (typeof ctx.response === 'object') && (typeof ctx.response['$$typeof'] === 'symbol');
+  const isResponseReactElement = (typeof ctx.response === 'object') && ctx.response !== null && (typeof ctx.response['$$typeof'] === 'symbol');
   // console.dir(ctx.response, { depth: 10 });
   if (isResponseReactElement) {
     const layout = cfgLayout.get(ctx);
