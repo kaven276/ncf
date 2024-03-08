@@ -29,8 +29,9 @@ function watchHotUpdate() {
   });
 
   watcher.on("change", (absPath) => {
+    // 不管目标 faas 是否执行过，只要改变都意味着触发执行自动测试
+    onFaasModuleChange(absPath);
     if (!require.cache[absPath]) {
-      onFaasModuleChange(absPath);
       return; // 从没有加载过，第一次加载，无需清理老版本，直接返回
     };
     debug('file change/saved', absPath);
@@ -132,7 +133,8 @@ function deleteCacheForUpdated(updatedFileName: string) {
     updateConfig(updatedFileName);
   }
 
-  if (executedSet.has(m.exports)) {
+  // 不再级联向上找所有受到影响的模块并自动测试，因为已经测试执行过的模块很多的话，可能会导致大量并发请求发出产生高负载
+  if (false && executedSet.has(m.exports)) {
     // 所有曾经执行过的依赖本模块的 faas 都将自动重新测试
     // debug('re test', updatedFileName);
     onFaasModuleChange(updatedFileName);
