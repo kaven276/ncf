@@ -38,7 +38,7 @@ export function getProxiedPath(): string | undefined {
 /** 进入服务执行，提供执行环境，事务管理。
  * 返回 Promise
  */
-export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promise<any> {
+export async function execute(income: IEntranceProps, gwExtras: GwExtras, caller?: Caller): Promise<any> {
   const { faasPath: faasPathOri, request, stream, mock } = income;
   let faasPath = await doRewrite(faasPathOri);
   idSeq += 1;
@@ -137,7 +137,7 @@ export async function execute(income: IEntranceProps, gwExtras: GwExtras): Promi
     request,
     response: null,
     stream,
-    caller: {} as Caller,
+    caller: caller || {} as Caller,
     fassModule,
     trans: [],
     laterFaasCalls: [],
